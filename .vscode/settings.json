@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"*.ejs": "html",
+		"minishell.h": "c",
+		"unistd.h": "c",
+		"stdlib.h": "c",
+		"history.h": "c",
+		"curses.h": "c",
+		"libft.h": "c",
+		"readline.h": "c"
+	}
+}
