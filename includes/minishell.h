@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/08/29 17:04:43 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:49:57 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,12 @@
 
 typedef struct s_shell
 {
-	char				*input;
-	t_gc				*alloc;
-}						t_shell;
+	char	*input;
+	t_gc	*alloc;
+}			t_shell;
 
-void					prompt_loop(t_shell *m);
-void					add_to_history(t_shell *m);
+void		prompt_loop(t_shell *m);
+void		add_to_history(t_shell *m);
+void		parse_input(t_shell *m);
 
 #endif

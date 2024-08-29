@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/08/29 18:18:12 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:56:49 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@ void	prompt_loop(t_shell *m)
 		add_history(m->input);
 		tokens = ft_split(m->input, ' ');
 		free(m->input);
-		parse_input(tokens);
-		while (tokens[i])
-			add_gc_node(&(m->alloc), tokens[i++]);
-		free(tokens);
+		parse_input(m);
 	}
 	rl_clear_history();
 }
