@@ -67,7 +67,7 @@ typedef struct s_lexer
     struct s_lexer	*next;
     struct s_lexer	*prev;
 }	t_lexer;
-
+```
 <div align="center">
 
 # <i>🌊</i>rash Minishell | @42Vienna
