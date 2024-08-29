@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/08/29 18:56:49 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/08/29 20:06:42 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,11 @@ void	init_var(t_shell *m)
 void	prompt_loop(t_shell *m)
 {
 	char	**tokens;
-	int i;
 
 	while (1)
 	{
 		m->input = readline(PROMPT);
 		add_history(m->input);
-		tokens = ft_split(m->input, ' ');
 		free(m->input);
 		parse_input(m);
 	}

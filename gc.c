@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 15:09:52 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/08/29 18:19:29 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/08/29 19:19:45 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	add_gc_node(t_gc **garbage, void *ptr)
 	t_gc	*new_node;
 	t_gc	*current;
 
+	if (!ptr)
+		return ;
 	new_node = malloc(sizeof(t_gc));
 	if (!new_node)
 	{
