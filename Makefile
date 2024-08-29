@@ -1,5 +1,7 @@
 SRC =   main.c \
-
+		gc.c \
+		parser.c
+		
 OBJS = ${SRC:.c=.o}
 NAME = minishell
 CC = cc
@@ -28,9 +30,9 @@ ${NAME}: ${OBJS}
 libft:
 	@if [ ! -d "$(LIBFT_PATH)" ]; then \
         echo "downloading libft..."; \
-    	git clone git@github.com:Sergio0227/Libft.git $(LIBFT_PATH) > /dev/null 2>&1; \
+    	git clone -b libft_original git@github.com:Sergio0227/Libft.git $(LIBFT_PATH) > /dev/null 2>&1; \
 	fi
-	@${MAKE} -C ${LIBFT_PATH} > /dev/null 2>&1
+	@${MAKE} all -C ${LIBFT_PATH} > /dev/null 2>&1
 	@echo "${GREEN}LIBFT MADE";
 
 .c.o:
@@ -40,10 +42,12 @@ libft:
 clean:
 	@${MAKE} -C ${LIBFT_PATH} clean > /dev/null 2>&1
 	@${RM} ${OBJS}
-	@echo -n "$(CYAN)[LIBFT]:$(DEF_COLOR) object files$(RED) \t => Removed!$(DEF_COLOR)\n"
+	@echo -n "$(CYAN)[LIBFT]:$(DEF_COLOR) object files$(RED) \t\t => Removed!$(DEF_COLOR)\n"
+	@echo -n "$(CYAN)[minishel]:$(DEF_COLOR) object files$(RED) \t => Removed!$(DEF_COLOR)\n"
 
-fclean:
-	${RM} ${NAME};
+
+fclean: clean
+	@${RM} ${NAME};
 	@${RM} -rf ${LIBFT_PATH}
 	@echo -n "$(CYAN)[minishell]:$(DEF_COLOR)  $(RED)    \t => Removed!$(DEF_COLOR)\n"
 	@echo -n "$(CYAN)[LIBFT]:$(DEF_COLOR)$(RED)    \t\t => Removed!$(DEF_COLOR)\n"
