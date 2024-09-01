@@ -29,7 +29,7 @@ ${NAME}: ${OBJS}
 libft:
 	if [ ! -d "$(LIBFT_PATH)" ]; then \
         echo "downloading libft..."; \
-		git clone -b libft_original git@github.com:Sergio0227/Libft.git $(LIBFT_PATH); \
+		git clone git@github.com:Sergio0227/Libft.git $(LIBFT_PATH); \
 	fi
 	${MAKE} all -C ${LIBFT_PATH}
 
