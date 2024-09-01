@@ -1,28 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gc.h                                               :+:      :+:    :+:   */
+/*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 15:19:48 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/01 17:24:14 by sandre-a         ###   ########.fr       */
+/*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
+/*   Updated: 2024/09/01 17:29:16 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GC_H
-# define GC_H
+#ifndef LEXER_H
+# define LEXER_H
 
-# include "libft.h"
-
-typedef struct s_gc
+typedef enum e_token
 {
-	void		*ptr;
-	struct s_gc	*next;
-}				t_gc;
+	PIPE,
+	HEREDOC,
+	LPR,
+	RPR,
+	AND,
+	OR,
+	APPEND,
+	OUT,
+	IN,
+	NOT,
+	END
+}					t_tokens;
 
-void			*ft_malloc(t_gc **garbage, size_t size);
-void			add_gc_node(t_gc **garbage, void *ptr);
-void			gc(t_gc **garbage);
+typedef struct s_lexer
+{
+	char			*str;
+	t_tokens		token;
+	int				i;
+	struct s_lexer	*next;
+	struct s_lexer	*prev;
+}					t_lexer;
 
 #endif

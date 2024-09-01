@@ -6,13 +6,14 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/08/29 19:05:28 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/01 17:25:49 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "lexer.h"
 # include "color.h"
 # include "gc.h"
 # include "libft.h"
