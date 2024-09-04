@@ -6,16 +6,15 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/02 14:39:54 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/04 14:46:57 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "lexer.h"
 # include "color.h"
-# include "gc.h"
+# include "lexer.h"
 # include "libft.h"
 # include <limits.h>
 # include <readline/history.h>
@@ -24,6 +23,7 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
 
@@ -32,8 +32,7 @@
 typedef struct s_shell
 {
 	char	*input;
-	t_gc	*alloc;
-	t_lexer *lexer;
+	t_lexer	*lexer;
 }			t_shell;
 
 void		prompt_loop(t_shell *m);

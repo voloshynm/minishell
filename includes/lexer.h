@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/01 17:29:16 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/02 23:04:44 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ typedef enum e_token
 	OUT,
 	IN,
 	NOT,
-	END
+	STRING,
+	COMMAND
 }					t_tokens;
 
 typedef struct s_lexer

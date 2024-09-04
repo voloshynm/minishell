@@ -6,33 +6,83 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/02 15:23:14 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:06:10 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void	init_token_list(t_shell *m)
+t_tokens	analyse_token(char *str)
 {
-
+	if (ft_strncmp(str, "|", ft_strlen(str)) == 0)
+		return (PIPE);
+	else if (ft_strncmp(str, "<<", ft_strlen(str)) == 0)
+		return (HEREDOC);
+	else if (ft_strncmp(str, "(", ft_strlen(str)) == 0)
+		return (LPR);
+	else if (ft_strncmp(str, ")", ft_strlen(str)) == 0)
+		return (RPR);
+	else if (ft_strncmp(str, "&&", ft_strlen(str)) == 0)
+		return (AND);
+	else if (ft_strncmp(str, "||", ft_strlen(str)) == 0)
+		return (OR);
+	else if (ft_strncmp(str, ">>", ft_strlen(str)) == 0)
+		return (APPEND);
+	else if (ft_strncmp(str, ">", ft_strlen(str)) == 0)
+		return (OUT);
+	else if (ft_strncmp(str, "<", ft_strlen(str)) == 0)
+		return (IN);
+	else if (ft_strncmp(str, "!", ft_strlen(str)) == 0)
+		return (NOT);
+	else 
+		return (COMMAND);
 }
 
-void	extract_token(t_shell *m)
+t_lexer *get_last_token(t_lexer *lexer)
+{
+	while (lexer->next)
+		lexer = lexer->next;
+	return (lexer);
+}
+
+void	*add_to_token_list(t_shell *m, t_lexer **lexer, char *str)
+{
+	t_lexer	*new_token;
+	t_lexer *temp;
+
+	new_token = malloc(sizeof(t_lexer));
+	new_token->str = str;
+	new_token->token = analyse_token(str);
+	new_token->next = NULL;
+    new_token->prev = NULL;
+	if (*lexer == NULL)
+		*lexer = new_token;
+	else
+	{
+		temp = *lexer;
+		temp = get_last_token(m->lexer);
+		temp->next = new_token;
+		new_token->prev = temp;
+	}
+}
+
+void	extract_tokens(t_shell *m, char *input)
 {
 	char	*str;
 	char	*start;
 	int		length;
 
-	while (m->input)
+	while (input)
 	{
-		start = m->input;
-		m->input = ft_strchr(m->input, ' ');
-		if (m->input)
-			length = (start - m->input++) * -1;
+		start = input;
+		input = ft_strchr(input, ' ');
+		if (input)
+			length = (start - input++) * -1;
 		else
 			length = ft_strlen(start);
-		str = ft_malloc(&m->alloc, sizeof(char) * length + 1);
+		str = malloc(sizeof(char) * length + 1);
 		ft_strlcpy(str, start, length + 1);
+		add_to_token_list(m, &m->lexer, str);
 	}
 }
 
@@ -40,5 +90,5 @@ void	parse_input(t_shell *m)
 {
 	if (m->input == NULL)
 		return ;
-	extract_token(m);
+	extract_tokens(m, m->input);
 }

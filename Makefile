@@ -1,5 +1,4 @@
 SRC =   main.c \
-		gc.c \
 		parser.c
 		
 OBJS = ${SRC:.c=.o}
