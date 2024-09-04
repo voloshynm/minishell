@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/04 18:45:53 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/05 00:24:05 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "color.h"
 # include "lexer.h"
 # include "libft.h"
+# include <dirent.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -23,9 +24,9 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
-# include <unistd.h>
 
 # define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
 
@@ -36,7 +37,8 @@ typedef struct s_shell
 }			t_shell;
 
 void		prompt_loop(t_shell *m);
-void		init_lexer(t_shell *m, char *input);
-void		excecute(void);
+t_lexer		*init_lexer(char *input);
+void		excecute(t_shell *m);
+void		check_dir(t_shell *m);
 
 #endif

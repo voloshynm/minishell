@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/04 19:42:30 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/05 00:28:47 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	prompt_loop(t_shell *m)
 	{
 		m->input = readline(PROMPT);
 		add_history(m->input);
-		init_lexer(m, m->input);
+		init_lexer(m->input);
+		//check_dir(m);
 		free_tokens(m);
 		count++;
 	}
@@ -55,6 +56,6 @@ int	main(void)
 
 	init_var(&m);
 	prompt_loop(&m);
-	//excecute();
+	// excecute();
 	return (0);
 }

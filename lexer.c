@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/04 19:24:12 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/05 00:26:30 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_lexer *get_last_token(t_lexer *lexer)
 	return (lexer);
 }
 
-void	*add_to_token_list(t_shell *m, t_lexer **lexer, char *str)
+void	*add_to_token_list(t_lexer **lexer, char *str)
 {
 	t_lexer	*new_token;
 	t_lexer *temp;
@@ -60,18 +60,20 @@ void	*add_to_token_list(t_shell *m, t_lexer **lexer, char *str)
 	else
 	{
 		temp = *lexer;
-		temp = get_last_token(m->lexer);
+		temp = get_last_token(*lexer);
 		temp->next = new_token;
 		new_token->prev = temp;
 	}
 }
 
-void	init_lexer(t_shell *m, char *input)
+t_lexer	*init_lexer(char *input)
 {
+	t_lexer *lexer;
 	char	*str;
 	char	*start;
 	int		length;
 
+	lexer = NULL;
 	while (input)
 	{
 		start = input;
@@ -82,6 +84,6 @@ void	init_lexer(t_shell *m, char *input)
 			length = ft_strlen(start);
 		str = malloc(sizeof(char) * length + 1);
 		ft_strlcpy(str, start, length + 1);
-		add_to_token_list(m, &m->lexer, str);
+		add_to_token_list(&lexer, str);
 	}
 }
