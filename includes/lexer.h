@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/04 15:55:37 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/04 19:16:27 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ typedef enum e_token
 	APPEND,
 	OUT,
 	IN,
-	NOT,
-	STRING,
+	NOT,	
 	COMMAND
 }					t_tokens;
 

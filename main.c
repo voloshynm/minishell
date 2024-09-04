@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/04 15:59:59 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/04 19:42:30 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	init_var(t_shell *m)
 
 void	free_tokens(t_shell *m)
 {
-	t_lexer *temp;
+	t_lexer	*temp;
 
 	free(m->input);
 	while (m->lexer)
@@ -34,9 +34,11 @@ void	free_tokens(t_shell *m)
 
 void	prompt_loop(t_shell *m)
 {
-	int count = 0;
+	int	count;
+	int	status;
 
-	while (count < 2)
+	count = 0;
+	while (count < 5)
 	{
 		m->input = readline(PROMPT);
 		add_history(m->input);
@@ -53,5 +55,6 @@ int	main(void)
 
 	init_var(&m);
 	prompt_loop(&m);
+	//excecute();
 	return (0);
 }
