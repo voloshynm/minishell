@@ -1,5 +1,5 @@
 SRC =   main.c \
-		parser.c
+		lexer.c
 		
 OBJS = ${SRC:.c=.o}
 NAME = minishell

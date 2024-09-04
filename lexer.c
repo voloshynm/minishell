@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/04 15:06:10 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:59:03 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	*add_to_token_list(t_shell *m, t_lexer **lexer, char *str)
 	}
 }
 
-void	extract_tokens(t_shell *m, char *input)
+void	init_lexer(t_shell *m, char *input)
 {
 	char	*str;
 	char	*start;
@@ -84,11 +84,4 @@ void	extract_tokens(t_shell *m, char *input)
 		ft_strlcpy(str, start, length + 1);
 		add_to_token_list(m, &m->lexer, str);
 	}
-}
-
-void	parse_input(t_shell *m)
-{
-	if (m->input == NULL)
-		return ;
-	extract_tokens(m, m->input);
 }
