@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/04 19:42:30 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/05 00:13:34 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	prompt_loop(t_shell *m)
 	{
 		m->input = readline(PROMPT);
 		add_history(m->input);
-		init_lexer(m, m->input);
+		m->lexer = init_lexer(m->input);
 		free_tokens(m);
 		count++;
 	}
