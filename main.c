@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 00:28:47 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/05 12:58:57 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,14 @@ void	init_var(t_shell *m)
 	m->lexer = NULL;
 }
 
-void	free_tokens(t_shell *m)
+void	free_tokens(t_lexer *lexer)
 {
 	t_lexer	*temp;
 
-	free(m->input);
-	while (m->lexer)
+	while (lexer)
 	{
-		temp = m->lexer;
-		m->lexer = m->lexer->next;
+		temp = lexer;
+		lexer = lexer->next;
 		free(temp->str);
 		free(temp);
 	}
@@ -38,13 +37,14 @@ void	prompt_loop(t_shell *m)
 	int	status;
 
 	count = 0;
-	while (count < 5)
+	while (count < 1)
 	{
 		m->input = readline(PROMPT);
 		add_history(m->input);
-		init_lexer(m->input);
-		//check_dir(m);
-		free_tokens(m);
+		m->lexer = init_lexer(m->input);
+		// check_dir(m);
+		free(m->input);
+		free_tokens(m->lexer);
 		count++;
 	}
 	rl_clear_history();

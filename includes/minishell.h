@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 00:24:05 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:00:34 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ typedef struct s_shell
 }			t_shell;
 
 void		prompt_loop(t_shell *m);
-t_lexer		*init_lexer(char *input);
 void		excecute(t_shell *m);
 void		check_dir(t_shell *m);
 

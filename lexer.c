@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 00:26:30 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/05 12:57:06 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ t_tokens	analyse_token(char *str)
 		return (IN);
 	else if (ft_strncmp(str, "!", ft_strlen(str)) == 0)
 		return (NOT);
-	else 
+	else
 		return (COMMAND);
 }
 
-t_lexer *get_last_token(t_lexer *lexer)
+t_lexer	*get_last_token(t_lexer *lexer)
 {
 	while (lexer->next)
 		lexer = lexer->next;
@@ -48,13 +48,13 @@ t_lexer *get_last_token(t_lexer *lexer)
 void	*add_to_token_list(t_lexer **lexer, char *str)
 {
 	t_lexer	*new_token;
-	t_lexer *temp;
+	t_lexer	*temp;
 
 	new_token = malloc(sizeof(t_lexer));
 	new_token->str = str;
 	new_token->token = analyse_token(str);
 	new_token->next = NULL;
-    new_token->prev = NULL;
+	new_token->prev = NULL;
 	if (*lexer == NULL)
 		*lexer = new_token;
 	else
@@ -69,9 +69,9 @@ void	*add_to_token_list(t_lexer **lexer, char *str)
 t_lexer	*init_lexer(char *input)
 {
 	t_lexer *lexer;
-	char	*str;
-	char	*start;
-	int		length;
+	char *str;
+	char *start;
+	int length;
 
 	lexer = NULL;
 	while (input)
@@ -86,4 +86,5 @@ t_lexer	*init_lexer(char *input)
 		ft_strlcpy(str, start, length + 1);
 		add_to_token_list(&lexer, str);
 	}
+	return (lexer);
 }
