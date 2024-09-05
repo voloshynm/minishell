@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 12:58:57 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/05 14:12:42 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	init_var(t_shell *m)
 {
 	m->input = NULL;
 	m->lexer = NULL;
+	m->path = getenv("PATH");
 }
 
 void	free_tokens(t_lexer *lexer)
@@ -42,7 +43,7 @@ void	prompt_loop(t_shell *m)
 		m->input = readline(PROMPT);
 		add_history(m->input);
 		m->lexer = init_lexer(m->input);
-		// check_dir(m);
+		check_dir(m);
 		free(m->input);
 		free_tokens(m->lexer);
 		count++;

@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:06:18 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/04 23:52:47 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/05 14:02:23 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ void	check_dir(t_shell *m)
 	}
 	if (!exists)
 		printf("%s: command not found\n", m->input);
-	else
-		excecute(m);
+	//else
+	//	excecute(m);
 }
 
 void	excecute(t_shell *m)
