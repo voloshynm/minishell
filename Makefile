@@ -1,4 +1,4 @@
-SRC =   main.c \
+SRC =	main.c \
 		lexer.c \
 		excecutor.c
 		
@@ -27,15 +27,14 @@ ${NAME}: ${OBJS}
 	${CC} ${CFLAGS} ${OBJS} -o ${NAME} -L${LIBFT_PATH} -lft -lreadline
 
 libft:
-	if [ ! -d "$(LIBFT_PATH)" ]; then \
-        echo "downloading libft..."; \
+	if [ ! -d "$(LIBFT_PATH)" ]; then	\
+		echo "downloading libft...";	\
 		git clone git@github.com:Sergio0227/Libft.git $(LIBFT_PATH); \
 	fi
 	${MAKE} all -C ${LIBFT_PATH}
 
 .c.o:
 	${CC} -g -c $< -o ${<:.c=.o}
-
 
 clean:
 	${MAKE} -C ${LIBFT_PATH} clean 

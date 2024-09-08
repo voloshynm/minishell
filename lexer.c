@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 00:23:11 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/08 21:29:14 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,6 @@ t_tokens	analyse_token(char *str)
 		return (OUT);
 	else if (ft_strncmp(str, "<", len) == 0)
 		return (IN);
-	else if (ft_strncmp(str, "(", len) == 0)
-		return (LPR);
-	else if (ft_strncmp(str, ")", len) == 0)
-		return (RPR);
-	else if (ft_strncmp(str, "$?", len) == 0)
-		return (EX_STAT);
 	else if (ft_strncmp(str, "$", len) == 0)
 		return (D_SIGN);
 	else 
@@ -77,7 +71,7 @@ void	tokenize_non_quotes(t_lexer *lexer, char *input)
 	char	*start;
 	int		length;
 
-	while (*input)
+	while (input)
 	{
 		start = input;
 		input = ft_strchr(input, ' ');

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 00:13:34 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/08 20:42:42 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	prompt_loop(t_shell *m)
 	while (count < 5)
 	{
 		m->input = readline(PROMPT);
+		printf("%s \n", m->input);
 		add_history(m->input);
 		m->lexer = init_lexer(m->input);
 		free_tokens(m);
