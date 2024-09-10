@@ -6,11 +6,46 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/08 21:29:14 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/10 22:07:55 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
+
+char	*process_arg(char *input, t_lexer **lexer, char c)
+{
+	char	*input_start;
+	char	*token_start;
+	char	*token;
+	int		token_len;
+
+	input_start = input;
+	while (*input)
+	{
+		if (input - input_start == 0 && (*input == '>' || *input == '<'
+			|| *input == '|' || *input == '&'))
+			{
+				printf("Error input");
+				exit(0);
+			}
+		if (*input == c)
+			token_len = input - input_start;
+			token = ft_calloc(1, token_len);
+			add_to_token_list(lexer, ft_strlcpy(token, input, token_len + 1));
+			if (*(++input) == c)
+			{
+				token = ft_calloc(1, 1);
+				add_to_token_list(lexer, ft_strlcpy(token, input - 2 , 2));
+			}
+			else
+			{
+				token = ft_calloc(1, 2);
+				add_to_token_list(lexer, ft_strlcpy(token, input - 1 , 1));
+			}
+		break;
+	}
+	
+}
 
 t_tokens	analyse_token(char *str)
 {
