@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/11 20:24:05 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:27:50 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 t_tokens	token_type(char *str)
 {
+	if (str[0] == '\'')
+		return (S_QUOTE);
+	if (str[0] == '\"')
+		return (D_QUOTE);
 	if (ft_strncmp(str, "|", ft_strlen(str)) == 0)
 		return (PIPE);
 	else if (ft_strncmp(str, ">", ft_strlen(str)) == 0)
@@ -132,17 +136,10 @@ char	*handle_quotes(char *input)
 	int		count;
 	char	quote_type;
 
-	if (*input == '\'')
-		quote_type = '\'';
-	else
-		quote_type = '\"';
+	quote_type = *input;
 	count = count_quotes(input, quote_type);
-	while (count - 1)
-	{
-		input++;
-		input = ft_strchr(input, quote_type);
-		count--;
-	}
+	input++;
+	input = ft_strchr(input, quote_type);
 	return (input);
 }
 
@@ -159,7 +156,6 @@ char	*tokenize_input(char **input)
 		if (**input == '\'' || **input == '\"')
 		{
 			*input = handle_quotes(*input);
-			start++;
 		}
 	}
 	if (*input)
@@ -176,7 +172,7 @@ void	analyse_tokens(t_lexer **lexer)
 	t_lexer	*temp;
 
 	temp = *lexer;
-	while (*lexer)
+	while ((*lexer)->next)
 	{
 		if (((*lexer)->token == REDIR_IN && (*lexer)->next->token == REDIR_IN)
 			|| ((*lexer)->token == REDIR_OUT
@@ -210,7 +206,7 @@ t_lexer	*init_lexer(char *input)
 		token = tokenize_input(&input);
 		add_to_token_list(&lexer, token);
 		if (input)
-			if (ft_strchr("><|", *(input - 1)))
+			if (ft_strchr(">|<", *(input - 1)))
 				add_to_token_list(&lexer, ft_strndup((input - 1), 1));
 	}
 	analyse_tokens(&lexer);

@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/11 20:04:57 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:25:22 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ typedef enum e_token
 	REDIR_OUT,
 	REDIR_APPEND,
 	REDIR_HEREDOC,
-	STRING
+	S_QUOTE,
+	D_QUOTE
 }					t_tokens;
 
 typedef struct s_lexer
