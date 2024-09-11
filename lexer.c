@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/11 21:27:50 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/12 00:17:32 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,76 @@ void	analyse_tokens(t_lexer **lexer)
 	}
 }
 
+void	remove_first_char(t_lexer *lexer)
+{
+	char	*old_str;
+	char	*new_str;
+
+	old_str = lexer->str;
+	new_str = ft_strdup(++old_str);
+	free(lexer->str);
+	lexer->str = new_str;
+}
+
+char	*replace_env_arg(char *s, t_lexer *lexer)
+{
+	char	*new_str;
+	char	*tmp_1;
+	char	*tmp_2;
+	char	*start;
+
+	start = s;
+	while (ft_isalnum(*s))
+//	while (*s > 65 && *s < 90)
+//	somehow I cannot check for only UPPERCASE, wtf. the pointer doesnt move thus the segfault fir getenv
+	{
+//		printf("DBG: *s %c\n", *s);
+		s++;
+	}
+	tmp_1 = ft_strndup(start, s - start);
+//	printf("DBG: s - 1 %s\n", s - 1);
+//	printf("DBG: tmp_1 %s\n", tmp_1);
+	tmp_2 = getenv(tmp_1);
+//	printf("DBG: tmp_2 %s\n", tmp_2);
+	if (!tmp_2)
+	{
+		printf("Environmental variable '$%s' does NOT exist\n", tmp_1);
+		free(tmp_1);
+		exit(0);
+	}
+	free(tmp_1);
+	tmp_1 = ft_strjoin(tmp_2, ++s);
+	tmp_2 = ft_strndup(lexer->str, start - lexer->str);
+	new_str = ft_strjoin(tmp_2, tmp_1);
+	free(tmp_1);
+	free(tmp_2);
+	return (new_str);
+}
+
+void	process_env_arg(t_lexer *lexer)
+{
+	char	c;
+	char	*s;
+	
+	c = *lexer->str;
+	if (c == '\'' || c == '\"')
+	{
+		remove_first_char(lexer);
+		if (c == '\'')
+			return ;
+	}
+	s = lexer->str;
+	while (*s)
+	{
+		if (*s == '$' && ft_isalnum(*(s + 1)))
+		{
+			lexer->str = replace_env_arg(++s, lexer);
+			return;
+		}
+		s++;
+	}
+}
+
 t_lexer	*init_lexer(char *input)
 {
 	t_lexer	*lexer;
@@ -211,5 +281,12 @@ t_lexer	*init_lexer(char *input)
 	}
 	analyse_tokens(&lexer);
 	lexer = get_first_token(lexer);
+	t_lexer	*tmp = lexer;
+	while (tmp)
+	{
+		process_env_arg(tmp);
+		printf("TOKEN: %s\n", tmp->str);
+		tmp = tmp->next;
+	}
 	return (lexer);
 }
