@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 00:14:47 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:09:09 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define ERR_PIPE			"incomplete pipe"
 */
 
-typedef enum e_token
+typedef enum	e_token
 {
 	PIPE,
 	OR,
@@ -38,18 +38,15 @@ typedef enum e_token
 	APPEND,
 	OUT,
 	IN,
-	LPR,
-	RPR,
-	EX_STAT,
-	D_SIGN,
 	COMMAND,
-	ARG
-}					t_tokens;
+	S_QUOTE,
+	D_QUOTE
+}				t_token;
 
 typedef struct s_lexer
 {
 	char			*str;
-	t_tokens		token;
+	t_token			token;
 	int				i;
 	struct s_lexer	*next;
 	struct s_lexer	*prev;

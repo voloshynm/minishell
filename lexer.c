@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/10 22:07:55 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:09:37 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*process_arg(char *input, t_lexer **lexer, char c)
 	
 }
 
-t_tokens	analyse_token(char *str)
+t_token	analyse_token(char *str)
 {
 	int	len;
 
@@ -66,16 +66,21 @@ t_tokens	analyse_token(char *str)
 		return (OUT);
 	else if (ft_strncmp(str, "<", len) == 0)
 		return (IN);
-	else if (ft_strncmp(str, "$", len) == 0)
-		return (D_SIGN);
 	else 
 		return (COMMAND);
 }
 
-t_lexer *get_last_token(t_lexer *lexer)
+t_lexer	*get_last_token(t_lexer *lexer)
 {
 	while (lexer->next)
 		lexer = lexer->next;
+	return (lexer);
+}
+
+t_lexer	*get_first_token(t_lexer *lexer)
+{
+	while (lexer && lexer->prev)
+		lexer = lexer->prev;
 	return (lexer);
 }
 

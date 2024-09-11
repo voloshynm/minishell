@@ -4,7 +4,7 @@
 typedef struct s_tree_node
 {
 	char			*str;
-	t_tokens		token;
+	t_token		token;
 	int				i;
 	struct s_tree_node	*next;
 	struct s_tree_node	*prev;
