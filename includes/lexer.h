@@ -3,47 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 00:14:47 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:04:57 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-# define WHITESPACES		" \t\v\n"
-# define QUOT_MARKS			"\'\""
-/*
-# define ERR_SYNTAX			"syntax error"
-# define ERR_SYNTAX_EXIT	2
+# include "libft.h"
+# include <stdbool.h>
+# include <stdio.h>
 
-# define ERR_UNO_BRACKET	"unopened brackets"
-# define ERR_UNC_BRACKET	"unclosed brackets"
-# define ERR_EMPTY_BRACKET	"empty brackets"
-# define ERR_REDIR			"invalid redirection"
-# define ERR_QUOTE			"unclosed quotation mark"
-# define ERR_LIST			"incomplete command list"
-# define ERR_MISS_OP		"missing operator"
-# define ERR_PIPE			"incomplete pipe"
+/*
+**     WORD,        	Represents commands and arguments (grep, cat, echo)
+**     PIPE,          Represents the pipe operator (|)
+**     REDIR_IN,      Represents input redirection (<)
+**     REDIR_OUT,     Represents output redirection (>)
+**     REDIR_APPEND,  Represents append redirection (>>)
+**     REDIR_HEREDOC, Represents heredoc redirection (<<)
+**     ENV_VAR,		Represents environment variable (VAR=value)
 */
 
 typedef enum e_token
 {
+	WORD,
 	PIPE,
-	OR,
-	AND,
-	HEREDOC,
-	APPEND,
-	OUT,
-	IN,
-	LPR,
-	RPR,
-	EX_STAT,
-	D_SIGN,
-	COMMAND,
-	ARG
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	REDIR_HEREDOC,
+	STRING
 }					t_tokens;
 
 typedef struct s_lexer
@@ -55,6 +47,9 @@ typedef struct s_lexer
 	struct s_lexer	*prev;
 }					t_lexer;
 
-t_lexer		*init_lexer(char *input);
+t_lexer				*get_last_token(t_lexer *lexer);
+t_lexer				*get_first_token(t_lexer *lexer);
+
+t_lexer				*init_lexer(char *input);
 
 #endif

@@ -3,63 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 00:23:11 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:24:05 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "includes/lexer.h"
 
-t_tokens	analyse_token(char *str)
+t_tokens	token_type(char *str)
 {
-	int	len;
-
-	len = ft_strlen(str);
-	if (ft_strncmp(str, "|", len) == 0)
+	if (ft_strncmp(str, "|", ft_strlen(str)) == 0)
 		return (PIPE);
-	else if (ft_strncmp(str, "||", len) == 0)
-		return (OR);
-	else if (ft_strncmp(str, "&&", len) == 0)
-		return (AND);
-	else if (ft_strncmp(str, "<<", len) == 0)
-		return (HEREDOC);
-	else if (ft_strncmp(str, ">>", len) == 0)
-		return (APPEND);
-	else if (ft_strncmp(str, ">", len) == 0)
-		return (OUT);
-	else if (ft_strncmp(str, "<", len) == 0)
-		return (IN);
-	else if (ft_strncmp(str, "(", len) == 0)
-		return (LPR);
-	else if (ft_strncmp(str, ")", len) == 0)
-		return (RPR);
-	else if (ft_strncmp(str, "$?", len) == 0)
-		return (EX_STAT);
-	else if (ft_strncmp(str, "$", len) == 0)
-		return (D_SIGN);
-	else 
-		return (COMMAND);
+	else if (ft_strncmp(str, ">", ft_strlen(str)) == 0)
+		return (REDIR_OUT);
+	else if (ft_strncmp(str, "<", ft_strlen(str)) == 0)
+		return (REDIR_IN);
+	else if (ft_strncmp(str, "<<", ft_strlen(str)) == 0)
+		return (REDIR_HEREDOC);
+	else if (ft_strncmp(str, ">>", ft_strlen(str)) == 0)
+		return (REDIR_APPEND);
+	else
+		return (WORD);
 }
 
-t_lexer *get_last_token(t_lexer *lexer)
+t_lexer	*get_last_token(t_lexer *lexer)
 {
 	while (lexer->next)
 		lexer = lexer->next;
 	return (lexer);
 }
 
-void	*add_to_token_list(t_lexer **lexer, char *str)
+t_lexer	*get_first_token(t_lexer *lexer)
+{
+	while (lexer && lexer->prev)
+		lexer = lexer->prev;
+	return (lexer);
+}
+
+void	add_to_token_list(t_lexer **lexer, char *str)
 {
 	t_lexer	*new_token;
-	t_lexer *temp;
+	t_lexer	*temp;
 
+	if (!*str)
+		return ;
 	new_token = malloc(sizeof(t_lexer));
 	new_token->str = str;
-	new_token->token = analyse_token(str);
+	new_token->token = token_type(str);
 	new_token->next = NULL;
-    new_token->prev = NULL;
+	new_token->prev = NULL;
 	if (*lexer == NULL)
 		*lexer = new_token;
 	else
@@ -71,59 +65,155 @@ void	*add_to_token_list(t_lexer **lexer, char *str)
 	}
 }
 
-void	tokenize_non_quotes(t_lexer *lexer, char *input)
+char	*ft_strpbrk(const char *s, const char *c)
+{
+	const char	*str = s;
+	int			i;
+
+	while (*str)
+	{
+		i = 0;
+		while (c[i])
+		{
+			if (*str == c[i])
+				return ((char *)str);
+			i++;
+		}
+		str++;
+	}
+	return (NULL);
+}
+
+char	*ft_strndup(const char *s, size_t n)
+{
+	size_t	i;
+	char	*t_s;
+	char	*new_str;
+	char	*start;
+
+	t_s = (char *)s;
+	i = 0;
+	new_str = malloc((n + 1) * sizeof(char));
+	if (!new_str)
+		return (NULL);
+	start = new_str;
+	while (*t_s && i < n)
+	{
+		*new_str = *t_s;
+		new_str++;
+		t_s++;
+		i++;
+	}
+	*new_str = 0;
+	return (start);
+}
+
+int	count_quotes(char *input, char quote_type)
+{
+	int	count;
+
+	count = 0;
+	while (*input)
+	{
+		if (*input == quote_type)
+			count++;
+		input++;
+	}
+	if (count % 2 == 1)
+	{
+		printf("Invalid quote usage\n");
+		exit(EXIT_FAILURE);
+	}
+	return (count);
+}
+
+char	*handle_quotes(char *input)
+{
+	int		count;
+	char	quote_type;
+
+	if (*input == '\'')
+		quote_type = '\'';
+	else
+		quote_type = '\"';
+	count = count_quotes(input, quote_type);
+	while (count - 1)
+	{
+		input++;
+		input = ft_strchr(input, quote_type);
+		count--;
+	}
+	return (input);
+}
+
+char	*tokenize_input(char **input)
 {
 	char	*str;
 	char	*start;
 	int		length;
 
-	while (*input)
+	start = *input;
+	*input = ft_strpbrk(*input, " >|<\'\"");
+	if (*input)
 	{
-		start = input;
-		input = ft_strchr(input, ' ');
-		if (input)
-			length = (start - input++) * -1;
-		else
-			length = ft_strlen(start);
-		str = malloc(sizeof(char) * length + 1);
-		ft_strlcpy(str, start, length + 1);
-		add_to_token_list(&lexer, str);
+		if (**input == '\'' || **input == '\"')
+		{
+			*input = handle_quotes(*input);
+			start++;
+		}
+	}
+	if (*input)
+		length = (start - (*input)++) * -1;
+	else
+		length = ft_strlen(start);
+	str = malloc(sizeof(char) * length + 1);
+	ft_strlcpy(str, start, length + 1);
+	return (str);
+}
+
+void	analyse_tokens(t_lexer **lexer)
+{
+	t_lexer	*temp;
+
+	temp = *lexer;
+	while (*lexer)
+	{
+		if (((*lexer)->token == REDIR_IN && (*lexer)->next->token == REDIR_IN)
+			|| ((*lexer)->token == REDIR_OUT
+				&& (*lexer)->next->token == REDIR_OUT))
+		{
+			free((*lexer)->str);
+			if ((*lexer)->next->token == REDIR_IN)
+				(*lexer)->str = ft_strdup("<<");
+			else
+				(*lexer)->str = ft_strdup(">>");
+			temp = (*lexer)->next->next;
+			free((*lexer)->next->str);
+			free((*lexer)->next);
+			(*lexer)->next = temp;
+			(*lexer)->token = token_type((*lexer)->str);
+			temp->prev = *lexer;
+			return ;
+		}
+		*lexer = (*lexer)->next;
 	}
 }
 
-// void	tokenize_single_quotes(t_shell *m, char *input)
-// {
-// 	char	*tmp;
-// 	char	*tmp_start;
-
-// 	tmp_start = ft_strdup(input);
-// 	tmp = tmp_start;
-// 	while(*tmp != QUOT_MARKS)
-// 		tmp++;
-// 	if(*tmp == '\'')
-// 	{
-
-// 	}
-	
-// }
-
-// added other WHITESPACES (eg \t)
 t_lexer	*init_lexer(char *input)
 {
-	char	*str;
-	char	*start;
-	int		length;
 	t_lexer	*lexer;
+	char	*token;
 
 	lexer = NULL;
 	while (input)
 	{
-		// if (*input == '\'')
-		// 	tokenize_single_quotes(lexer, input);
-		// else if (*input == '\"')
-		// 	tokenize_double_quotes(lexer, input);
-		// else
-			tokenize_non_quotes(lexer, input);
+		token = tokenize_input(&input);
+		add_to_token_list(&lexer, token);
+		if (input)
+			if (ft_strchr("><|", *(input - 1)))
+				add_to_token_list(&lexer, ft_strndup((input - 1), 1));
 	}
+	analyse_tokens(&lexer);
+	lexer = get_first_token(lexer);
 	return (lexer);
 }
