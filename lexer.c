@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/12 11:43:51 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/12 12:53:45 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,8 @@ void	analyse_tokens(t_lexer **lexer)
 			free((*lexer)->next);
 			(*lexer)->next = temp;
 			(*lexer)->token = token_type((*lexer)->str);
-			temp->prev = *lexer;
+			if (temp)				/////FIXXXXXXX
+				temp->prev = *lexer;
 			return ;
 		}
 		*lexer = (*lexer)->next;
