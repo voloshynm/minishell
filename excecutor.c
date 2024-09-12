@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:06:18 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/05 21:03:45 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/11 23:58:18 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,30 @@
 
 int	excecute(t_exec *exec)
 {
-	pid_t	pid;
+    pid_t	pid;
+    int     status;
 
-	char *const argv[] = {
-		"echo",          // argv[0]: The name of the program (conventionally)
-		"-n",            // argv[1]: Argument to the program
-		"hello world\n", // argv[2]: Argument to the program
-		NULL             // Must be terminated by NULL
-	};
-	pid = fork();
-	if (pid == 0)
-		execve(exec->pathname, argv, NULL);
-	return (1);
+    char *const argv[] = {
+        "echo",          // argv[0]: program name
+        "hello world",   // argv[2]: text to print
+        NULL             // Must be terminated by NULL
+    };
+
+    pid = fork();
+    if (pid == 0) // Child process
+    {
+        execve(exec->pathname, argv, NULL);
+        perror("execve failed");
+        exit(1);
+    }
+    else if (pid > 0)
+        waitpid(pid, &status, 0);
+    else
+    {
+        perror("fork failed");
+        return -1;
+    }
+    return 1;
 }
 
 char	*builtin_exists(t_exec *exec)
