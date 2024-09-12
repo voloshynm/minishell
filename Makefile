@@ -1,6 +1,6 @@
 SRC =   main.c \
 		lexer.c \
-		excecutor.c \
+		executor.c \
 		string_utils.c
 		
 OBJS = ${SRC:.c=.o}

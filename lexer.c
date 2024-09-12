@@ -3,21 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/12 12:53:45 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:58:08 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/lexer.h"
 
-t_tokens	token_type(char *str)
+t_token	token_type(char *str)
 {
-	if (str[0] == '\'')
-		return (S_QUOTE);
-	if (str[0] == '\"')
-		return (D_QUOTE);
 	if (ft_strncmp(str, "|", ft_strlen(str)) == 0)
 		return (PIPE);
 	else if (ft_strncmp(str, ">", ft_strlen(str)) == 0)
@@ -54,6 +50,11 @@ void	add_to_token_list(t_lexer **lexer, char *str)
 	if (!*str)
 		return ;
 	new_token = malloc(sizeof(t_lexer));
+	if (new_token == NULL)
+	{
+		printf("Alloc error during tokenization");
+		exit(EXIT_FAILURE);
+	}
 	new_token->str = str;
 	new_token->token = token_type(str);
 	new_token->next = NULL;
@@ -68,6 +69,7 @@ void	add_to_token_list(t_lexer **lexer, char *str)
 		new_token->prev = temp;
 	}
 }
+
 /*
 ** Checks if quotes were properly closed, besides when its
  	single quotes inside of double quotes, or inversed.
@@ -81,7 +83,7 @@ char	*handle_quotes(char *input)
 
 	count = 0;
 	quote_type = *input;
-	last_quote = input;  
+	last_quote = input;
 	while (*input)
 	{
 		if (*input == quote_type)
@@ -95,7 +97,7 @@ char	*handle_quotes(char *input)
 	}
 	last_quote++;
 	last_quote = ft_strchr(last_quote, quote_type);
-	return last_quote;
+	return (last_quote);
 }
 
 char	*tokenize_input(char **input)
@@ -116,6 +118,11 @@ char	*tokenize_input(char **input)
 	else
 		length = ft_strlen(start);
 	str = malloc(sizeof(char) * length + 1);
+	if (str == NULL)
+	{
+		printf("Alloc error during tokenization");
+		exit(EXIT_FAILURE);
+	}
 	ft_strlcpy(str, start, length + 1);
 	return (str);
 }
@@ -164,6 +171,14 @@ void	remove_first_char(t_lexer *lexer)
 	lexer->str = new_str;
 }
 
+/*
+**	Pointer *s shows start of the name of variable. After moving till the end  
+	of UPPER letters. Upon retrieving non-UPPER, it gets the value of variable
+	adds whatever left after the name and stores into tmp1. From lexer->str it
+	retrieves the chars before $ sign into tmp1. Then it joins tmp2 and tmp1
+	in fact replacing the name of variable with the value.
+*/
+
 char	*replace_env_arg(char *s, t_lexer *lexer)
 {
 	char	*new_str;
@@ -172,23 +187,15 @@ char	*replace_env_arg(char *s, t_lexer *lexer)
 	char	*start;
 
 	start = s;
-	while (ft_isalnum(*s))
-//	while (*s > 65 && *s < 90)
-//	somehow I cannot check for only UPPERCASE, wtf. the pointer doesnt move thus the segfault fir getenv
-	{
-//		printf("DBG: *s %c\n", *s);
+	while (*s >= 'A' && *s <= 'Z')
 		s++;
-	}
 	tmp_1 = ft_strndup(start, s - start);
-//	printf("DBG: s - 1 %s\n", s - 1);
-//	printf("DBG: tmp_1 %s\n", tmp_1);
 	tmp_2 = getenv(tmp_1);
-//	printf("DBG: tmp_2 %s\n", tmp_2);
 	if (!tmp_2)
 	{
 		printf("Environmental variable '$%s' does NOT exist\n", tmp_1);
 		free(tmp_1);
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
 	free(tmp_1);
 	tmp_1 = ft_strjoin(tmp_2, ++s);
@@ -203,7 +210,7 @@ void	process_env_arg(t_lexer *lexer)
 {
 	char	c;
 	char	*s;
-	
+
 	c = *lexer->str;
 	if (c == '\'' || c == '\"')
 	{
@@ -217,11 +224,12 @@ void	process_env_arg(t_lexer *lexer)
 		if (*s == '$' && ft_isalnum(*(s + 1)))
 		{
 			lexer->str = replace_env_arg(++s, lexer);
-			return;
+			return ;
 		}
 		s++;
 	}
 }
+
 /*
 ** Goes through the input to split it by token, ft_strchr return the position
 	of the found token **TOKENIZE_INPUT** split using (SPACE, >, <, |, ", ')
@@ -232,6 +240,7 @@ void	process_env_arg(t_lexer *lexer)
 t_lexer	*init_lexer(char *input)
 {
 	t_lexer	*lexer;
+	t_lexer	*tmp;
 	char	*token;
 
 	lexer = NULL;
@@ -245,7 +254,7 @@ t_lexer	*init_lexer(char *input)
 	}
 	analyse_tokens(&lexer);
 	lexer = get_first_token(lexer);
-	t_lexer	*tmp = lexer;
+	tmp = lexer;
 	while (tmp)
 	{
 		process_env_arg(tmp);
