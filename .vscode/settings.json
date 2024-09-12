@@ -1,9 +1,0 @@
-{
-	"files.associations": {
-		"*.ejs": "html",
-		"get_next_line.h": "c",
-		"cstdio": "c",
-		"minishell.h": "c",
-		"libft.h": "c"
-	}
-}
