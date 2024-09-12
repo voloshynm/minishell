@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/12 00:17:32 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/12 11:43:51 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,55 +68,20 @@ void	add_to_token_list(t_lexer **lexer, char *str)
 		new_token->prev = temp;
 	}
 }
-
-char	*ft_strpbrk(const char *s, const char *c)
+/*
+** Checks if quotes were properly closed, besides when its
+ 	single quotes inside of double quotes, or inversed.
+** Return a pointer to the closing quote of the String
+*/
+char	*handle_quotes(char *input)
 {
-	const char	*str = s;
-	int			i;
-
-	while (*str)
-	{
-		i = 0;
-		while (c[i])
-		{
-			if (*str == c[i])
-				return ((char *)str);
-			i++;
-		}
-		str++;
-	}
-	return (NULL);
-}
-
-char	*ft_strndup(const char *s, size_t n)
-{
-	size_t	i;
-	char	*t_s;
-	char	*new_str;
-	char	*start;
-
-	t_s = (char *)s;
-	i = 0;
-	new_str = malloc((n + 1) * sizeof(char));
-	if (!new_str)
-		return (NULL);
-	start = new_str;
-	while (*t_s && i < n)
-	{
-		*new_str = *t_s;
-		new_str++;
-		t_s++;
-		i++;
-	}
-	*new_str = 0;
-	return (start);
-}
-
-int	count_quotes(char *input, char quote_type)
-{
-	int	count;
+	int		count;
+	char	quote_type;
+	char	*last_quote;
 
 	count = 0;
+	quote_type = *input;
+	last_quote = input;  
 	while (*input)
 	{
 		if (*input == quote_type)
@@ -128,19 +93,9 @@ int	count_quotes(char *input, char quote_type)
 		printf("Invalid quote usage\n");
 		exit(EXIT_FAILURE);
 	}
-	return (count);
-}
-
-char	*handle_quotes(char *input)
-{
-	int		count;
-	char	quote_type;
-
-	quote_type = *input;
-	count = count_quotes(input, quote_type);
-	input++;
-	input = ft_strchr(input, quote_type);
-	return (input);
+	last_quote++;
+	last_quote = ft_strchr(last_quote, quote_type);
+	return last_quote;
 }
 
 char	*tokenize_input(char **input)
@@ -154,9 +109,7 @@ char	*tokenize_input(char **input)
 	if (*input)
 	{
 		if (**input == '\'' || **input == '\"')
-		{
 			*input = handle_quotes(*input);
-		}
 	}
 	if (*input)
 		length = (start - (*input)++) * -1;
@@ -195,6 +148,10 @@ void	analyse_tokens(t_lexer **lexer)
 	}
 }
 
+/*
+**	Removes first quote str[0] from a string used
+	to determinate the token type
+*/
 void	remove_first_char(t_lexer *lexer)
 {
 	char	*old_str;
@@ -264,7 +221,13 @@ void	process_env_arg(t_lexer *lexer)
 		s++;
 	}
 }
-
+/*
+** Goes through the input to split it by token, ft_strchr return the position
+	of the found token **TOKENIZE_INPUT** split using (SPACE, >, <, |, ", ')
+	(QUOTES WILL THAN HAVE A DIFFERENT TREATMENT)
+** FT_STRCHR will determinate the type of TOKEN > < or | and then its 
+	added to the token list. 
+*/
 t_lexer	*init_lexer(char *input)
 {
 	t_lexer	*lexer;

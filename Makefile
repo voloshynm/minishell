@@ -1,6 +1,7 @@
 SRC =   main.c \
 		lexer.c \
-		excecutor.c
+		excecutor.c \
+		string_utils.c
 		
 OBJS = ${SRC:.c=.o}
 NAME = minishell

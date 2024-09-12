@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 15:31:19 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/10 16:22:27 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/12 10:13:12 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,10 @@ t_list				*ft_lstnew(void *content);
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
 void				free_ft_split(char **strings);
+/*
+** Defined in string_utils.c
+*/
+char				*ft_strpbrk(const char *s, const char *c);
+char				*ft_strndup(const char *s, size_t n);
 
 #endif
