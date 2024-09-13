@@ -99,6 +99,6 @@ int	command_exists(t_exec *exec)
 	}
 	else
 		printf("%s: command not found\n", exec->argv[0]);
-	excecute(exec);
+	//excecute(exec);
 	return (1);
 }

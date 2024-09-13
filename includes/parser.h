@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:31 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/12 16:51:10 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/13 09:42:46 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct	s_command
 	int		fd_out;
 }				t_command;
 
-t_parser	*init_parser(t_lexer *lexer);
+t_parser	*init_parser(t_lexer **lexer);
+
 
 #endif

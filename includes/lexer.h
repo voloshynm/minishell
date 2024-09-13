@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/12 17:04:07 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/13 09:53:14 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ typedef enum e_token
 {
 	WORD,
 	PIPE,
-	REDIR_IN,
-	REDIR_OUT,
-	REDIR_APPEND,
-	REDIR_HEREDOC,
+	IN,
+	OUT,
+	APPEND,
+	HEREDOC,
+	AND,
+	OR
 }					t_token;
 
 /*

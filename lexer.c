@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/12 16:58:08 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/13 10:18:00 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,17 @@ t_token	token_type(char *str)
 	if (ft_strncmp(str, "|", ft_strlen(str)) == 0)
 		return (PIPE);
 	else if (ft_strncmp(str, ">", ft_strlen(str)) == 0)
-		return (REDIR_OUT);
+		return (OUT);
 	else if (ft_strncmp(str, "<", ft_strlen(str)) == 0)
-		return (REDIR_IN);
+		return (IN);
 	else if (ft_strncmp(str, "<<", ft_strlen(str)) == 0)
-		return (REDIR_HEREDOC);
+		return (HEREDOC);
 	else if (ft_strncmp(str, ">>", ft_strlen(str)) == 0)
-		return (REDIR_APPEND);
+		return (APPEND);
+	else if (ft_strncmp(str, "&&", ft_strlen(str)) == 0)
+		return (AND);
+	else if (ft_strncmp(str, "||", ft_strlen(str)) == 0)
+		return (OR);
 	else
 		return (WORD);
 }
@@ -72,7 +76,7 @@ void	add_to_token_list(t_lexer **lexer, char *str)
 
 /*
 ** Checks if quotes were properly closed, besides when its
- 	single quotes inside of double quotes, or inversed.
+	single quotes inside of double quotes, or inversed.
 ** Return a pointer to the closing quote of the String
 */
 char	*handle_quotes(char *input)
@@ -107,7 +111,7 @@ char	*tokenize_input(char **input)
 	int		length;
 
 	start = *input;
-	*input = ft_strpbrk(*input, " >|<\'\"");
+	*input = ft_strpbrk(*input, " >|<&\'\"");
 	if (*input)
 	{
 		if (**input == '\'' || **input == '\"')
@@ -127,30 +131,42 @@ char	*tokenize_input(char **input)
 	return (str);
 }
 
+void join_same_tokens(t_lexer **lexer)
+{
+	if ((*lexer)->next->token == IN)
+		(*lexer)->str = ft_strdup("<<");
+	else if ((*lexer)->next->token == OUT)
+		(*lexer)->str = ft_strdup(">>");
+	else if ((*lexer)->next->token == PIPE)
+		(*lexer)->str = ft_strdup("||");
+	else 
+	 	(*lexer)->str = ft_strdup("&&");
+
+}
+
 void	analyse_tokens(t_lexer **lexer)
 {
 	t_lexer	*temp;
 
 	temp = *lexer;
-	while ((*lexer)->next)
-	{
-		if (((*lexer)->token == REDIR_IN && (*lexer)->next->token == REDIR_IN)
-			|| ((*lexer)->token == REDIR_OUT
-				&& (*lexer)->next->token == REDIR_OUT))
+	while (*lexer)
+	{	
+		if (!(*lexer)->next)
+			break;
+		if (((*lexer)->token == IN && (*lexer)->next->token == IN)
+			|| ((*lexer)->token == OUT && (*lexer)->next->token == OUT) 
+			|| ((*lexer)->token == PIPE && (*lexer)->next->token == PIPE) 
+			|| ((*lexer)->str[0] == '&' && (*lexer)->next->str[0] == '&'))
 		{
 			free((*lexer)->str);
-			if ((*lexer)->next->token == REDIR_IN)
-				(*lexer)->str = ft_strdup("<<");
-			else
-				(*lexer)->str = ft_strdup(">>");
+			join_same_tokens(lexer);
 			temp = (*lexer)->next->next;
 			free((*lexer)->next->str);
 			free((*lexer)->next);
 			(*lexer)->next = temp;
 			(*lexer)->token = token_type((*lexer)->str);
-			if (temp)				/////FIXXXXXXX
+			if (temp) /////FIXXXXXXX
 				temp->prev = *lexer;
-			return ;
 		}
 		*lexer = (*lexer)->next;
 	}
@@ -172,7 +188,7 @@ void	remove_first_char(t_lexer *lexer)
 }
 
 /*
-**	Pointer *s shows start of the name of variable. After moving till the end  
+**	Pointer *s shows start of the name of variable. After moving till the end
 	of UPPER letters. Upon retrieving non-UPPER, it gets the value of variable
 	adds whatever left after the name and stores into tmp1. From lexer->str it
 	retrieves the chars before $ sign into tmp1. Then it joins tmp2 and tmp1
@@ -234,13 +250,13 @@ void	process_env_arg(t_lexer *lexer)
 ** Goes through the input to split it by token, ft_strchr return the position
 	of the found token **TOKENIZE_INPUT** split using (SPACE, >, <, |, ", ')
 	(QUOTES WILL THAN HAVE A DIFFERENT TREATMENT)
-** FT_STRCHR will determinate the type of TOKEN > < or | and then its 
-	added to the token list. 
+** FT_STRCHR will determinate the type of TOKEN > < or | and then its
+	added to the token list.
 */
 t_lexer	*init_lexer(char *input)
 {
 	t_lexer	*lexer;
-	t_lexer	*tmp;
+	t_lexer	*lexer_start;
 	char	*token;
 
 	lexer = NULL;
@@ -249,17 +265,16 @@ t_lexer	*init_lexer(char *input)
 		token = tokenize_input(&input);
 		add_to_token_list(&lexer, token);
 		if (input)
-			if (ft_strchr(">|<", *(input - 1)))
+			if (ft_strchr(">|<&", *(input - 1)))
 				add_to_token_list(&lexer, ft_strndup((input - 1), 1));
 	}
+	lexer_start = lexer;
 	analyse_tokens(&lexer);
-	lexer = get_first_token(lexer);
-	tmp = lexer;
-	while (tmp)
+	while (lexer_start)
 	{
-		process_env_arg(tmp);
-		printf("TOKEN: %s\n", tmp->str);
-		tmp = tmp->next;
+		process_env_arg(lexer_start);
+		printf("TOKEN: %s\n", lexer_start->str);
+		lexer_start = lexer_start->next;
 	}
 	return (lexer);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/12 17:09:20 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/13 09:42:01 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ t_parser	*init_parser(t_lexer **lexer)
 		printf("Parse error near '|'\n");
 		exit(EXIT_FAILURE);
 	}
-	while (l)
-	{
-		if (l->token == PIPE)
-	}
+	// while (l)
+	// {
+	// 	if (l->token == PIPE)
+	// }
 }
