@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/13 10:18:00 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/16 18:02:03 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/lexer.h"
+
+void	free_lexer(t_lexer *lexer)
+{
+	t_lexer	*token;
+
+	while (lexer)
+	{
+		token = get_first_token(lexer);
+		lexer = token->next;
+		if (lexer)
+			lexer->prev = NULL;
+		free(token->str);
+		free(token);
+	}
+}
 
 t_token	token_type(char *str)
 {
@@ -211,6 +226,7 @@ char	*replace_env_arg(char *s, t_lexer *lexer)
 	{
 		printf("Environmental variable '$%s' does NOT exist\n", tmp_1);
 		free(tmp_1);
+		free_lexer(lexer);
 		exit(EXIT_FAILURE);
 	}
 	free(tmp_1);

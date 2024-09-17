@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/12 10:00:33 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:30:48 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	init_var(t_shell *m)
 {
 	m->input = NULL;
 	m->lexer = NULL;
+	m->parser = NULL;
 	m->exec.env_path = ft_split(getenv("PATH"), ':');
 	m->exec.pathname = NULL;
 }

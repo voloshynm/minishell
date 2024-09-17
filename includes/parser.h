@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:31 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/13 09:42:46 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/16 22:14:38 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 typedef struct	s_parser
 {
 	t_list	*cmds;
-	char	**envv;
+	char	**envp;
 	int		ex_status;
 	pid_t	pid;
 }				t_parser;
@@ -39,13 +39,12 @@ typedef struct	s_parser
 
 typedef struct	s_command
 {
-	char	**cmd;
-	char	*full_path;
-	int		fd_in;
-	int		fd_out;
+	char		**cmd;
+	char		*full_path;
+	int			infile;
+	int			outfile;
+	t_token		cmd_splitter;
 }				t_command;
-
-t_parser	*init_parser(t_lexer **lexer);
 
 
 #endif

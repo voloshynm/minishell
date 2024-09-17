@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/13 09:53:14 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/16 19:39:10 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,12 @@ typedef enum e_token
 
 /*
 **	explain this struct, especially Im curious wtf is i? :) - SERGIO
-	
 **	
 */
 typedef struct s_lexer
 {
 	char			*str;
 	t_token			token;
-	int				i;
 	struct s_lexer	*next;
 	struct s_lexer	*prev;
 }					t_lexer;
