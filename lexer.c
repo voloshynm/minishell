@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/16 18:02:03 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/17 23:02:27 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/lexer.h"
+#include "includes/minishell.h"
 
 void	free_lexer(t_lexer *lexer)
 {
@@ -146,60 +146,44 @@ char	*tokenize_input(char **input)
 	return (str);
 }
 
-void join_same_tokens(t_lexer **lexer)
+void	join_same_tokens(t_lexer *lexer)
 {
-	if ((*lexer)->next->token == IN)
-		(*lexer)->str = ft_strdup("<<");
-	else if ((*lexer)->next->token == OUT)
-		(*lexer)->str = ft_strdup(">>");
-	else if ((*lexer)->next->token == PIPE)
-		(*lexer)->str = ft_strdup("||");
-	else 
-	 	(*lexer)->str = ft_strdup("&&");
-
+	if (lexer->next->token == IN)
+		lexer->str = ft_strdup("<<");
+	else if (lexer->next->token == OUT)
+		lexer->str = ft_strdup(">>");
+	else if (lexer->next->token == PIPE)
+		lexer->str = ft_strdup("||");
+	else
+		lexer->str = ft_strdup("&&");
 }
 
-void	analyse_tokens(t_lexer **lexer)
+void	analyse_tokens(t_lexer *lexer)
 {
 	t_lexer	*temp;
 
-	temp = *lexer;
-	while (*lexer)
-	{	
-		if (!(*lexer)->next)
-			break;
-		if (((*lexer)->token == IN && (*lexer)->next->token == IN)
-			|| ((*lexer)->token == OUT && (*lexer)->next->token == OUT) 
-			|| ((*lexer)->token == PIPE && (*lexer)->next->token == PIPE) 
-			|| ((*lexer)->str[0] == '&' && (*lexer)->next->str[0] == '&'))
+	temp = lexer;
+	while (lexer)
+	{
+		if (!lexer->next)
+			break ;
+		if ((lexer->token == IN && lexer->next->token == IN)
+			|| (lexer->token == OUT && lexer->next->token == OUT)
+			|| (lexer->token == PIPE && lexer->next->token == PIPE)
+			|| (lexer->str[0] == '&' && lexer->next->str[0] == '&'))
 		{
-			free((*lexer)->str);
+			free(lexer->str);
 			join_same_tokens(lexer);
-			temp = (*lexer)->next->next;
-			free((*lexer)->next->str);
-			free((*lexer)->next);
-			(*lexer)->next = temp;
-			(*lexer)->token = token_type((*lexer)->str);
-			if (temp) /////FIXXXXXXX
-				temp->prev = *lexer;
+			temp = lexer->next->next;
+			free(lexer->next->str);
+			free(lexer->next);
+			lexer->next = temp;
+			lexer->token = token_type(lexer->str);
+			if (temp)
+				temp->prev = lexer;
 		}
-		*lexer = (*lexer)->next;
+		lexer = lexer->next;
 	}
-}
-
-/*
-**	Removes first quote str[0] from a string used
-	to determinate the token type
-*/
-void	remove_first_char(t_lexer *lexer)
-{
-	char	*old_str;
-	char	*new_str;
-
-	old_str = lexer->str;
-	new_str = ft_strdup(++old_str);
-	free(lexer->str);
-	lexer->str = new_str;
 }
 
 /*
@@ -240,16 +224,10 @@ char	*replace_env_arg(char *s, t_lexer *lexer)
 
 void	process_env_arg(t_lexer *lexer)
 {
-	char	c;
 	char	*s;
 
-	c = *lexer->str;
-	if (c == '\'' || c == '\"')
-	{
-		remove_first_char(lexer);
-		if (c == '\'')
-			return ;
-	}
+	if (*lexer->str == '\'' || *lexer->str == '\"')
+		lexer->str = remove_first_char(lexer->str);
 	s = lexer->str;
 	while (*s)
 	{
@@ -262,6 +240,46 @@ void	process_env_arg(t_lexer *lexer)
 	}
 }
 
+int	is_token_redir(t_lexer *l)
+{
+	if (l->token == IN || l->token == OUT || l->token == APPEND
+		|| l->token == HEREDOC)
+		return (1);
+	return (0);
+}
+
+int	is_token_pipish(t_lexer *l)
+{
+	if (l->token == OR || l->token == AND || l->token == PIPE)
+		return (1);
+	return (0);
+}
+
+int	unexpected_token(t_lexer *lexer)
+{
+	t_lexer	*start;
+
+	start = lexer;
+	if (lexer->token == PIPE || lexer->token == AND || lexer->token == OR)
+		return (p_error(2, lexer->str));
+	while (start)
+	{
+		if (!start->next)
+			break ;
+		if (is_token_redir(start) && is_token_redir(start->next))
+			return (p_error(2, start->next->str));
+		if (is_token_pipish(start) && is_token_pipish(start->next))
+			return (p_error(2, start->next->str));
+		start = start->next;
+	}
+	if ((get_last_token(lexer)->token >= 2
+			&& get_last_token(lexer)->token <= 5))
+		return (p_error(2, "newline"));
+	if (get_last_token(lexer)->token != WORD)
+		return (p_error(2, get_last_token(lexer)->str));
+	return (0);
+}
+
 /*
 ** Goes through the input to split it by token, ft_strchr return the position
 	of the found token **TOKENIZE_INPUT** split using (SPACE, >, <, |, ", ')
@@ -269,13 +287,12 @@ void	process_env_arg(t_lexer *lexer)
 ** FT_STRCHR will determinate the type of TOKEN > < or | and then its
 	added to the token list.
 */
-t_lexer	*init_lexer(char *input)
+int	init_lexer(t_lexer *lexer, char *input)
 {
-	t_lexer	*lexer;
-	t_lexer	*lexer_start;
 	char	*token;
 
-	lexer = NULL;
+	if (input_error(input))
+		return (UNEXPEC_TOKEN);
 	while (input)
 	{
 		token = tokenize_input(&input);
@@ -284,13 +301,14 @@ t_lexer	*init_lexer(char *input)
 			if (ft_strchr(">|<&", *(input - 1)))
 				add_to_token_list(&lexer, ft_strndup((input - 1), 1));
 	}
-	lexer_start = lexer;
-	analyse_tokens(&lexer);
-	while (lexer_start)
+	analyse_tokens(lexer);
+	if (unexpected_token(lexer))
+		return (UNEXPEC_TOKEN);
+	while (lexer)
 	{
-		process_env_arg(lexer_start);
-		printf("TOKEN: %s\n", lexer_start->str);
-		lexer_start = lexer_start->next;
+		process_env_arg(lexer);
+		printf("TOKEN: %s\n", lexer->str);
+		lexer = lexer->next;
 	}
-	return (lexer);
+	return (0);
 }

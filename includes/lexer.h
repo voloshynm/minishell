@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/16 19:39:10 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/17 21:17:49 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,6 @@ typedef struct s_lexer
 t_lexer				*get_last_token(t_lexer *lexer);
 t_lexer				*get_first_token(t_lexer *lexer);
 
-t_lexer				*init_lexer(char *input);
+int					init_lexer(t_lexer *lexer, char *input);
 
 #endif

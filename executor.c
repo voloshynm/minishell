@@ -1,104 +1,116 @@
-#include "includes/executor.h"
+// /* ************************************************************************** */
+// /*                                                                            */
+// /*                                                        :::      ::::::::   */
+// /*   executor.c                                         :+:      :+:    :+:   */
+// /*                                                    +:+ +:+         +:+     */
+// /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+// /*                                                +#+#+#+#+#+   +#+           */
+// /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
+// /*   Updated: 2024/09/17 19:14:56 by sandre-a         ###   ########.fr       */
+// /*                                                                            */
+// /* ************************************************************************** */
 
-int	excecute(t_exec *exec)
-{
-    pid_t	pid;
-    int     status;
+// #include "includes/executor.h"
 
-    char *const argv[] = {
-        "echo",          // argv[0]: program name
-        "hello world",   // argv[2]: text to print
-        NULL             // Must be terminated by NULL
-    };
+// int	excecute(t_exec *exec)
+// {
+//     pid_t	pid;
+//     int     status;
 
-    pid = fork();
-    if (pid == 0) // Child process
-    {
-        execve(exec->pathname, argv, NULL);
-        perror("execve failed");
-        exit(1);
-    }
-    else if (pid > 0)
-        waitpid(pid, &status, 0);
-    else
-    {
-        perror("fork failed");
-        return -1;
-    }
-    return 1;
-}
+//     char *const argv[] = {
+//         "echo",          // argv[0]: program name
+//         "hello world",   // argv[2]: text to print
+//         NULL             // Must be terminated by NULL
+//     };
 
-char	*builtin_exists(t_exec *exec)
-{
-	DIR				*directory;
-	struct dirent	*entry;
-	char			path[PATH_MAX];
-	char			*pathname;
+//     pid = fork();
+//     if (pid == 0) // Child process
+//     {
+//         execve(exec->pathname, argv, NULL);
+//         perror("execve failed");
+//         exit(1);
+//     }
+//     else if (pid > 0)
+//         waitpid(pid, &status, 0);
+//     else
+//     {
+//         perror("fork failed");
+//         return -1;
+//     }
+//     return 1;
+// }
 
-	getcwd(path, sizeof(path));
-	pathname = ft_strjoin(path, "/builtins");
-	directory = opendir(pathname);
-	while (directory)
-	{
-		entry = readdir(directory);
-		if (!entry)
-			break ;
-		if (!ft_strncmp(exec->argv[0], entry->d_name, ft_strlen(exec->argv[0])))
-		{
-			closedir(directory);
-			return (pathname);
-		}
-	}
-	closedir(directory);
-	free(pathname);
-	return (NULL);
-}
+// char	*builtin_exists(t_exec *exec)
+// {
+// 	DIR				*directory;
+// 	struct dirent	*entry;
+// 	char			path[PATH_MAX];
+// 	char			*pathname;
 
-char	*bin_builtin_exists(t_exec *exec)
-{
-	DIR				*directory;
-	struct dirent	*entry;
-	int				i;
+// 	getcwd(path, sizeof(path));
+// 	pathname = ft_strjoin(path, "/builtins");
+// 	directory = opendir(pathname);
+// 	while (directory)
+// 	{
+// 		entry = readdir(directory);
+// 		if (!entry)
+// 			break ;
+// 		if (!ft_strncmp(exec->argv[0], entry->d_name, ft_strlen(exec->argv[0])))
+// 		{
+// 			closedir(directory);
+// 			return (pathname);
+// 		}
+// 	}
+// 	closedir(directory);
+// 	free(pathname);
+// 	return (NULL);
+// }
 
-	i = 0;
-	while (exec->env_path[i])
-	{
-		directory = opendir(exec->env_path[i]);
-		while (directory)
-		{
-			entry = readdir(directory);
-			if (!entry)
-				break ;
-			if (!ft_strncmp(exec->argv[0], entry->d_name,
-					ft_strlen(exec->argv[0])))
-			{
-				closedir(directory);
-				return (exec->env_path[i]);
-			}
-		}
-		closedir(directory);
-		i++;
-	}
-	return (NULL);
-}
+// char	*bin_builtin_exists(t_exec *exec)
+// {
+// 	DIR				*directory;
+// 	struct dirent	*entry;
+// 	int				i;
 
-int	command_exists(t_exec *exec)
-{
-	char	*temp;
+// 	i = 0;
+// 	while (exec->env_path[i])
+// 	{
+// 		directory = opendir(exec->env_path[i]);
+// 		while (directory)
+// 		{
+// 			entry = readdir(directory);
+// 			if (!entry)
+// 				break ;
+// 			if (!ft_strncmp(exec->argv[0], entry->d_name,
+// 					ft_strlen(exec->argv[0])))
+// 			{
+// 				closedir(directory);
+// 				return (exec->env_path[i]);
+// 			}
+// 		}
+// 		closedir(directory);
+// 		i++;
+// 	}
+// 	return (NULL);
+// }
 
-	exec->argv = malloc(sizeof(char *));
-	exec->argv[0] = ft_strdup("echo");
-	exec->pathname = builtin_exists(exec);
-	if (!exec->pathname)
-		exec->pathname = bin_builtin_exists(exec);
-	if (exec->pathname)
-	{
-		temp = ft_strjoin(exec->pathname, "/");
-		exec->pathname = ft_strjoin(temp, exec->argv[0]);
-		free(temp);
-	}
-	else
-		printf("%s: command not found\n", exec->argv[0]);
-	//excecute(exec);
-	return (1);
-}
+// int	command_exists(t_exec *exec)
+// {
+// 	char	*temp;
+
+// 	exec->argv = malloc(sizeof(char *));
+// 	exec->argv[0] = ft_strdup("echo");
+// 	exec->pathname = builtin_exists(exec);
+// 	if (!exec->pathname)
+// 		exec->pathname = bin_builtin_exists(exec);
+// 	if (exec->pathname)
+// 	{
+// 		temp = ft_strjoin(exec->pathname, "/");
+// 		exec->pathname = ft_strjoin(temp, exec->argv[0]);
+// 		free(temp);
+// 	}
+// 	else
+// 		printf("%s: command not found\n", exec->argv[0]);
+// 	//excecute(exec);
+// 	return (1);
+// }
