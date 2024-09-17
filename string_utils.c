@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:11:19 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/12 10:11:52 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:50:04 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,19 @@ char	*ft_strndup(const char *s, size_t n)
 	}
 	*new_str = 0;
 	return (start);
+}
+
+/*
+**	Removes first quote str[0] from a string used
+	to determinate the token type
+*/
+char	*remove_first_char(char *str)
+{
+	char *old_str;
+	char *new_str;
+
+	old_str = str;
+	new_str = ft_strdup(++old_str);
+	free(--old_str);
+	return (new_str);
 }
