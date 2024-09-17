@@ -6,77 +6,168 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/17 16:58:18 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/17 23:03:07 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/parser.h"
+#include "includes/minishell.h"
 
-int	is_token_redir(t_lexer *l)
+int		is_token_redir(t_lexer *l)
 {
-	if (l->token != IN || l->token != OUT
-			|| l->token != APPEND || l->token != HEREDOC)
+	if (l->token == IN || l->token == OUT
+			|| l->token == APPEND || l->token == HEREDOC)
 		return (1);
 	return (0);
 }
 
-int	is_cmd_start_err(t_lexer *l)
-{
-	int	err;
-
-	err = 0;
-	if (l->token != WORD || is_token_redir(l->token))
-		printf("syntax error near unexpected token `%s'\n", l->token);
-		err = p_error(UNEXPEC_TOKEN, &l->token);
-		free_lexer();
-		free_parser();
-		return (err);
-}
-
-// void	is_cmd_start_err(t_lexer *l)
+// if (token == IN) // Input redirection '<'
 // {
-// 	if (l->token != WORD || l->token != IN || l->token != OUT
-// 				|| l->token != APPEND || l->token != HEREDOC)
-// 		printf("syntax error near unexpected token `%s'\n", l->token);
-// 		free_lexer();
-// 		free_parser();
-// 		exit(EXIT_FAILURE);
+// 	// Open the file for reading
+// 	c->infile = open(filename, O_RDONLY);
+// 	if (c->infile < 0)
+// 	{
+// 		perror("Error opening input file");
+// 		return;
+// 	}
+// }
+// else if (token == OUT) // Output redirection '>'
+// {
+// 	// Open the file for writing (create or truncate)
+// 	c->outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+// 	if (c->outfile < 0)
+// 	{
+// 		perror("Error opening output file");
+// 		return;
+// 	}
+// }
+// else if (token == APPEND) // Output redirection '>>'
+// {
+// 	// Open the file for appending (create if doesn't exist)
+// 	c->outfile = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+// 	if (c->outfile < 0)
+// 	{
+// 		perror("Error opening output file in append mode");
+// 		return;
+// 	}
+// }
+// else if (token == HEREDOC) // Heredoc '<<'
+// {
+// 	// Here you would handle the heredoc logic (pseudo-code)
+// 	// Typically, heredoc reads input from stdin until a specified delimiter
+// 	// and stores it in a temporary file, which would then be opened here.
+
+// 	// For simplicity, we are assuming that the heredoc content is already in a file.
+// 	c->infile = open(filename, O_RDONLY); // Replace filename with your temp file
+// 	if (c->infile < 0)
+// 	{
+// 		perror("Error opening heredoc file");
+// 		return;
+// 	}
 // }
 
-int	parse_commands(t_parser **p, t_lexer **l)
-{
-	t_list		*cmds_lst_el;
-	t_command	*c;
-	t_command	*cur_cmd;
+#include <fcntl.h>  // For open(), O_CREAT, etc.
+#include <unistd.h> // For read(), write(), close(), unlink()
+#include <stdio.h>  // For perror(), printf()
+#include <stdlib.h> // For malloc(), free()
+#include <string.h> // For strcmp(), strlen()
 
-	while ((*l)->token)
+int handle_heredoc(const char *delimiter, t_shell *m)
+{
+	char	*line;
+	int		tmp_fd;
+	char	*tmp_filename;
+
+	tmp_filename = ft_strjoin("/tmp/heredoc_tmp_", ft_itoa(m->pid)) ;  // You could use `getpid()` to ensure unique filenames
+	tmp_fd = open(tmp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (tmp_fd < 0)
+		return(p_error("Error creating temporary file", NULL));
+	while (1)
 	{
-		if (is_cmd_start_err((*l)->token))
-			return (UNEXPEC_TOKEN);		// check that we have a proper input, specifically first token
-		c = ft_calloc(1, sizeof(t_command));
-		cmds_lst_el = ft_lstnew(c);
-		ft_lstadd_back(&(*p)->cmds, cmds_lst_el);	// create a list element c of a struct t_command and add it to t_list cmds
-		if (!c || !cmds_lst_el || !(*p)->cmds)
-			return (ALLOC_FAILURE);
-//		parse_full_path(c, (*l)->token);		// define the actual command, based on the fist token and then check if it is a builtin. Consequently assign a path of the command
-		cur_cmd = c->cmd;						// ensure we don't lose the initial pointer during iteration and use a temp one instead
-		while ((*l)->token == WORD)
+		line = readline("heredoc> ");
+		if (!line)
+			break;
+		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		{
-			cur_cmd = (*l)->token;
-			*l = (*l)->next;
-			cur_cmd++;
+			free(line);
+			break;
 		}
-		while (is_token_redir((*l)->token))
-			parse_redirection(&c, (*l)->token);		// process the type of redirection and thus record into infile & outfile
-		c->cmd_splitter = (*l)->token;
+		write(tmp_fd, line, ft_strlen(line));
+		write(tmp_fd, "\n", 1);
+		free(line);
+	}
+	close(tmp_fd);
+	tmp_fd = open(tmp_filename, O_RDONLY);
+	if (tmp_fd < 0)
+		return(p_error("Error re-opening temporary file", NULL));
+	return (tmp_fd);
+}
+
+
+int	parse_redirection(t_command	*c, t_token token, char *filename, t_shell *m)
+{
+	if (token == IN)
+	{
+		c->infile = open(filename, O_RDONLY);
+		if (c->infile < 0)
+			return(p_error(RED_IN_ERR, NULL));
+	}
+	else if (token == OUT)
+	{
+		c->outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (c->outfile < 0)
+			return(p_error(RED_OUT_ERR, NULL));
+	}
+	else if (token == APPEND)
+	{
+		c->outfile = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (c->outfile < 0)
+			return(p_error(RED_APPEND_ERR, NULL));
+	}
+	else if (token == HEREDOC)
+	{
+		c->infile = handle_heredoc(filename, m);
+		if (c->infile < 0)
+			return(p_error(RED_HEREDOC_ERR, NULL));
 	}
 }
 
-t_parser	*init_parser(t_lexer **lexer, t_shell **m)
+
+int		parse_commands(t_shell *m)
 {
-	t_parser	*p;
+	t_command	*c;
+	char		**cur_cmd;
+	t_lexer		*l;
+	t_list		*cmds_lst_el;
 
-	parse_commands(&p, lexer);
-	parse_remaining_parser(&p, m);
+	l = m->lexer;
+	while (l)
+	{
+		c = ft_calloc(1, sizeof(t_command));
+		cmds_lst_el = ft_lstnew(c);
+		ft_lstadd_back(&m->parser, cmds_lst_el);	// create a list element c of a struct t_command and add it to t_list cmds
+		if (!c || !cmds_lst_el || !m->parser)
+			return (p_error(ALLOC_FAILURE, NULL));
+//		parse_full_path(c, (*l)->str);		// define the actual command, based on the fist token and then check if it is a builtin. Consequently assign a path of the command
+		cur_cmd = c->cmd;						// ensure we don't lose the initial pointer during iteration and use a temp one instead
+		while (l->token == WORD)
+		{
+			cur_cmd = l->str;
+			l = l->next;
+			cur_cmd++;
+		}
+		c->infile = STDIN_FILENO;
+		c->outfile = STDOUT_FILENO;
+		while (is_token_redir(l->token))
+		{
+			if (!((l + 2)) && is_token_redir((l + 2)->token))
+			{
+				l += 2;
+				continue ;
+			}
+			else
+				parse_redirection(&c, l->token, (l++)->str, m);		// process the type of redirection and thus record into infile & outfile
+		}
+		c->cmd_splitter = l->token;
+	}
+	return (OK);
 }
-

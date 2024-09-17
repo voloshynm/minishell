@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:31 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/16 22:14:38 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:56:16 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,8 @@
 # define PARSER_H
 
 # include "minishell.h"
-
-/*
-**	*cmds	= linked list of t_command with all commands, separated by pipes
-	**envv	= array containing keys and values for the shell environment
-	ex_status	= exit status of most recently executed cmd
-**	pid 	= process id for minishell instance
-*/
-
-typedef struct	s_parser
-{
-	t_list	*cmds;
-	char	**envp;
-	int		ex_status;
-	pid_t	pid;
-}				t_parser;
+# include <fcntl.h>  // For open()
+# include <unistd.h> // For close()
 
 /*
 **	**cmd 		= command name and parameters if any

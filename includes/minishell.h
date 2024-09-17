@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/17 17:27:44 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:30:20 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,18 @@
 
 # define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
 
+/*
+**	*cmds	= linked list of t_command with all commands, separated by pipes
+	**envv	= array containing keys and values for the shell environment
+	ex_status	= exit status of most recently executed cmd
+**	pid 	= process id for minishell instance
+*/
+
 typedef struct s_shell
 {
 	char		*input;
 	t_lexer		*lexer;
-	t_parser	*parser;
+	t_list		*parser;
 	t_exec		*exec;
 	pid_t		pid;
 	int			ex_status;

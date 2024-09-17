@@ -16,6 +16,9 @@
 		"color.h": "c",
 		"termios.h": "c",
 		"types.h": "c",
-		"executor.h": "c"
+		"executor.h": "c",
+		"unistd.h": "c",
+		"fcntl.h": "c",
+		"parser.h": "c"
 	}
 }
