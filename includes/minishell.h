@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/17 17:27:44 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/17 20:19:19 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 # define MINISHELL_H
 
 # include "color.h"
-# include "lexer.h"
-# include "parser.h"
-# include "libft.h"
 # include "executor.h"
+# include "lexer.h"
+# include "libft.h"
+# include "parser.h"
 # include <dirent.h>
 # include <limits.h>
 # include <readline/history.h>
@@ -37,9 +37,9 @@ typedef struct s_shell
 	t_exec		*exec;
 	pid_t		pid;
 	int			ex_status;
-}			t_shell;
+}				t_shell;
 
-enum e_err_state
+enum			e_err_state
 {
 	OK = 0,
 	ALLOC_FAILURE = 1,
@@ -49,8 +49,9 @@ enum e_err_state
 	ENV_VAR_NOT_EXIST = 5,
 };
 
-void		prompt_loop(t_shell *m);
+void			prompt_loop(t_shell *m);
 
-int	p_error(int err_id, void **arg_1);
+int				p_error(int err_id, void *arg);
+int				input_error(char *input);
 
 #endif

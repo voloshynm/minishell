@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/16 17:30:48 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/17 22:32:10 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ void	init_var(t_shell *m)
 	m->input = NULL;
 	m->lexer = NULL;
 	m->parser = NULL;
-	m->exec.env_path = ft_split(getenv("PATH"), ':');
-	m->exec.pathname = NULL;
 }
 
 void	free_tokens(t_lexer *lexer)
@@ -33,41 +31,43 @@ void	free_tokens(t_lexer *lexer)
 		free(temp);
 	}
 }
-
-void	free_env_path(t_exec *exec)
+int	input_error(char *input)
 {
-	int	x;
+	char	token_type;
 
-	x = 0;
-	while (exec->env_path[x])
+	while (1)
 	{
-		free(exec->env_path[x]);
-		x++;
+		input = ft_strpbrk(input, "|&<>");
+		if (input)
+			token_type = *input;
+		if (!input)
+			break ;
+		if (*(++input) == ' ' || *input == '\t')
+		{
+			while (*input == ' ' || *input == '\t' && *input)
+				input++;
+			if (*input == token_type)
+				return (p_error(2, &token_type));
+		}
 	}
-	free(exec->env_path);
+	return (0);
 }
 
 void	prompt_loop(t_shell *m)
 {
-	int	count;
 	int	status;
 
-	count = 0;
-	while (count < 3)
+	while (1)
 	{
 		m->input = readline(PROMPT);
+		init_lexer(m->lexer, m->input);
 		add_history(m->input);
-		m->lexer = init_lexer(m->input);
-		command_exists(&m->exec);
+		// command_exists(&m->exec);
 		free(m->input);
-		free_tokens(m->lexer);
-		if (m->exec.pathname)       ////TEST
-			free(m->exec.pathname); ////TEST
-		free(m->exec.argv[0]);      ////TEST
-		free(m->exec.argv);         ////TEST
-		count++;
+		// free_tokens(m->lexer);
+		// free(m->exec->argv[0]);      ////TEST
+		// free(m->exec->argv);         ////TEST
 	}
-	free_env_path(&m->exec); ////TEST
 	rl_clear_history();
 }
 
