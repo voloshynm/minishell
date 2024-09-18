@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 22:31:41 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 22:37:14 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,13 @@ static int	parse_command(t_command *c, t_lexer *l)
 }
 
 static int	parse_full_path(t_command *c, t_lexer *l, t_shell *m)
+{
+	// define the actual command, based on the fist token and then
+	// check if it is a builtin. Consequently assign a path of the command
+	return (0);
+}
+
+static int	test_parser(t_shell *m)
 {
 	// define the actual command, based on the fist token and then
 	// check if it is a builtin. Consequently assign a path of the command
