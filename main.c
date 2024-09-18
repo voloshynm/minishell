@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 22:00:07 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/19 01:03:54 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ void	prompt_loop(t_shell *m)
 		if (input_error(m->input) || *m->input == 0)
 			continue ;
 		add_history(m->input);
-		init_lexer(m->lexer, m->input);
+		init_lexer(&m->lexer, m->input);
+		parse_commands(m);
 		//command_exists(m);
 		//free(m->input);
 		// free_lexer(m->lexer);

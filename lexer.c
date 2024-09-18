@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 16:27:09 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/18 23:06:55 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,28 +56,30 @@ static void	join_same_tokens(t_lexer *lexer)
 ** FT_STRCHR will determinate the type of TOKEN > < or | and then its
 	added to the token list.
 */
-int	init_lexer(t_lexer *lexer, char *input)
+int	init_lexer(t_lexer **lexer, char *input)
 {
 	char	*token;
+	t_lexer	*l_start;
 
 	if (input_error(input))
 		return (UNEXPEC_TOKEN);
 	while (input)
 	{
 		token = tokenize_input(&input);
-		add_to_token_list(&lexer, token);
+		add_to_token_list(lexer, token);
 		if (input)
 			if (ft_strchr(">|<&", *(input - 1)))
-				add_to_token_list(&lexer, ft_strndup((input - 1), 1));
+				add_to_token_list(lexer, ft_strndup((input - 1), 1));
 	}
-	analyse_tokens(lexer);
-	if (unexpected_token(lexer))
+	analyse_tokens(*lexer);
+	if (unexpected_token(*lexer))
 		return (UNEXPEC_TOKEN);
-	while (lexer)
+	l_start = *lexer;
+	while (l_start)
 	{
-		process_env_arg(lexer);
-		printf("TOKEN: %s\n", lexer->str);
-		lexer = lexer->next;
+		process_env_arg(l_start);
+		printf("TOKEN: %s\n", l_start->str);
+		l_start = l_start->next;
 	}
 	return (0);
 }

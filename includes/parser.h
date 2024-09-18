@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:31 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 16:30:14 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/18 22:49:28 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
-
 
 /*
 **	**cmd 		= command name and parameters if any

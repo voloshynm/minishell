@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 18:42:24 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 23:51:28 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static int	handle_heredoc(const char *delimiter, t_shell *m)
 /*
 **	open proper infile or outfile depending on the redirection token type
 */
-static int	parse_redirection(t_command *c, t_token token, char *filename,
+int	parse_redirection(t_command *c, t_token token, char *filename,
 		t_shell *m)
 {
 	if (token == IN)
@@ -92,6 +92,7 @@ static int	parse_redirection(t_command *c, t_token token, char *filename,
 		if (c->infile < 0)
 			return (p_error(RED_HEREDOC_ERR, NULL));
 	}
+	return (0);
 }
 
 /*

@@ -1,10 +1,12 @@
-SRC =   main.c \
-		lexer.c \
-		executor.c \
-		string_utils.c \
-		error_handler.c \
-		lexer_utils.c \
-		lexer_helper.c
+SRC =   main.c 					\
+		lexer.c 				\
+		executor.c 				\
+		string_utils.c 			\
+		error_handler.c 		\
+		lexer_utils.c 			\
+		lexer_helper.c 			\
+		parser.c				\
+		parser_redirection.c
 		
 OBJS = ${SRC:.c=.o}
 NAME = minishell

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 22:19:51 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/18 22:55:25 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,11 @@ int			input_error(char *input);
 
 //int			excecute(t_exec *exec);
 int			command_exists(t_shell *m);
+
+int		parse_redirection(t_command *c, t_token token, char *filename,
+		t_shell *m);
+int		setup_redirection(t_command *c);
+void	restore_and_close_files(t_command *c);
+int		parse_commands(t_shell *m);
 
 #endif
