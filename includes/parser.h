@@ -3,19 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:31 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 15:08:47 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:30:14 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "minishell.h"
-# include <fcntl.h>  // For open()
-# include <unistd.h> // For close()
 
 /*
 **	**cmd 		= command name and parameters if any

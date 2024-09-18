@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 15:15:14 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:32:33 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,22 @@ void	prompt_loop(t_shell *m)
 	rl_clear_history();
 }
 
+void	handle_sigint(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
 int	main(void)
 {
-	t_shell	m;
+	t_shell m;
 
-	init_minishell(&m);
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	init_var(&m);
 	prompt_loop(&m);
 	return (0);
 }

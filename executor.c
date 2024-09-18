@@ -10,7 +10,7 @@
 // /*                                                                            */
 // /* ************************************************************************** */
 
-// #include "includes/executor.h"
+// #include "includes/minishell.h"
 
 // int	excecute(t_exec *exec)
 // {

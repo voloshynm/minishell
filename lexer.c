@@ -3,14 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 15:15:50 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:27:09 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
+
+static int	unexpected_token(t_lexer *lexer)
+{
+	t_lexer	*start;
+
+	start = lexer;
+	if (lexer->token == PIPE || lexer->token == AND || lexer->token == OR)
+		return (p_error(2, lexer->str));
+	while (start)
+	{
+		if (!start->next)
+			break ;
+		if (is_token_redir(start) && is_token_redir(start->next))
+			return (p_error(2, start->next->str));
+		if (is_token_pipish(start) && is_token_pipish(start->next))
+			return (p_error(2, start->next->str));
+		start = start->next;
+	}
+	if ((get_last_token(lexer)->token >= 2
+			&& get_last_token(lexer)->token <= 5))
+		return (p_error(2, "newline"));
+	if (get_last_token(lexer)->token != WORD)
+		return (p_error(2, get_last_token(lexer)->str));
+	return (0);
+}
+
+static void	join_same_tokens(t_lexer *lexer)
+{
+	if (lexer->next->token == IN)
+		lexer->str = ft_strdup("<<");
+	else if (lexer->next->token == OUT)
+		lexer->str = ft_strdup(">>");
+	else if (lexer->next->token == PIPE)
+		lexer->str = ft_strdup("||");
+	else
+		lexer->str = ft_strdup("&&");
+}
 
 /*
 ** Goes through the input to split it by token, ft_strchr return the position
@@ -60,18 +97,6 @@ void	free_lexer(t_lexer *lexer)
 	}
 }
 
-static void	join_same_tokens(t_lexer *lexer)
-{
-	if (lexer->next->token == IN)
-		lexer->str = ft_strdup("<<");
-	else if (lexer->next->token == OUT)
-		lexer->str = ft_strdup(">>");
-	else if (lexer->next->token == PIPE)
-		lexer->str = ft_strdup("||");
-	else
-		lexer->str = ft_strdup("&&");
-}
-
 void	analyse_tokens(t_lexer *lexer)
 {
 	t_lexer	*temp;
@@ -98,29 +123,4 @@ void	analyse_tokens(t_lexer *lexer)
 		}
 		lexer = lexer->next;
 	}
-}
-
-static int	unexpected_token(t_lexer *lexer)
-{
-	t_lexer	*start;
-
-	start = lexer;
-	if (lexer->token == PIPE || lexer->token == AND || lexer->token == OR)
-		return (p_error(2, lexer->str));
-	while (start)
-	{
-		if (!start->next)
-			break ;
-		if (is_token_redir(start) && is_token_redir(start->next))
-			return (p_error(2, start->next->str));
-		if (is_token_pipish(start) && is_token_pipish(start->next))
-			return (p_error(2, start->next->str));
-		start = start->next;
-	}
-	if ((get_last_token(lexer)->token >= 2
-			&& get_last_token(lexer)->token <= 5))
-		return (p_error(2, "newline"));
-	if (get_last_token(lexer)->token != WORD)
-		return (p_error(2, get_last_token(lexer)->str));
-	return (0);
 }
