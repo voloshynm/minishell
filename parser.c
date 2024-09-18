@@ -6,109 +6,84 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 15:25:11 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 21:36:11 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-int handle_heredoc(const char *delimiter, t_shell *m)
+/*
+**	create a list element c of a struct t_command and add it to t_list cmds
+*/
+static int	init_cmd_struct_add_to_parser_lst(t_command *c, t_shell *m)
 {
-	char	*line;
-	int		tmp_fd;
-	char	*tmp_filename;
-	char	*tmp_pid
+	t_list	*cmds_lst_el;
 
-	tmp_pid = ft_itoa(m->pid);
-	tmp_filename = ft_strjoin("/tmp/heredoc_tmp_", tmp_pid);
-	tmp_fd = open(tmp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (tmp_fd < 0)
-		return(p_error(TMP_FILE_CREATION_ERR, NULL));
-	while (1)
+	c = ft_calloc(1, sizeof(t_command));
+	cmds_lst_el = ft_lstnew(c);
+	ft_lstadd_back(&m->parser, cmds_lst_el);
+	if (!c || !cmds_lst_el || !m->parser)
+		return (p_error(ALLOC_FAILURE, NULL));
+	c->infile = STDIN_FILENO;
+	c->outfile = STDOUT_FILENO;
+	return (OK);
+}
+static int	get_cmd_len(t_lexer *lexer)
+{
+	int		len;
+	t_lexer	*l;
+
+	l = lexer;
+	len = 0;
+	while(l->token == WORD)
 	{
-		line = readline("heredoc> ");
-		if (!line)
-			break;
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
-		{
-			free(line);
-			break;
-		}
-		write(tmp_fd, line, ft_strlen(line));
-		write(tmp_fd, "\n", 1);
-		free(line);
+		len++;
+		l = l->next;
 	}
-	close(tmp_fd);
-	tmp_fd = open(tmp_filename, O_RDONLY);
-	if (tmp_fd < 0)
-		return(p_error("Error re-opening temporary file", NULL));
-	return (tmp_fd);
+	return (len);
 }
 
-
-int	parse_redirection(t_command	*c, t_token token, char *filename, t_shell *m)
+static int	parse_command(t_command *c, t_lexer *l)
 {
-	if (token == IN)
+	char	**cur_cmd;
+
+	cur_cmd = ft_calloc(1, get_cmd_len(l));
+	c->cmd = cur_cmd;
+	while (l->token == WORD)
 	{
-		c->infile = open(filename, O_RDONLY);
-		if (c->infile < 0)
-			return(p_error(RED_IN_ERR, NULL));
+		cur_cmd = l->str;
+		l = l->next;
+		cur_cmd++;
 	}
-	else if (token == OUT)
-	{
-		c->outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (c->outfile < 0)
-			return(p_error(RED_OUT_ERR, NULL));
-	}
-	else if (token == APPEND)
-	{
-		c->outfile = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (c->outfile < 0)
-			return(p_error(RED_APPEND_ERR, NULL));
-	}
-	else if (token == HEREDOC)
-	{
-		c->infile = handle_heredoc(filename, m);
-		if (c->infile < 0)
-			return(p_error(RED_HEREDOC_ERR, NULL));
-	}
+	return (0);
 }
 
+static int	parse_full_path(t_command *c, t_lexer *l, t_shell *m)
+{
+	// define the actual command, based on the fist token and then
+	// check if it is a builtin. Consequently assign a path of the command
+	return (0);
+}
 
-int		parse_commands(t_shell *m)
+int	parse_commands(t_shell *m)
 {
 	t_command	*c;
 	char		**cur_cmd;
 	t_lexer		*l;
-	t_list		*cmds_lst_el;
 
 	l = m->lexer;
 	while (l)
 	{
-		c = ft_calloc(1, sizeof(t_command));
-		cmds_lst_el = ft_lstnew(c);
-		ft_lstadd_back(&m->parser, cmds_lst_el);	// create a list element c of a struct t_command and add it to t_list cmds
-		if (!c || !cmds_lst_el || !m->parser)
-			return (p_error(ALLOC_FAILURE, NULL));
-//		parse_full_path(c, (*l)->str);		// define the actual command, based on the fist token and then check if it is a builtin. Consequently assign a path of the command
-		cur_cmd = c->cmd;						// ensure we don't lose the initial pointer during iteration and use a temp one instead
-		while (l->token == WORD)
-		{
-			cur_cmd = l->str;
-			l = l->next;
-			cur_cmd++;
-		}
-		c->infile = STDIN_FILENO;
-		c->outfile = STDOUT_FILENO;
+		if (!init_cmd_struct_add_to_parser_lst(c, m) || !parse_command(c, l))
+			return (ALLOC_FAILURE);
+		if (!parse_full_path(c, l->str, m))
+			return (m->ex_status);
 		while (is_token_redir(l->token))
 		{
-			if (!((l + 2)) && is_token_redir((l + 2)->token))
-			{
-				l += 2;
-				continue ;
-			}
-			else
-				parse_redirection(&c, l->token, (l++)->str, m);		// process the type of redirection and thus record into infile & outfile
+			if (!parse_redirection(&c, l->token, (++l)->str, m))
+				return (m->ex_status);
+			if ((++l)->token == WORD)
+				return (p_error(UNEXPEC_TOKEN, l->str));
 		}
 		c->cmd_splitter = l->token;
 	}

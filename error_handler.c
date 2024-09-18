@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 16:33:47 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/18 17:27:25 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	p_error(int err_id, void *arg)
 		printf("Error: Error opening heredoc file\n");
 	else if (err_id == TMP_FILE_CREATION_ERR)
 		printf("Error: Error creating temporary file\n");
+	else if (err_id == DUP2_ERR)
+		printf("Error: dup2 failed\n");
 	if (err_id == ALLOC_FAILURE || err_id == CMD_NOT_EXIST
 		|| err_id == ENV_VAR_NOT_EXIST)
 		;
