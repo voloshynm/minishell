@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:11:19 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 15:08:24 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:32:12 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_strpbrk(const char *s, const char *c)
 	const char	*str = s;
 	int			i;
 
+	if (!str)
+		return (NULL);
 	while (*str)
 	{
 		i = 0;
