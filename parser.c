@@ -6,25 +6,11 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 15:04:46 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:19:52 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
-
-int		is_token_redir(t_lexer *l)
-{
-	if (l->token == IN || l->token == OUT
-			|| l->token == APPEND || l->token == HEREDOC)
-		return (1);
-	return (0);
-}
-
-#include <fcntl.h>  // For open(), O_CREAT, etc.
-#include <unistd.h> // For read(), write(), close(), unlink()
-#include <stdio.h>  // For perror(), printf()
-#include <stdlib.h> // For malloc(), free()
-#include <string.h> // For strcmp(), strlen()
 
 int handle_heredoc(const char *delimiter, t_shell *m)
 {

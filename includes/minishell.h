@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 14:40:27 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:19:43 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,12 @@
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
-# include <stdlib.h>
 # include <termios.h>
+# include <fcntl.h>  // For open(), O_CREAT, etc.
+# include <unistd.h> // For read(), write(), close(), unlink()
+# include <stdio.h>  // For perror(), printf()
+# include <stdlib.h> // For malloc(), free()
+# include <string.h> // For strcmp(), strlen()
 
 # define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
 
