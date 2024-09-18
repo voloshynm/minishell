@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 16:32:33 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/18 22:00:07 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,17 @@ void	prompt_loop(t_shell *m)
 	while (1)
 	{
 		m->input = readline(PROMPT);
-		init_lexer(m->lexer, m->input);
+		if (m->input == NULL)
+		{
+			printf("exit\n");
+			break ;
+		}
+		if (input_error(m->input) || *m->input == 0)
+			continue ;
 		add_history(m->input);
-		// command_exists(&m->exec);
-		free(m->input);
+		init_lexer(m->lexer, m->input);
+		//command_exists(m);
+		//free(m->input);
 		// free_lexer(m->lexer);
 		// free(m->exec->argv[0]);      ////TEST
 		// free(m->exec->argv);         ////TEST
@@ -77,7 +84,7 @@ int	main(void)
 
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
-	init_var(&m);
+	init_minishell(&m);
 	prompt_loop(&m);
 	return (0);
 }

@@ -19,6 +19,8 @@
 		"executor.h": "c",
 		"unistd.h": "c",
 		"fcntl.h": "c",
-		"parser.h": "c"
+		"parser.h": "c",
+		"stdlib.h": "c",
+		"wait.h": "c"
 	}
 }
