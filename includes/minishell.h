@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/17 23:18:14 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 14:40:27 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ enum			e_err_state
 	QUOTE_ERROR = 3,
 	CMD_NOT_EXIST = 4,
 	ENV_VAR_NOT_EXIST = 5,
+	RED_IN_ERR = 6,
+	RED_OUT_ERR = 7,
+	RED_APPEND_ERR = 8,
+	RED_HEREDOC_ERR = 9
 };
 
 void			prompt_loop(t_shell *m);

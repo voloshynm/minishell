@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:31 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/17 18:56:16 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:08:47 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 **	fd_out		= file descriptor to write to (defaults to stdout)
 */
 
-typedef struct	s_command
+typedef struct s_command
 {
 	char		**cmd;
 	char		*full_path;
@@ -32,6 +32,5 @@ typedef struct	s_command
 	int			outfile;
 	t_token		cmd_splitter;
 }				t_command;
-
 
 #endif

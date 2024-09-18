@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/17 23:16:54 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:04:46 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,51 +19,6 @@ int		is_token_redir(t_lexer *l)
 		return (1);
 	return (0);
 }
-
-// if (token == IN) // Input redirection '<'
-// {
-// 	// Open the file for reading
-// 	c->infile = open(filename, O_RDONLY);
-// 	if (c->infile < 0)
-// 	{
-// 		perror("Error opening input file");
-// 		return;
-// 	}
-// }
-// else if (token == OUT) // Output redirection '>'
-// {
-// 	// Open the file for writing (create or truncate)
-// 	c->outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-// 	if (c->outfile < 0)
-// 	{
-// 		perror("Error opening output file");
-// 		return;
-// 	}
-// }
-// else if (token == APPEND) // Output redirection '>>'
-// {
-// 	// Open the file for appending (create if doesn't exist)
-// 	c->outfile = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-// 	if (c->outfile < 0)
-// 	{
-// 		perror("Error opening output file in append mode");
-// 		return;
-// 	}
-// }
-// else if (token == HEREDOC) // Heredoc '<<'
-// {
-// 	// Here you would handle the heredoc logic (pseudo-code)
-// 	// Typically, heredoc reads input from stdin until a specified delimiter
-// 	// and stores it in a temporary file, which would then be opened here.
-
-// 	// For simplicity, we are assuming that the heredoc content is already in a file.
-// 	c->infile = open(filename, O_RDONLY); // Replace filename with your temp file
-// 	if (c->infile < 0)
-// 	{
-// 		perror("Error opening heredoc file");
-// 		return;
-// 	}
-// }
 
 #include <fcntl.h>  // For open(), O_CREAT, etc.
 #include <unistd.h> // For read(), write(), close(), unlink()

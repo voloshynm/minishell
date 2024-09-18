@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error_handler.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
+/*   Updated: 2024/09/18 15:07:53 by mvoloshy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "includes/minishell.h"
 
 /*
@@ -10,13 +22,21 @@ int	p_error(int err_id, void *arg)
 	if (err_id == ALLOC_FAILURE)
 		printf("Error: Memory allocation failure\n");
 	else if (err_id == UNEXPEC_TOKEN)
-		printf("Error: syntax error near unexpected token `%s'\n", (char *) arg);
+		printf("Syntax error near unexpected token `%s'\n", (char *) arg);
 	else if (err_id == QUOTE_ERROR)
 		printf("Error: Invalid quote usage\n");
 	else if (err_id == CMD_NOT_EXIST)
 		printf("Error: %s: command not found\n", (char *) arg);
 	else if (err_id == ENV_VAR_NOT_EXIST)
 		printf("Error: Not able to get timestamp error\n");
+	else if (err_id == RED_IN_ERR)
+		printf("Error: Error opening input file\n");
+	else if (err_id == RED_OUT_ERR)
+		printf("Error: Error opening output file\n");
+	else if (err_id == RED_APPEND_ERR)
+		printf("Error: Error opening output file in append mode\n");
+	else if (err_id == RED_HEREDOC_ERR)
+		printf("Error: Error opening heredoc file\n");
 	if (err_id == ALLOC_FAILURE || err_id == CMD_NOT_EXIST
 		|| err_id == ENV_VAR_NOT_EXIST)
 		;

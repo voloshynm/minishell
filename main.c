@@ -3,34 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/17 22:32:10 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:15:14 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void	init_var(t_shell *m)
+void	init_minishell(t_shell *m)
 {
 	m->input = NULL;
 	m->lexer = NULL;
 	m->parser = NULL;
+	m->input = NULL;
+	m->pid = getpid();
+	m->ex_status = 0;
 }
 
-void	free_tokens(t_lexer *lexer)
-{
-	t_lexer	*temp;
-
-	while (lexer)
-	{
-		temp = lexer;
-		lexer = lexer->next;
-		free(temp->str);
-		free(temp);
-	}
-}
 int	input_error(char *input)
 {
 	char	token_type;
@@ -64,7 +55,7 @@ void	prompt_loop(t_shell *m)
 		add_history(m->input);
 		// command_exists(&m->exec);
 		free(m->input);
-		// free_tokens(m->lexer);
+		// free_lexer(m->lexer);
 		// free(m->exec->argv[0]);      ////TEST
 		// free(m->exec->argv);         ////TEST
 	}
@@ -75,7 +66,7 @@ int	main(void)
 {
 	t_shell	m;
 
-	init_var(&m);
+	init_minishell(&m);
 	prompt_loop(&m);
 	return (0);
 }

@@ -17,13 +17,13 @@
 # include <dirent.h>
 # include <limits.h>
 # include <stdio.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 typedef struct s_exec
 {
 	char	**argv;
-	char 	*pathname;
+	char	*pathname;
 }			t_exec;
 
 int			excecute(t_exec *exec);

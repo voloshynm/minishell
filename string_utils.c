@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:11:19 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/17 17:50:04 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:08:24 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ char	*ft_strndup(const char *s, size_t n)
 */
 char	*remove_first_char(char *str)
 {
-	char *old_str;
-	char *new_str;
+	char	*old_str;
+	char	*new_str;
 
 	old_str = str;
 	new_str = ft_strdup(++old_str);

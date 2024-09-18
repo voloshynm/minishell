@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/17 21:17:49 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:04:02 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,16 @@ typedef enum e_token
 }					t_token;
 
 /*
-**	explain this struct, especially Im curious wtf is i? :) - SERGIO
+**	lexer stores tokenized elements of the input. 
+**	during the tokenization it consumes > and > and then conbines into e.g.>>
+**	tokenizer checks for the erroneous input, after tokenization and analysis
+**	eventually we replace the env variable with its value
 **	
+**	t_token	token stores the type of the token
+**	char *str stores the string value of the token
+** 	*next and *prev are links to the following elements of the list of tokens 
 */
+
 typedef struct s_lexer
 {
 	char			*str;
@@ -50,9 +57,21 @@ typedef struct s_lexer
 	struct s_lexer	*prev;
 }					t_lexer;
 
-t_lexer				*get_last_token(t_lexer *lexer);
-t_lexer				*get_first_token(t_lexer *lexer);
+// lexer_utils.c
+t_lexer		*get_last_token(t_lexer *lexer);
+t_lexer		*get_first_token(t_lexer *lexer);
+t_token		token_type(char *str);
+int			is_token_redir(t_lexer *l);
+int			is_token_pipish(t_lexer *l);
 
-int					init_lexer(t_lexer *lexer, char *input);
+// lexer_helper.c
+void		add_to_token_list(t_lexer **lexer, char *str);
+char		*tokenize_input(char **input);
+void		process_env_arg(t_lexer *lexer);
+
+// lexer.c
+int			init_lexer(t_lexer *lexer, char *input);
+void		analyse_tokens(t_lexer *lexer);
+void		free_lexer(t_lexer *lexer);
 
 #endif
