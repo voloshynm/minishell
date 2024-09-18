@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 15:19:52 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:25:11 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@ int handle_heredoc(const char *delimiter, t_shell *m)
 	char	*line;
 	int		tmp_fd;
 	char	*tmp_filename;
+	char	*tmp_pid
 
-	tmp_filename = ft_strjoin("/tmp/heredoc_tmp_", ft_itoa(m->pid)) ;  // You could use `getpid()` to ensure unique filenames
+	tmp_pid = ft_itoa(m->pid);
+	tmp_filename = ft_strjoin("/tmp/heredoc_tmp_", tmp_pid);
 	tmp_fd = open(tmp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
-		return(p_error("Error creating temporary file", NULL));
+		return(p_error(TMP_FILE_CREATION_ERR, NULL));
 	while (1)
 	{
 		line = readline("heredoc> ");

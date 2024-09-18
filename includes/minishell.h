@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 15:19:43 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:23:26 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ enum			e_err_state
 	RED_IN_ERR = 6,
 	RED_OUT_ERR = 7,
 	RED_APPEND_ERR = 8,
-	RED_HEREDOC_ERR = 9
+	RED_HEREDOC_ERR = 9,
+	TMP_FILE_CREATION_ERR = 10
 };
 
 void			prompt_loop(t_shell *m);

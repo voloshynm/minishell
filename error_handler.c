@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 15:07:53 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:24:57 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	p_error(int err_id, void *arg)
 		printf("Error: Error opening output file in append mode\n");
 	else if (err_id == RED_HEREDOC_ERR)
 		printf("Error: Error opening heredoc file\n");
+	else if (err_id == TMP_FILE_CREATION_ERR)
+		printf("Error: Error creating temporary file\n");
 	if (err_id == ALLOC_FAILURE || err_id == CMD_NOT_EXIST
 		|| err_id == ENV_VAR_NOT_EXIST)
 		;
