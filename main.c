@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/19 01:03:54 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/19 18:28:47 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ void	prompt_loop(t_shell *m)
 		init_lexer(&m->lexer, m->input);
 		parse_commands(m);
 		//command_exists(m);
-		//free(m->input);
-		// free_lexer(m->lexer);
+		free(m->input);
+		free_lexer(m->lexer);
 		// free(m->exec->argv[0]);      ////TEST
 		// free(m->exec->argv);         ////TEST
 	}
