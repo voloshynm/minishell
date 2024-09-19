@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 23:51:28 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/19 18:56:56 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 /*
 **	function to read into heredoc
 */
-static void	heredoc_readline(const char *delimiter, char *line, int tmp_fd)
+static void	heredoc_readline(const char *delimiter, int tmp_fd)
 {
+	char	*line;
+
 	while (1)
 	{
 		line = readline("heredoc> ");
@@ -42,7 +44,6 @@ static void	heredoc_readline(const char *delimiter, char *line, int tmp_fd)
 */
 static int	handle_heredoc(const char *delimiter, t_shell *m)
 {
-	char	*line;
 	int		tmp_fd;
 	char	*tmp_filename;
 	char	*tmp_pid;
@@ -53,7 +54,7 @@ static int	handle_heredoc(const char *delimiter, t_shell *m)
 	tmp_fd = open(tmp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
 		return (p_error(TMP_FILE_CREATION_ERR, NULL));
-	heredoc_readline(delimiter, line, tmp_fd);
+	heredoc_readline(delimiter, tmp_fd);
 	close(tmp_fd);
 	tmp_fd = open(tmp_filename, O_RDONLY);
 	if (tmp_fd < 0)
@@ -65,8 +66,7 @@ static int	handle_heredoc(const char *delimiter, t_shell *m)
 /*
 **	open proper infile or outfile depending on the redirection token type
 */
-int	parse_redirection(t_command *c, t_token token, char *filename,
-		t_shell *m)
+int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 {
 	if (token == IN)
 	{
@@ -120,6 +120,8 @@ int	setup_redirection(t_command *c)
 		if (dup2(c->outfile, STDOUT_FILENO) < 0)
 			return (p_error(DUP2_ERR, NULL));
 	}
+	(void)saved_stdin;
+	(void)saved_stdout;
 	return (0);
 }
 

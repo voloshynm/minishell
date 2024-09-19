@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 23:07:09 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/19 18:42:34 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,6 @@ void		process_env_arg(t_lexer *lexer);
 // lexer.c
 int			init_lexer(t_lexer **lexer, char *input);
 void		analyse_tokens(t_lexer *lexer);
-void		free_lexer(t_lexer *lexer);
+void		free_lexer(t_lexer **lexer);
 
 #endif

@@ -11,7 +11,7 @@ SRC =   main.c 					\
 OBJS = ${SRC:.c=.o}
 NAME = minishell
 CC = cc
-CFLAGS = -Werror -Wextra -Wall
+CFLAGS = -g -Werror -Wextra -Wall
 LIBFT_PATH = ./libft
 RM = rm -f
 
@@ -39,8 +39,8 @@ libft:
 	fi
 	${MAKE} all -C ${LIBFT_PATH}
 
-.c.o:
-	${CC} -g -c $< -o ${<:.c=.o}
+#.c.o:
+#	${CC} -g -c $< -o ${<:.c=.o}
 
 
 clean:
