@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/19 18:26:05 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/19 19:10:33 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,16 +84,16 @@ int	init_lexer(t_lexer **lexer, char *input)
 	return (0);
 }
 
-void	free_lexer(t_lexer *lexer)
+void	free_lexer(t_lexer **lexer)
 {
 	t_lexer	*token;
 
-	while (lexer)
+	while (*lexer)
 	{
-		token = get_first_token(lexer);
-		lexer = token->next;
-		if (lexer)
-			lexer->prev = NULL;
+		token = get_first_token(*lexer);
+		*lexer = token->next;
+		if (*lexer)
+			(*lexer)->prev = NULL;
 		free(token->str);
 		free(token);
 	}

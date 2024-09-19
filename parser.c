@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/19 01:23:57 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/19 18:59:09 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 	t_list	*cmds_lst_el;
 
 	*c = ft_calloc(1, sizeof(t_command));
-	cmds_lst_el = ft_lstnew(c);
+	cmds_lst_el = ft_lstnew(*c);
 	ft_lstadd_back(&m->parser, cmds_lst_el);
 	if (!c || !cmds_lst_el || !m->parser)
 		return (p_error(ALLOC_FAILURE, NULL));
@@ -35,7 +35,7 @@ static int	get_cmd_len(t_lexer *lexer)
 
 	l = lexer;
 	len = 0;
-	while(l && l->token == WORD)
+	while (l && l->token == WORD)
 	{
 		len++;
 		l = l->next;
@@ -47,7 +47,7 @@ static int	parse_command(t_command *c, t_lexer **l)
 {
 	char	**cur_cmd;
 
-	cur_cmd = ft_calloc(1, get_cmd_len(*l));
+	cur_cmd = ft_calloc(get_cmd_len(*l) + 1, sizeof(char *));
 	c->cmd = cur_cmd;
 	while (*l && (*l)->token == WORD)
 	{
@@ -55,11 +55,15 @@ static int	parse_command(t_command *c, t_lexer **l)
 		*l = (*l)->next;
 		cur_cmd++;
 	}
+	*cur_cmd = NULL;
 	return (0);
 }
 
 static int	parse_full_path(t_command *c, char *s, t_shell *m)
 {
+	(void)c;
+	(void)s;
+	(void)m;
 	// define the actual command, based on the fist token and then
 	// check if it is a builtin. Consequently assign a path of the command
 	return (0);
@@ -67,15 +71,21 @@ static int	parse_full_path(t_command *c, char *s, t_shell *m)
 
 static int	test_parser(t_shell *m)
 {
-	t_command *test = ((t_command *)(m->parser->content));
-	printf("CMD: %s", *(test->cmd));
+	t_command	*test;
+
+	test = (t_command *)(m->parser->content);
+	while (*test->cmd)
+	{
+		printf("CMD1: %s\n", *test->cmd);
+		test->cmd++;
+	}
+	(void)test;
 	return (0);
 }
 
 int	parse_commands(t_shell *m)
 {
 	t_command	*c;
-	char		**cur_cmd;
 	t_lexer		*l;
 
 	l = m->lexer;
@@ -102,7 +112,6 @@ int	parse_commands(t_shell *m)
 		if (l->next)
 			l = l->next;
 	}
-
 	test_parser(m);
 	return (OK);
 }

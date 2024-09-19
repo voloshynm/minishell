@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 15:34:26 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/19 19:06:47 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 	{
 		printf("Environmental variable '$%s' does NOT exist\n", tmp_1);
 		free(tmp_1);
-		free_lexer(lexer);
-		exit(EXIT_FAILURE);
+		return (NULL);
 	}
 	free(tmp_1);
 	tmp_1 = ft_strjoin(tmp_2, ++s);
