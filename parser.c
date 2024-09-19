@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/19 22:21:57 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/19 22:31:07 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static int	parse_full_path(t_command *c, t_shell *m)
 	}
 	else
 		printf("%s: command not found\n", p->cmd[0]);
-	excecute(m);
+	execute(m);
 	(void)c;
 	return (0);
 }

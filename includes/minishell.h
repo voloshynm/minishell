@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/19 22:17:45 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/19 22:31:16 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,6 @@ int			parse_commands(t_shell *m);
 int			is_builtin(t_shell *m);
 
 int			is_bin(t_shell *m);
-int	excecute(t_shell *m);
+int		execute(t_shell *m);
 
 #endif
