@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 22:55:25 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/19 22:31:05 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,6 @@ int		parse_redirection(t_command *c, t_token token, char *filename,
 int		setup_redirection(t_command *c);
 void	restore_and_close_files(t_command *c);
 int		parse_commands(t_shell *m);
+void	free_parser(t_list **parser);
 
 #endif

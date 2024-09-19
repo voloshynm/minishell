@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/19 18:59:09 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/19 22:35:59 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
+
+void	free_parser(t_list **parser)
+{
+	t_list		*p;
+	t_command	*command;
+
+	while (*parser)
+	{
+		p = *parser;
+		*parser = (*parser)->next;
+		command = ((t_command *)p->content);
+		free_ft_split(command->cmd);
+		free(command->full_path);
+		free(p);
+	}
+}
 
 /*
 **	create a list element c of a struct t_command and add it to t_list cmds
@@ -22,7 +38,7 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 	*c = ft_calloc(1, sizeof(t_command));
 	cmds_lst_el = ft_lstnew(*c);
 	ft_lstadd_back(&m->parser, cmds_lst_el);
-	if (!c || !cmds_lst_el || !m->parser)
+	if (!(*c) || !cmds_lst_el || !m->parser)
 		return (p_error(ALLOC_FAILURE, NULL));
 	(*c)->infile = STDIN_FILENO;
 	(*c)->outfile = STDOUT_FILENO;
@@ -69,17 +85,32 @@ static int	parse_full_path(t_command *c, char *s, t_shell *m)
 	return (0);
 }
 
-static int	test_parser(t_shell *m)
+static int	print_parser(t_shell *minihell)
 {
 	t_command	*test;
+	t_shell		*m;
+	int			i;
+	char		c;
 
-	test = (t_command *)(m->parser->content);
-	while (*test->cmd)
+	m = minihell;
+	i = 1;
+	while ((t_command *)(m->parser))
 	{
-		printf("CMD1: %s\n", *test->cmd);
-		test->cmd++;
+		test = (t_command *)(m->parser->content);
+		while (*test->cmd)
+		{
+			printf("CMD %d: %s\n", i, *test->cmd);
+			test->cmd++;
+		}
+		if (test->cmd_splitter == PIPE)
+			c = 'P';
+		else if (test->cmd_splitter == OR)
+			c = 'O';
+		else if (test->cmd_splitter == AND)
+			c = 'A';
+		printf("CMD %d splitter: %c\n", i++, c);
+		m->parser = m->parser->next;
 	}
-	(void)test;
 	return (0);
 }
 
@@ -95,23 +126,20 @@ int	parse_commands(t_shell *m)
 			return (ALLOC_FAILURE);
 		if (parse_full_path(c, *(c->cmd), m))
 			return (m->ex_status);
-		if (!l)
-			break ;
-		while (is_token_redir(l))
+		while (l && is_token_redir(l))
 		{
 			if (parse_redirection(c, l->token, (l->next)->str, m))
 				return (m->ex_status);
 			if (l->next->next && (l->next->next)->token == WORD)
 				return (p_error(UNEXPEC_TOKEN, l->str));
-			if (l->next->next)
-				l = l->next->next;
-			else
-				l = l->next;
+			l = l->next->next;
 		}
-		c->cmd_splitter = l->token;
-		if (l->next)
+		if (l && is_token_pipish(l))
+		{
+			c->cmd_splitter = l->token;
 			l = l->next;
+		}
 	}
-	test_parser(m);
+	print_parser(m);
 	return (OK);
 }
