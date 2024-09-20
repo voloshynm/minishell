@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 10:57:38 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:54:35 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	init_lexer(t_lexer **lexer, char *input)
 	{
 		token = tokenize_input(&input);
 		add_to_token_list(lexer, token);
-		if (input) 
+		if (input)
 			if (ft_strchr(">|<&", *(input - 1)))
 				add_to_token_list(lexer, ft_strndup((input - 1), 1));
 	}

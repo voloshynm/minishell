@@ -6,27 +6,11 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/20 12:11:21 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:49:51 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
-
-void	free_parser(t_list **parser)
-{
-	t_list		*p;
-	t_command	*command;
-
-	while (*parser)
-	{
-		p = *parser;
-		*parser = (*parser)->next;
-		command = ((t_command *)p->content);
-		free_ft_split(command->cmd);
-		free(command->full_path);
-		free(p);
-	}
-}
 
 /*
 **	create a list element c of a struct t_command and add it to t_list cmds
@@ -45,6 +29,7 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 	(*c)->cmd_splitter = NONE;
 	return (OK);
 }
+
 static int	get_cmd_len(t_lexer *lexer)
 {
 	int		len;
@@ -76,57 +61,6 @@ static int	parse_command(t_command *c, t_lexer **l)
 	return (0);
 }
 
-static int	parse_full_path(t_command *c, t_shell *m)
-{
-	char		*temp;
-	t_command	*p;
-
-	p = ((t_command *)(m->parser->content));
-	p->full_path = NULL;
-	is_builtin(m);
-	if (!p->full_path)
-		is_bin(m);
-	if (p->full_path)
-	{
-		temp = ft_strjoin(p->full_path, "/");
-		p->full_path = ft_strjoin(temp, p->cmd[0]);
-		free(temp);
-	}
-	else
-		printf("%s: command not found\n", p->cmd[0]);
-	execute(m);
-	(void)c;
-	return (0);
-}
-
-static int	print_parser(t_shell *minihell)
-{
-	t_command	*test;
-	t_shell		*m;
-	int			i;
-
-	m = minihell;
-	i = 1;
-	while ((t_command *)(m->parser))
-	{
-		test = (t_command *)(m->parser->content);
-		while (*test->cmd)
-		{
-			printf("CMD %d: %s\n", i, *test->cmd);
-			test->cmd++;
-		}
-		if (test->cmd_splitter == PIPE)
-			printf("CMD %d splitter: PIPE\n", i);
-		else if (test->cmd_splitter == OR)
-			printf("CMD %d splitter: OR\n", i);
-		else if (test->cmd_splitter == AND)
-			printf("CMD %d splitter: AND\n", i);
-		m->parser = m->parser->next;
-		i++;
-	}
-	return (0);
-}
-
 int	parse_commands(t_shell *m)
 {
 	t_command	*c;
@@ -155,4 +89,20 @@ int	parse_commands(t_shell *m)
 	}
 	print_parser(m);
 	return (OK);
+}
+
+void	free_parser(t_list **parser)
+{
+	t_list		*p;
+	t_command	*command;
+
+	while (*parser)
+	{
+		p = *parser;
+		*parser = (*parser)->next;
+		command = ((t_command *)p->content);
+		free_ft_split(command->cmd);
+		free(command->full_path);
+		free(p);
+	}
 }

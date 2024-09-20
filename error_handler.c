@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/19 15:01:49 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:55:23 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 **	Prints the error
 	Frees the resources
 	Returns the error
+	//if (err_id == ALLOC_FAILURE || err_id == CMD_NOT_EXIST
+	//	|| err_id == ENV_VAR_NOT_EXIST)
+	//	;
 */
 int	p_error(int err_id, void *arg)
 {
@@ -41,8 +44,27 @@ int	p_error(int err_id, void *arg)
 		printf("Error: Error creating temporary file\n");
 	else if (err_id == DUP2_ERR)
 		printf("Error: dup2 failed\n");
-	//if (err_id == ALLOC_FAILURE || err_id == CMD_NOT_EXIST
-	//	|| err_id == ENV_VAR_NOT_EXIST)
-	//	;
 	return (err_id);
+}
+
+int	input_error(char *input)
+{
+	char	token_type;
+
+	while (1)
+	{
+		input = ft_strpbrk(input, "|&<>");
+		if (input)
+			token_type = *input;
+		if (!input)
+			break ;
+		if (*(++input) == ' ' || *input == '\t')
+		{
+			while (*input == ' ' || (*input == '\t' && *input))
+				input++;
+			if (*input == token_type)
+				return (p_error(2, &token_type));
+		}
+	}
+	return (0);
 }

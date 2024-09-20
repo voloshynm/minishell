@@ -6,10 +6,9 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 10:54:51 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:40:25 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -40,7 +39,6 @@
 	ex_status	= exit status of most recently executed cmd
 **	pid 	= process id for minishell instance
 */
-
 typedef struct s_shell
 {
 	char	*input;
@@ -69,24 +67,30 @@ enum		e_err_state
 	DUP2_ERR = 11
 };
 
-void		prompt_loop(t_shell *m);
+// main.c: the main loop of minishell
+void	prompt_loop(t_shell *m);
 
-int			p_error(int err_id, void *arg);
-int			input_error(char *input);
+// error_handler.c: to handle input errors and print errors
+int		p_error(int err_id, void *arg);
+int		input_error(char *input);
 
-// int			excecute(t_exec *exec);
-int			command_exists(t_shell *m);
+// parser.c: to parse tokens into commands with its path
+int		parse_commands(t_shell *m);
+void	free_parser(t_list **parser);
 
-int			parse_redirection(t_command *c, t_token token, char *filename,
-				t_shell *m);
-int			setup_redirection(t_command *c);
-void		restore_and_close_files(t_command *c);
-int			parse_commands(t_shell *m);
+// parser_path.c: to get full path of the command for exec
+int		parse_full_path(t_command *c, t_shell *m);
+int		is_builtin(t_shell *m);
+int		is_bin(t_shell *m, int i);
+int		print_parser(t_shell *minihell);
 
-int			is_builtin(t_shell *m);
+// parser_redirection.c: to handle redirections
+int		parse_redirection(t_command *c, t_token token, char *filename,
+			t_shell *m);
+int		setup_redirection(t_command *c);
+void	restore_and_close_files(t_command *c);
 
-int			is_bin(t_shell *m);
-int			execute(t_shell *m);
-void		free_parser(t_list **parser);
+// executor.c: to execute the command
+int		execute(t_shell *m);
 
 #endif

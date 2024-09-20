@@ -6,43 +6,20 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 10:52:09 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:54:10 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void	initialize_vars(t_shell *m)
+void	init_shell_vars(t_shell *m)
 {
-	m->envp = ft_split(getenv("PATH"), ':'),
-	m->input = NULL;
+	m->envp = ft_split(getenv("PATH"), ':');
 	m->lexer = NULL;
 	m->parser = NULL;
 	m->input = NULL;
 	m->pid = getpid();
 	m->ex_status = 0;
-}
-
-int	input_error(char *input)
-{
-	char	token_type;
-
-	while (1)
-	{
-		input = ft_strpbrk(input, "|&<>");
-		if (input)
-			token_type = *input;
-		if (!input)
-			break ;
-		if (*(++input) == ' ' || *input == '\t')
-		{
-			while (*input == ' ' || (*input == '\t' && *input))
-				input++;
-			if (*input == token_type)
-				return (p_error(2, &token_type));
-		}
-	}
-	return (0);
 }
 
 void	prompt_loop(t_shell *m)
@@ -81,7 +58,7 @@ void	handle_sigint(int sig)
 
 int	main(int argc, char **argv)
 {
-	t_shell m;
+	t_shell	m;
 
 	(void)argv;
 	if (argc != 1)
@@ -91,7 +68,7 @@ int	main(int argc, char **argv)
 	}
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
-	initialize_vars(&m);
+	init_shell_vars(&m);
 	prompt_loop(&m);
 	return (0);
 }
