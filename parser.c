@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/19 22:35:59 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 10:55:27 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,26 @@ static int	parse_command(t_command *c, t_lexer **l)
 	return (0);
 }
 
-static int	parse_full_path(t_command *c, char *s, t_shell *m)
+static int	parse_full_path(t_command *c, t_shell *m)
 {
+	char		*temp;
+	t_command	*p;
+
+	p = ((t_command *)(m->parser->content));
+	p->full_path = NULL;
+	is_builtin(m);
+	if (!p->full_path)
+		is_bin(m);
+	if (p->full_path)
+	{
+		temp = ft_strjoin(p->full_path, "/");
+		p->full_path = ft_strjoin(temp, p->cmd[0]);
+		free(temp);
+	}
+	else
+		printf("%s: command not found\n", p->cmd[0]);
+	execute(m);
 	(void)c;
-	(void)s;
-	(void)m;
-	// define the actual command, based on the fist token and then
-	// check if it is a builtin. Consequently assign a path of the command
 	return (0);
 }
 
@@ -124,7 +137,7 @@ int	parse_commands(t_shell *m)
 	{
 		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l))
 			return (ALLOC_FAILURE);
-		if (parse_full_path(c, *(c->cmd), m))
+		if (parse_full_path(c, m))
 			return (m->ex_status);
 		while (l && is_token_redir(l))
 		{

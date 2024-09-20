@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/19 18:42:34 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/20 10:54:12 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
-
 
 /*
 **	WORD,        	Represents commands and arguments (grep, cat, echo)
@@ -22,7 +21,6 @@
 **	REDIR_APPEND,	Represents append redirection (>>)
 **	REDIR_HEREDOC,	Represents heredoc redirection (<<)
 */
-
 typedef enum e_token
 {
 	WORD,
@@ -45,7 +43,6 @@ typedef enum e_token
 **	char *str stores the string value of the token
 ** 	*next and *prev are links to the following elements of the list of tokens 
 */
-
 typedef struct s_lexer
 {
 	char			*str;

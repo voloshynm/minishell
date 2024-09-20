@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/19 19:10:33 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 10:57:38 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	init_lexer(t_lexer **lexer, char *input)
 	while (l_start)
 	{
 		process_env_arg(l_start);
-		printf("TOKEN: %s\n", l_start->str);
+		//printf("TOKEN: %s\n", l_start->str);
 		l_start = l_start->next;
 	}
 	return (0);

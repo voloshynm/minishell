@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/19 22:31:29 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 10:52:09 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	initialize_vars(t_shell *m)
 {
+	m->envp = ft_split(getenv("PATH"), ':'),
 	m->input = NULL;
 	m->lexer = NULL;
 	m->parser = NULL;
@@ -48,7 +49,6 @@ void	prompt_loop(t_shell *m)
 {
 	while (1)
 	{
-		//initialize_vars(m);
 		m->input = readline(PROMPT);
 		if (m->input == NULL)
 		{
@@ -79,12 +79,19 @@ void	handle_sigint(int sig)
 	rl_redisplay();
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	t_shell m;
 
+	(void)argv;
+	if (argc != 1)
+	{
+		printf("Minishell cannot be launched with arguments\n");
+		return (EXIT_FAILURE);
+	}
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
+	initialize_vars(&m);
 	prompt_loop(&m);
 	return (0);
 }

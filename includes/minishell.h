@@ -6,9 +6,10 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/19 22:31:05 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 10:54:51 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -23,6 +24,7 @@
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <sys/wait.h>
 # include <signal.h>
 # include <stdbool.h>
 # include <stdlib.h> // For malloc(), free()
@@ -72,14 +74,19 @@ void		prompt_loop(t_shell *m);
 int			p_error(int err_id, void *arg);
 int			input_error(char *input);
 
-//int			excecute(t_exec *exec);
+// int			excecute(t_exec *exec);
 int			command_exists(t_shell *m);
 
-int		parse_redirection(t_command *c, t_token token, char *filename,
-		t_shell *m);
-int		setup_redirection(t_command *c);
-void	restore_and_close_files(t_command *c);
-int		parse_commands(t_shell *m);
-void	free_parser(t_list **parser);
+int			parse_redirection(t_command *c, t_token token, char *filename,
+				t_shell *m);
+int			setup_redirection(t_command *c);
+void		restore_and_close_files(t_command *c);
+int			parse_commands(t_shell *m);
+
+int			is_builtin(t_shell *m);
+
+int			is_bin(t_shell *m);
+int			execute(t_shell *m);
+void		free_parser(t_list **parser);
 
 #endif
