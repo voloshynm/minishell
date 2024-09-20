@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/20 10:55:27 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:11:21 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 		return (p_error(ALLOC_FAILURE, NULL));
 	(*c)->infile = STDIN_FILENO;
 	(*c)->outfile = STDOUT_FILENO;
+	(*c)->cmd_splitter = NONE;
 	return (OK);
 }
 static int	get_cmd_len(t_lexer *lexer)
@@ -103,7 +104,6 @@ static int	print_parser(t_shell *minihell)
 	t_command	*test;
 	t_shell		*m;
 	int			i;
-	char		c;
 
 	m = minihell;
 	i = 1;
@@ -116,13 +116,13 @@ static int	print_parser(t_shell *minihell)
 			test->cmd++;
 		}
 		if (test->cmd_splitter == PIPE)
-			c = 'P';
+			printf("CMD %d splitter: PIPE\n", i);
 		else if (test->cmd_splitter == OR)
-			c = 'O';
+			printf("CMD %d splitter: OR\n", i);
 		else if (test->cmd_splitter == AND)
-			c = 'A';
-		printf("CMD %d splitter: %c\n", i++, c);
+			printf("CMD %d splitter: AND\n", i);
 		m->parser = m->parser->next;
+		i++;
 	}
 	return (0);
 }

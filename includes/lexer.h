@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 10:54:12 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:05:17 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ typedef enum e_token
 	APPEND,
 	HEREDOC,
 	AND,
-	OR
+	OR,
+	NONE
 }					t_token;
 
 /*
