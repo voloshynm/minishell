@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/19 19:06:47 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/20 15:15:18 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,11 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 	tmp_1 = ft_strndup(start, s - start);
 	tmp_2 = getenv(tmp_1);
 	if (!tmp_2)
-	{
-		printf("Environmental variable '$%s' does NOT exist\n", tmp_1);
-		free(tmp_1);
-		return (NULL);
-	}
+		tmp_2 = "";
 	free(tmp_1);
-	tmp_1 = ft_strjoin(tmp_2, ++s);
-	tmp_2 = ft_strndup(lexer->str, start - lexer->str);
+	tmp_1 = ft_strjoin(tmp_2, s);
+	tmp_2 = ft_strndup(lexer->str,
+			ft_strlen(lexer->str) - ft_strlen(start) - 1);
 	new_str = ft_strjoin(tmp_2, tmp_1);
 	free(tmp_1);
 	free(tmp_2);
@@ -56,10 +53,7 @@ void	process_env_arg(t_lexer *lexer)
 	while (*s)
 	{
 		if (*s == '$' && ft_isalnum(*(s + 1)))
-		{
 			lexer->str = replace_env_arg(++s, lexer);
-			return ;
-		}
 		s++;
 	}
 }
