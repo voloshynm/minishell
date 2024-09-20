@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 15:24:36 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:32:21 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,31 +21,20 @@ int	execute(t_shell *m)
 	p = ((t_command *)(m->parser->content));
 	pid = fork();
 	if (pid == 0)
-	{ // Child process
+	{
 		execve(p->full_path, p->cmd, NULL);
-		perror("execve failed");
-		exit(127); // Common convention: 127 indicates command not found
+		exit(127); 
 	}
 	else if (pid > 0)
-	{ // Parent process
+	{
 		waitpid(pid, &status, 0);
 		if ((status & 0x7F) == 0)
-		{                                        
-			int exit_code = (status >> 8) & 0xFF;
-			//printf("Child exited with status: %d\n", exit_code);
-			return (exit_code); // Return the child's exit code
-		}
+			return ((status >> 8) & 0xFF);
 		else
-		{
-			//printf("Child was terminated by signal: %d\n", status & 0x7F);
-			return (-1); // Indicate an abnormal termination
-		}
+			return (-1);
 	}
 	else
-	{
-		perror("fork failed");
 		return (-1);
-	}
 	return (0);
 }
 

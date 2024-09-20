@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/20 15:11:56 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 23:02:58 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	parse_commands(t_shell *m)
 {
 	t_command	*c;
 	t_lexer		*l;
-
+	
 	l = m->lexer;
 	while (l)
 	{

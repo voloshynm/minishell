@@ -5,7 +5,8 @@ SRC =   main.c 											\
 		string_utils.c 									\
 		error_handler.c 		
 		
-		
+BUILTIN_SRC = echo.c
+
 OBJS = ${SRC:.c=.o}
 NAME = minishell
 CC = cc
@@ -27,7 +28,7 @@ WHITE = \033[0;97m
 
 all: libft ${NAME}
 
-${NAME}: ${OBJS}
+${NAME}: ${OBJS} builtin
 	${CC} ${CFLAGS} ${OBJS} -o ${NAME} -L${LIBFT_PATH} -lft -lreadline
 
 libft:
@@ -37,9 +38,8 @@ libft:
 	fi
 	${MAKE} all -C ${LIBFT_PATH}
 
-#.c.o:
-#	${CC} -g -c $< -o ${<:.c=.o}
-
+builtin: libft 
+	${CC} ${CFLAGS}  builtins/${BUILTIN_SRC} -o builtins/$(basename ${BUILTIN_SRC}) -L${LIBFT_PATH} -lft 
 
 clean:
 	${MAKE} -C ${LIBFT_PATH} clean 

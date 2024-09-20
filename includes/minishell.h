@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 12:40:25 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 23:15:18 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,9 @@ void	free_parser(t_list **parser);
 
 // parser_path.c: to get full path of the command for exec
 int		parse_full_path(t_command *c, t_shell *m);
-int		is_builtin(t_shell *m);
-int		is_bin(t_shell *m, int i);
+int		is_builtin(t_command *p);
+int		is_bin(t_shell *m, t_command *p);
+
 int		print_parser(t_shell *minihell);
 
 // parser_redirection.c: to handle redirections

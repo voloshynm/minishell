@@ -3,52 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   parser_path.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 15:24:13 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 23:14:54 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-int	is_builtin(t_shell *m)
+int	is_builtin(t_command *c)
 {
 	DIR				*directory;
 	struct dirent	*entry;
 	char			path[PATH_MAX];
-	t_command		*p;
 
-	p = ((t_command *)(m->parser->content));
 	getcwd(path, sizeof(path));
-	p->full_path = ft_strjoin(path, "/builtins");
-	directory = opendir(p->full_path);
+	c->full_path = ft_strjoin(path, "/builtins");
+	directory = opendir(c->full_path);
 	while (directory)
 	{
 		entry = readdir(directory);
 		if (!entry)
 			break ;
-		if (!ft_strncmp(p->cmd[0], entry->d_name, ft_strlen(p->cmd[0])))
+		if (!ft_strncmp(c->cmd[0], entry->d_name, ft_strlen(c->cmd[0])))
 		{
 			closedir(directory);
 			return (1);
 		}
 	}
-	free(p->full_path);
-	p->full_path = NULL;
+	free(c->full_path);
+	c->full_path = NULL;
 	closedir(directory);
 	return (0);
 }
 
-int	is_bin(t_shell *m, int i)
+int	is_bin(t_shell *m, t_command *c)
 {
 	DIR				*directory;
 	struct dirent	*entry;
-	t_command		*p;
+	int				i;
 
-	i = 0;
-	p = ((t_command *)(m->parser->content));
-	while (m->envp[i])
+	i = -1;
+	while (m->envp[++i])
 	{
 		directory = opendir(m->envp[i]);
 		while (directory)
@@ -56,15 +53,14 @@ int	is_bin(t_shell *m, int i)
 			entry = readdir(directory);
 			if (!entry)
 				break ;
-			if (!ft_strncmp(p->cmd[0], entry->d_name, ft_strlen(p->cmd[0])))
+			if (!ft_strncmp(c->cmd[0], entry->d_name, ft_strlen(c->cmd[0])))
 			{
-				p->full_path = m->envp[i];
+				c->full_path = m->envp[i];
 				closedir(directory);
 				return (1);
 			}
 		}
 		closedir(directory);
-		i++;
 	}
 	return (0);
 }
@@ -72,23 +68,18 @@ int	is_bin(t_shell *m, int i)
 int	parse_full_path(t_command *c, t_shell *m)
 {
 	char		*temp;
-	t_command	*p;
-	int			i;
-
-	p = ((t_command *)(m->parser->content));
-	i = 0;
-	p->full_path = NULL;
-	is_builtin(m);
-	if (!p->full_path)
-		is_bin(m, i);
-	if (p->full_path)
+	
+	is_builtin(c);
+	if (!c->full_path)
+		is_bin(m, c);
+	if (c->full_path)
 	{
-		temp = ft_strjoin(p->full_path, "/");
-		p->full_path = ft_strjoin(temp, p->cmd[0]);
+		temp = ft_strjoin(c->full_path, "/");
+		c->full_path = ft_strjoin(temp, c->cmd[0]);
 		free(temp);
 	}
 	else
-		printf("%s: command not found\n", p->cmd[0]);
+		printf("%s: command not found\n", c->cmd[0]);
 	execute(m);
 	(void)c;
 	return (0);
