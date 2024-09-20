@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 13:10:48 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:56:20 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ void	init_shell_vars(t_shell *m)
 	m->input = NULL;
 	m->pid = getpid();
 	m->ex_status = 0;
+	m->pipefd[0] = 0;
+	m->pipefd[1] = 1;
+	m->last_splitter_token = NONE;
 }
 
 void	prompt_loop(t_shell *m)

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/20 15:11:56 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:55:27 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 		return (p_error(ALLOC_FAILURE, NULL));
 	(*c)->infile = STDIN_FILENO;
 	(*c)->outfile = STDOUT_FILENO;
-	(*c)->cmd_splitter = NONE;
+	if (m->last_splitter_token != NONE)
+		(*c)->cmd_splitter = m->last_splitter_token;
+	else
+		(*c)->cmd_splitter = NONE;
 	return (OK);
 }
 
@@ -83,7 +86,7 @@ int	parse_commands(t_shell *m)
 		}
 		if (l && is_token_pipish(l))
 		{
-			c->cmd_splitter = l->token;
+			m->last_splitter_token = l->token;
 			l = l->next;
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 15:24:13 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:42:41 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	is_builtin(t_shell *m)
 		entry = readdir(directory);
 		if (!entry)
 			break ;
-		if (!ft_strncmp(p->cmd[0], entry->d_name, ft_strlen(p->cmd[0])))
+		if (!ft_strcmp(p->cmd[0], entry->d_name))
 		{
 			closedir(directory);
 			return (1);
@@ -56,7 +56,7 @@ int	is_bin(t_shell *m, int i)
 			entry = readdir(directory);
 			if (!entry)
 				break ;
-			if (!ft_strncmp(p->cmd[0], entry->d_name, ft_strlen(p->cmd[0])))
+			if (!ft_strcmp(p->cmd[0], entry->d_name))
 			{
 				p->full_path = m->envp[i];
 				closedir(directory);
