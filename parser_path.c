@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 12:46:33 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 15:24:13 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ int	print_parser(t_shell *minihell)
 			printf("CMD %d: %s\n", i, *test->cmd);
 			test->cmd++;
 		}
+		printf("CMD %d path: %s\n", i, test->full_path);
 		if (test->cmd_splitter == PIPE)
 			printf("CMD %d splitter: PIPE\n", i);
 		else if (test->cmd_splitter == OR)

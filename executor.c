@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 12:21:00 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/20 15:24:36 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,17 @@ int	execute(t_shell *m)
 	{
 		perror("fork failed");
 		return (-1);
+	}
+	return (0);
+}
+
+int	executor_loop(t_shell *m)
+{
+	while (m->parser)
+	{
+		
+
+		m->parser = m->parser->next;
 	}
 	return (0);
 }
