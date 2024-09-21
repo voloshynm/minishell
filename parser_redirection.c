@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/19 18:56:56 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/21 11:54:43 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,46 +101,45 @@ int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 	// Redirect output if outfile is set and not STDOUT
 	if (c->outfile != STDOUT_FILENO)
 */
-int	setup_redirection(t_command *c)
+int	setup_redirection(t_command *c, t_shell *m)
 {
-	int	saved_stdin;
-	int	saved_stdout;
-
-	saved_stdin = -1;
-	saved_stdout = -1;
 	if (c->infile != STDIN_FILENO)
 	{
-		saved_stdin = dup(STDIN_FILENO);
+		m->pipefd[0] = dup(STDIN_FILENO);
+		if (m->pipefd[0] < 0)
+			return (p_error(DUP2_ERR, NULL));
 		if (dup2(c->infile, STDIN_FILENO) < 0)
 			return (p_error(DUP2_ERR, NULL));
 	}
 	if (c->outfile != STDOUT_FILENO)
 	{
-		saved_stdout = dup(STDOUT_FILENO);
+		m->pipefd[1] = dup(STDOUT_FILENO);
+		if (m->pipefd[1] < 0)
+			return (p_error(DUP2_ERR, NULL));
 		if (dup2(c->outfile, STDOUT_FILENO) < 0)
 			return (p_error(DUP2_ERR, NULL));
 	}
-	(void)saved_stdin;
-	(void)saved_stdout;
 	return (0);
 }
 
 /*
-**	// Restore stdin and close infile if it was redirected
-	if (c->infile != STDIN_FILENO)
-	// Restore stdout and close outfile if it was redirected
-	if (c->outfile != STDOUT_FILENO)
+**	// Restore stdin from pipefd[0] and close infile if it was redirected
+	// Restore stdout from pipefd[1] and close outfile if it was redirected
 */
-void	restore_and_close_files(t_command *c)
+void	restore_and_close_files(t_command *c, t_shell *m)
 {
 	if (c->infile != STDIN_FILENO)
 	{
-		dup2(STDIN_FILENO, c->infile);
-		close(c->infile);
+		dup2(m->pipefd[0], STDIN_FILENO);
+		close(m->pipefd[0]);
+		if (c->infile != -1)
+			close(c->infile);
 	}
 	if (c->outfile != STDOUT_FILENO)
 	{
-		dup2(STDOUT_FILENO, c->outfile);
-		close(c->outfile);
+		dup2(m->pipefd[1], STDOUT_FILENO);
+		close(m->pipefd[1]);
+		if (c->outfile != -1)
+			close(c->outfile);
 	}
 }

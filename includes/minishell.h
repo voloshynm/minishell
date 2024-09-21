@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 23:15:18 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/21 11:57:43 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,16 @@
 */
 typedef struct s_shell
 {
-	char	*input;
-	t_lexer	*lexer;
-	t_list	*parser;
-	pid_t	pid;
-	char	**envp;
-	char	*pwd;
-	char	*oldpwd;
-	int		ex_status;
+	char		*input;
+	t_lexer		*lexer;
+	t_list		*parser;
+	pid_t		pid;
+	char		**envp;
+	char		*pwd;
+	char		*oldpwd;
+	int			ex_status;
+	int 		pipefd[2];
+	t_token		last_splitter_token;
 }			t_shell;
 
 enum		e_err_state
@@ -88,9 +90,9 @@ int		print_parser(t_shell *minihell);
 // parser_redirection.c: to handle redirections
 int		parse_redirection(t_command *c, t_token token, char *filename,
 			t_shell *m);
-int		setup_redirection(t_command *c);
-void	restore_and_close_files(t_command *c);
+int	setup_redirection(t_command *c, t_shell *m);
 
+void	restore_and_close_files(t_command *c, t_shell *m);
 // executor.c: to execute the command
 int		execute(t_shell *m);
 

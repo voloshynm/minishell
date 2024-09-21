@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 23:14:54 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/21 11:56:33 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	is_builtin(t_command *c)
 		entry = readdir(directory);
 		if (!entry)
 			break ;
-		if (!ft_strncmp(c->cmd[0], entry->d_name, ft_strlen(c->cmd[0])))
+		if (!ft_strcmp(c->cmd[0], entry->d_name))
 		{
 			closedir(directory);
 			return (1);
@@ -53,7 +53,7 @@ int	is_bin(t_shell *m, t_command *c)
 			entry = readdir(directory);
 			if (!entry)
 				break ;
-			if (!ft_strncmp(c->cmd[0], entry->d_name, ft_strlen(c->cmd[0])))
+			if (!ft_strcmp(c->cmd[0], entry->d_name))
 			{
 				c->full_path = m->envp[i];
 				closedir(directory);
@@ -81,7 +81,6 @@ int	parse_full_path(t_command *c, t_shell *m)
 	else
 		printf("%s: command not found\n", c->cmd[0]);
 	execute(m);
-	(void)c;
 	return (0);
 }
 

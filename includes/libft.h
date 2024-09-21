@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 15:31:19 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/17 17:54:27 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/21 11:50:49 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,7 @@ void				free_ft_split(char **strings);
 char				*ft_strpbrk(const char *s, const char *c);
 char				*ft_strndup(const char *s, size_t n);
 char				*remove_first_char(char *str);
+int					ft_strcmp(const char *s1, const char *s2);
+
 
 #endif

@@ -47,6 +47,7 @@ clean:
 
 
 fclean: clean
+	${RM} builtins/$(basename ${BUILTIN_SRC})
 	${RM} ${NAME};
 	${RM} -rf ${LIBFT_PATH}
 

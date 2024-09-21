@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 10:11:19 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 22:57:27 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/21 11:53:47 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,23 @@ char	*remove_first_char(char *str)
 	new_str = ft_strdup(++old_str);
 	free(--old_str);
 	return (new_str);
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	unsigned char	*p1;
+	unsigned char	*p2;
+
+	p1 = (unsigned char *)s1;
+	p2 = (unsigned char *)s2;
+	while (*p1 != '\0' || *p2 != '\0')
+	{
+		if (*p1 > *p2)
+			return (1);
+		else if (*p1 < *p2)
+			return (-1);
+		p1++;
+		p2++;
+	}
+	return (0);
 }
