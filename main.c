@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/21 11:59:00 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/21 16:50:22 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	prompt_loop(t_shell *m)
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input))
 			parse_commands(m);
-		free(m->input);
+		executor_loop(m);
 		free_lexer(&m->lexer);
 		free_parser(&m->parser);
 	}

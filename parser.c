@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/21 11:58:23 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/21 16:28:56 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	parse_commands(t_shell *m)
 			l = l->next;
 		}
 	}
-	print_parser(m);
+	//print_parser(m);
 	return (OK);
 }
 

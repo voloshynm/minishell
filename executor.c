@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/21 11:59:30 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/21 16:44:46 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,9 +128,8 @@ int	executor_loop(t_shell *m)
 	while (m->parser)
 	{
 		p = ((t_command *)(m->parser->content));
-		if (p->cmd_splitter == PIPE)
-//			execute_pipe(m);
-			execute(m);
+		if (m->last_splitter_token == PIPE)
+			execute_pipe(m);
 		else if ((p->cmd_splitter == OR && m->ex_status != 0)
 				|| (p->cmd_splitter == AND && m->ex_status == 0)
 				|| p->cmd_splitter == NONE)

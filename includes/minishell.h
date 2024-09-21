@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/21 11:57:43 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:23:12 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,6 @@ int	setup_redirection(t_command *c, t_shell *m);
 void	restore_and_close_files(t_command *c, t_shell *m);
 // executor.c: to execute the command
 int		execute(t_shell *m);
+int	executor_loop(t_shell *m);
 
 #endif
