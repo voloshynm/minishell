@@ -3,7 +3,8 @@ SRC =   main.c 											\
 		parser.c parser_redirection.c parser_path.c		\
 		executor.c 										\
 		string_utils.c 									\
-		error_handler.c 		
+		error_handler.c 								\
+		signals.c
 		
 BUILTIN_SRC = echo.c
 

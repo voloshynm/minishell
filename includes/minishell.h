@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/21 12:23:12 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/22 19:40:27 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,19 @@
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <sys/wait.h>
 # include <signal.h>
 # include <stdbool.h>
 # include <stdlib.h> // For malloc(), free()
 # include <string.h> // For strcmp(), strlen()
+# include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h> // For read(), write(), close(), unlink()
+# include <sys/ioctl.h>
+
 
 # define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
+
+extern int	g_sig;
 
 /*
 **	*cmds	= linked list of t_command with all commands, separated by pipes
@@ -41,16 +45,16 @@
 */
 typedef struct s_shell
 {
-	char		*input;
-	t_lexer		*lexer;
-	t_list		*parser;
-	pid_t		pid;
-	char		**envp;
-	char		*pwd;
-	char		*oldpwd;
-	int			ex_status;
-	int 		pipefd[2];
-	t_token		last_splitter_token;
+	char	*input;
+	t_lexer	*lexer;
+	t_list	*parser;
+	pid_t	pid;
+	char	**envp;
+	char	*pwd;
+	char	*oldpwd;
+	int		ex_status;
+	int		pipefd[2];
+	t_token	last_splitter_token;
 }			t_shell;
 
 enum		e_err_state
@@ -70,31 +74,35 @@ enum		e_err_state
 };
 
 // main.c: the main loop of minishell
-void	prompt_loop(t_shell *m);
+void		prompt_loop(t_shell *m);
 
 // error_handler.c: to handle input errors and print errors
-int		p_error(int err_id, void *arg);
-int		input_error(char *input);
+int			p_error(int err_id, void *arg);
+int			input_error(char *input);
 
 // parser.c: to parse tokens into commands with its path
-int		parse_commands(t_shell *m);
-void	free_parser(t_list **parser);
+int			parse_commands(t_shell *m);
+void		free_parser(t_list **parser);
 
 // parser_path.c: to get full path of the command for exec
-int		parse_full_path(t_command *c, t_shell *m);
-int		is_builtin(t_command *p);
-int		is_bin(t_shell *m, t_command *p);
+int			parse_full_path(t_command *c, t_shell *m);
+int			is_builtin(t_command *p);
+int			is_bin(t_shell *m, t_command *p);
 
-int		print_parser(t_shell *minihell);
+int			print_parser(t_shell *minihell);
 
 // parser_redirection.c: to handle redirections
-int		parse_redirection(t_command *c, t_token token, char *filename,
-			t_shell *m);
-int	setup_redirection(t_command *c, t_shell *m);
+int			parse_redirection(t_command *c, t_token token, char *filename,
+				t_shell *m);
+int			setup_redirection(t_command *c, t_shell *m);
 
-void	restore_and_close_files(t_command *c, t_shell *m);
+void		restore_and_close_files(t_command *c, t_shell *m);
 // executor.c: to execute the command
-int		execute(t_shell *m);
-int	executor_loop(t_shell *m);
+int			execute(t_shell *m);
+int			executor_loop(t_shell *m);
+
+// signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
+
+void	handle_signals(void);
 
 #endif
