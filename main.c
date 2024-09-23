@@ -6,11 +6,13 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 18:56:20 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/23 14:07:06 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
+
+int	g_sig;
 
 void	init_shell_vars(t_shell *m)
 {
@@ -40,25 +42,17 @@ void	prompt_loop(t_shell *m)
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input))
 			parse_commands(m);
-		free(m->input);
+		executor_loop(m);
 		free_lexer(&m->lexer);
 		free_parser(&m->parser);
 	}
 	rl_clear_history();
 }
 
-void	handle_sigint(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
 
 int	main(int argc, char **argv)
 {
-	t_shell	m;
+	t_shell m;
 
 	(void)argv;
 	if (argc != 1)
@@ -66,8 +60,7 @@ int	main(int argc, char **argv)
 		printf("Minishell cannot be launched with arguments\n");
 		return (EXIT_FAILURE);
 	}
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
+	handle_signals();
 	init_shell_vars(&m);
 	prompt_loop(&m);
 	return (0);

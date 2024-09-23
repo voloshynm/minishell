@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/20 18:55:27 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/23 14:03:47 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	parse_commands(t_shell *m)
 			l = l->next;
 		}
 	}
-	print_parser(m);
+	//print_parser(m);
 	return (OK);
 }
 

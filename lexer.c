@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 12:54:35 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:01:28 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	init_lexer(t_lexer **lexer, char *input)
 {
 	char	*token;
 	t_lexer	*l_start;
-
+	
 	if (input_error(input))
 		return (UNEXPEC_TOKEN);
 	while (input)
