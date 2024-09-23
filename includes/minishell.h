@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/23 14:04:34 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/23 20:31:59 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ int			setup_redirection(t_command *c, t_shell *m);
 
 void		restore_and_close_files(t_command *c, t_shell *m);
 // executor.c: to execute the command
-int			execute(t_shell *m);
 int			executor_loop(t_shell *m);
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
