@@ -5,7 +5,7 @@ SRC =   main.c 											\
 		error_handler.c 								\
 		signals.c
 		
-BUILTIN_SRC = echo.c
+
 
 OBJS = ${SRC:.c=.o}
 NAME = minishell
@@ -39,7 +39,9 @@ libft:
 	${MAKE} all -C ${LIBFT_PATH}
 
 builtin: libft 
-	${CC} ${CFLAGS} builtins/${BUILTIN_SRC} -o builtins/$(basename ${BUILTIN_SRC}) -L${LIBFT_PATH} -lft 
+	${CC} ${CFLAGS} builtins/echo.c -o builtins/echo -L${LIBFT_PATH} -lft
+	${CC} ${CFLAGS} builtins/cd.c -o builtins/cd -L${LIBFT_PATH} -lft 
+
 
 clean:
 	${MAKE} -C ${LIBFT_PATH} clean 
@@ -47,7 +49,6 @@ clean:
 
 
 fclean: clean
-	${RM} builtins/$(basename ${BUILTIN_SRC})
 	${RM} ${NAME};
 	${RM} -rf ${LIBFT_PATH}
 

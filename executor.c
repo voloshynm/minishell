@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/24 00:12:13 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:22:01 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,17 @@
 // 	return (0);
 // }
 
-#include <unistd.h>
-#include <sys/wait.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 int	count_pipes(t_shell *m)
 {
 	t_list		*tmp;
 	int			count;
 	t_command	*p;
-	
+
 	tmp = m->parser;
 	p = ((t_command *)(m->parser->content));
 	count = 0;
@@ -92,8 +92,8 @@ static void	handle_fds_child(int pipefd[2][2], int i, int num_pipes)
 
 static void	handle_fds_parent(int pipefd[2][2], int i, int num_pipes)
 {
-	(void) num_pipes;
-	if (i != 0)  // Parent: Close the pipes of the previous command
+	(void)num_pipes;
+	if (i != 0) // Parent: Close the pipes of the previous command
 	{
 		close(pipefd[(i + 1) % 2][0]);
 		close(pipefd[(i + 1) % 2][1]);
@@ -114,10 +114,12 @@ int	execute_pipe(t_shell *m)
 	int			status;
 	int			i;
 	int			num_pipes;
-	int			pipefd[2][2]; // Two sets of pipe file descriptors for alternating between commands
 	t_command	*p;
+	int			pipefd[2][2];
 
-	num_pipes = count_pipes(m); // Count the number of pipes needed (number of pipes)
+	// Two sets of pipe file descriptors for alternating between commands
+	num_pipes = count_pipes(m);
+	// Count the number of pipes needed (number of pipes)
 	i = -1;
 	while (++i <= num_pipes)
 	{
@@ -145,10 +147,11 @@ int	execute_pipe(t_shell *m)
 		}
 		handle_fds_parent(pipefd, i, num_pipes);
 		if (m->parser->next != NULL)
-			m->parser = m->parser->next; // Move to the next command in the pipeline
+			m->parser = m->parser->next;
+		// Move to the next command in the pipeline
 		waitpid(-1, &status, 0);
 	}
-	return(return_child_exit(status));
+	return (return_child_exit(status));
 }
 
 int	execute_command(t_shell *m)
@@ -161,13 +164,14 @@ int	execute_command(t_shell *m)
 	pid = fork();
 	if (pid == 0)
 	{
+		setup_redirection(p, m);
 		execve(p->full_path, p->cmd, NULL);
 		exit(127);
 	}
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
-		return(return_child_exit(status));
+		return (return_child_exit(status));
 	}
 	else
 		return (-1);
@@ -185,7 +189,7 @@ int	execute_command(t_shell *m)
 */
 int	executor_loop(t_shell *m)
 {
-	t_command *p;
+	t_command	*p;
 
 	while (m->parser)
 	{

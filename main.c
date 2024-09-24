@@ -3,20 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/23 14:07:06 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:41:30 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-int	g_sig;
+int		g_sig;
 
 void	init_shell_vars(t_shell *m)
 {
 	m->envp = ft_split(getenv("PATH"), ':');
+	m->pwd = getenv("PWD");
+	m->oldpwd = getenv("OLDPWD");
 	m->lexer = NULL;
 	m->parser = NULL;
 	m->input = NULL;
@@ -48,7 +50,6 @@ void	prompt_loop(t_shell *m)
 	}
 	rl_clear_history();
 }
-
 
 int	main(int argc, char **argv)
 {
