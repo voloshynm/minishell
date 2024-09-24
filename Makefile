@@ -39,7 +39,7 @@ libft:
 	${MAKE} all -C ${LIBFT_PATH}
 
 builtin: libft 
-	${CC} ${CFLAGS}  builtins/${BUILTIN_SRC} -o builtins/$(basename ${BUILTIN_SRC}) -L${LIBFT_PATH} -lft 
+	${CC} ${CFLAGS} builtins/${BUILTIN_SRC} -o builtins/$(basename ${BUILTIN_SRC}) -L${LIBFT_PATH} -lft 
 
 clean:
 	${MAKE} -C ${LIBFT_PATH} clean 
