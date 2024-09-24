@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/23 14:07:06 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/24 20:06:54 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,12 @@ void	prompt_loop(t_shell *m)
 			continue ;
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input))
-			parse_commands(m);
-		executor_loop(m);
-		free_lexer(&m->lexer);
-		free_parser(&m->parser);
+		{
+			if (!parse_commands(m))
+				executor_loop(m);
+			free_lexer(&m->lexer);
+			free_parser(&m->parser);
+		}
 	}
 	rl_clear_history();
 }

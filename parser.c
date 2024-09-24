@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/23 14:03:47 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/24 17:05:32 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ void	free_parser(t_list **parser)
 		p = *parser;
 		*parser = (*parser)->next;
 		command = ((t_command *)p->content);
-		free_ft_split(command->cmd);
 		free(command->full_path);
 		free(p);
 	}
