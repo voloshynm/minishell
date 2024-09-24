@@ -2,7 +2,6 @@ SRC =   main.c 											\
 		lexer.c lexer_utils.c lexer_helper.c 			\
 		parser.c parser_redirection.c parser_path.c		\
 		executor.c 										\
-		string_utils.c 									\
 		error_handler.c 								\
 		signals.c
 		
@@ -35,7 +34,7 @@ ${NAME}: ${OBJS} builtin
 libft:
 	if [ ! -d "$(LIBFT_PATH)" ]; then \
         echo "downloading libft..."; \
-		git clone git@github.com:Sergio0227/Libft.git $(LIBFT_PATH); \
+		git clone -b additional_functions git@github.com:Sergio0227/Libft.git $(LIBFT_PATH); \
 	fi
 	${MAKE} all -C ${LIBFT_PATH}
 

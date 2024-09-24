@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/20 15:18:38 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/24 00:13:34 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,14 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 void	process_env_arg(t_lexer *lexer)
 {
 	char	*s;
+	char    *tmp;
 
 	if (*lexer->str == '\'' || *lexer->str == '\"')
-		lexer->str = remove_first_char(lexer->str);
+	{
+		tmp = lexer->str;
+		lexer->str = ft_str_rm_front_chars(lexer->str, 1);
+		free(tmp);
+	}
 	s = lexer->str;
 	while (*s)
 	{
