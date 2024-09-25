@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/25 00:01:22 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 21:14:18 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,20 @@ int	p_error(int err_id, void *arg)
 		printf("Error: Error opening heredoc file\n");
 	else if (err_id == TMP_FILE_CREATION_ERR)
 		printf("Error: Error creating temporary file\n");
+	else if (err_id == FORK_ERR)
+		perror("fork");
 	else if (err_id == DUP2_ERR)
-		printf("Error: dup2 failed\n");
+		perror("dup2");
+	else if (err_id == EXEC_ERR)
+		perror("execve");
 	return (err_id);
 }
-
+int	p_error2(char *str, void *arg)
+{
+	(void)arg;
+	perror(str);
+	return (errno);
+}
 
 /*
 ^Checks for simple input errors before splitting into tokens,

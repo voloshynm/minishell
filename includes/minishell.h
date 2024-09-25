@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/24 23:15:27 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 22:28:33 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 
 
 # define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
+# define MAX_FDS 4096
 
 extern int	g_sig;
 
@@ -54,6 +55,7 @@ typedef struct s_shell
 	char	*pwd;
 	char	*oldpwd;
 	int		ex_status;
+	int		exit_statuses[MAX_FDS];
 	int		pipefd[2];
 	t_token	last_splitter_token;
 }			t_shell;
@@ -71,7 +73,10 @@ enum		e_err_state
 	RED_APPEND_ERR = 8,
 	RED_HEREDOC_ERR = 9,
 	TMP_FILE_CREATION_ERR = 10,
-	DUP2_ERR = 11
+	DUP2_ERR = 11,
+	PIPE_ERR = 12,
+	FORK_ERR = 13,
+	EXEC_ERR = 127
 };
 
 // main.c: the main loop of minishell
@@ -79,6 +84,7 @@ void		prompt_loop(t_shell *m);
 
 // error_handler.c: to handle input errors and print errors
 int			p_error(int err_id, void *arg);
+int			p_error2(char *str, void *arg);
 int			input_error(char *input);
 
 // parser.c: to parse tokens into commands with its path

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/25 13:34:09 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:36:16 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,20 @@ int		g_sig;
 /*
 ^FIX PIPE SEG FAULT,  last_splitter_token was not being reset,
 ^reset_vars() now is being called after every main_loop iteration.
+& m->exit_statuses[i] = -300 because errors are from 1 to 255 and -1.
+& 0 - successfully finished process
 */
 void	reset_vars(t_shell *m)
 {
+	int i;
+
+	i = -1;
 	m->lexer = NULL;
 	m->parser = NULL;
 	m->input = NULL;
 	m->ex_status = 0;
+	while(++i < MAX_FDS)
+		m->exit_statuses[i] = -300;
 	m->pipefd[0] = 0;
 	m->pipefd[1] = 1;
 	m->last_splitter_token = NONE;

@@ -3,99 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/24 23:14:45 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:36:45 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-// OPTIMIZATION WORK
-// int	handle_pipes(int num_pipes, int pipes[2 * num_pipes], char c)
-// {
-// 	int		i;
-
-// 	i = -1;
-// 	if (c = 'S')
-// 	{
-// 		while (++i < num_pipes)
-// 		{
-// 			if (pipe(pipes + i * 2) == -1)
-// 			{
-// 				perror("pipe");
-// 				return -1;
-// 			}
-// 		}
-// 	}
-// 	else if (c = 'C')
-// 	{
-// 		while (++i < 2 * num_pipes) // Close all pipe file descriptors in child
-// 			close(pipes[i]);
-// 	}
-// 	return (0);
-// }
-
-// int execute_pipe(t_shell *m, t_list *parser, int num_pipes)
-// {
-// 	t_list		*current;
-// 	t_command	*p;
-// 	int			pipes[2 * num_pipes]; // Array to hold pipe file descriptors
-// 	int			i;
-// 	int			command_index;
-
-// 	if (!handle_pipes(num_pipes, pipes, 'S'))
-// 		return (-1);
-// 	command_index = 0;
-// 	current = parser;
-// 	while (current)
-// 	{
-// 		p = (t_command *)(current->content);
-// 		pid_t pid = fork();
-// 		if (pid == -1)
-// 		{
-// 			perror("fork");
-// 			return -1;
-// 		}
-// 		if (pid == 0) // Child process
-// 		{
-// 			if (command_index > 0) // If not the first command, get input from the previous pipe
-// 			{
-// 				if (dup2(pipes[(command_index - 1) * 2], STDIN_FILENO) == -1)
-// 				{
-// 					perror("dup2");
-// 					exit(1);
-// 				}
-// 			}	
-// 			if (current->next) // If not the last command, output to the next pipe
-// 			{
-// 				if (dup2(pipes[command_index * 2 + 1], STDOUT_FILENO) == -1)
-// 				{
-// 					perror("dup2");
-// 					exit(1);
-// 				}
-// 			}
-// 			handle_pipes(num_pipes, pipes, 'S');
-// 			execve(p->full_path, p->cmd, NULL);
-// 			perror("execve"); // If execve fails
-// 			exit(127);
-// 		}
-// 		current = current->next; // Move to the next command
-// 		command_index++;
-// 	}
-// 	handle_pipes(num_pipes, pipes, 'S'); // Parent process: close all pipe file descriptors
-
-// 	// Wait for all child processes
-// 	int status;
-// 	i = -1;
-// 	while (++i < command_index)
-// 	{
-// 		wait(&status);
-// 		printf("***DEBUG*** Parent: Child process %d exited with status %d\n", i, WEXITSTATUS(status));
-// 	}
-// 	return return_child_exit(status); // Assuming return_child_exit handles status properly
-// }
+// Check if the Child Terminated Normally:
+// *Bitwise AND with 0x7F*: checks the lower 7 bits of the status variable
+// Normal Termination: If the result is 0, it indicates that the child process
+// terminated normally (i.e., it exited without being killed by a signal).
+// *Right Shift:((status >> 8) & 0xFF)* The expression status >> 8 shifts 
+// the bits of status 8 places to the right. The result is then masked with 
+// 0xFF to ensure we only get the lower 8 bits (the actual exit code).
+// *Return Value:* This value represents the exit status of the child process
+// (typically in the range of 0 to 255).
+// *Return -1* for Abnormal Termination (e.g., it was killed by a signal)
+static int	return_child_exit(int status)
+{
+	if ((status & 0x7F) == 0)
+		return ((status >> 8) & 0xFF);
+	else
+		return (-1);
+}
 
 int	count_pipes(t_shell *m)
 {
@@ -117,130 +50,122 @@ int	count_pipes(t_shell *m)
 	return (count);
 }
 
-static int	return_child_exit(int status)
+// (c == 'S') Set all pipes
+// (c == 'C') Close all pipe file descriptors in child or parent
+int	set_close_pipe(int num_pipes, int pipes[], char c)
 {
-	if ((status & 0x7F) == 0)
-		return ((status >> 8) & 0xFF);
-	else
-		return (-1);
-}
-
-int execute_pipe(t_shell *m, t_list *parser, int num_pipes)
-{
-	t_list *current = parser;
-	int pipes[2 * num_pipes]; // Array to hold pipe file descriptors
-	int i = 0;
-
-	(void)m;
-	// Create all pipes
-	while (i < num_pipes)
-	{
-		if (pipe(pipes + i * 2) == -1)
-		{
-			perror("pipe");
-			return -1;
-		}
-		printf("***DEBUG*** Pipe %d created\n", i);
-		i++;
-	}
-
-	int command_index = 0;
-	while (current)
-	{
-		t_command *p = (t_command *)(current->content);
-		pid_t pid = fork();
-
-		if (pid == -1)
-		{
-			perror("fork");
-			return -1;
-		}
-
-		if (pid == 0) // Child process
-		{
-			// If not the first command, get input from the previous pipe
-			if (command_index > 0)
-			{
-				if (dup2(pipes[(command_index - 1) * 2], STDIN_FILENO) == -1)
-				{
-					perror("dup2");
-					exit(1);
-				}
-				printf("***DEBUG*** Child %d: Input redirected from pipe %d\n", command_index, command_index - 1);
-			}
-
-			// If not the last command, output to the next pipe
-			if (current->next)
-			{
-				if (dup2(pipes[command_index * 2 + 1], STDOUT_FILENO) == -1)
-				{
-					perror("dup2");
-					exit(1);
-				}
-				printf("***DEBUG*** Child %d: Output redirected to pipe %d\n", command_index, command_index);
-			}
-
-			// Close all pipe file descriptors in child
-			i = 0;
-			while (i < 2 * num_pipes)
-			{
-				close(pipes[i]);
-				i++;
-			}
-
-			// Execute the command
-			printf("***DEBUG*** Child %d: Executing command: %s\n", command_index, p->full_path);
-			execve(p->full_path, p->cmd, NULL);
-			perror("execve"); // If execve fails
-			exit(127);
-		}
-
-		current = current->next; // Move to the next command
-		command_index++;
-	}
-
-	// Parent process: close all pipe file descriptors
+	int		i;
+	
 	i = -1;
-	while (++i < 2 * num_pipes)
+	if (c == 'S')
 	{
+		while (++i < num_pipes)
+		{
+			if (pipe(pipes + i * 2) == -1)
+				return (-1);
+		}
+	}
+	if (c == 'C')
+	{
+		while (++i < 2 * num_pipes)
 		close(pipes[i]);
-		printf("***DEBUG*** Parent: Closed pipe %d\n", i);
 	}
-
-	// Wait for all child processes
-	int status;
-	i = 0;
-	while (i < command_index)
-	{
-		wait(&status);
-		printf("***DEBUG*** Parent: Child process %d exited with status %d\n", i, WEXITSTATUS(status));
-		i++;
-	}
-
-	return return_child_exit(status); // Assuming return_child_exit handles status properly
+	return (0);
 }
+
+// (1) Child cmd_index: Input redirected from pipe cmd_index - 1
+// If not the first command, get input from the previous pipe
+// (2) Child cmd_index: Output redirected to pipe cmd_index
+// If not the last command, output to the next pipe
+// (3) Close pipes
+int	upd_fd(int *cmd_index, int pipes[], t_list **current, int num_pipes)
+{
+	if (*cmd_index > 0)
+	{
+		if (dup2(pipes[(*cmd_index - 1) * 2], STDIN_FILENO) == -1)
+			return (p_error2("dup2", NULL));
+	}
+	if ((*current)->next)
+	{
+		if (dup2(pipes[*cmd_index * 2 + 1], STDOUT_FILENO) == -1)
+			return (p_error2("dup2", NULL));
+	}
+	set_close_pipe(num_pipes, pipes, 'C');
+	return (0);
+}
+// Waiting for Children: after all children have been created, loop through 
+// the pids array and call waitpid(pids[i], &status, 0); for each stored PID 
+// to wait for their termination.
+// TODO : in fact I implemented an array of storing all the exit errors for the
+// TODO children. You should use this as an input for your signal handling
+// TODO when the return is -1 (see return_child_exit)
+int	wait_children(t_shell *m, int num_pipes, int pids[])
+{
+	int i;
+	int	status;
+
+	i = -1;
+	while (++i < num_pipes + 1)
+	{
+		waitpid(pids[i], &status, 0);
+		m->exit_statuses[i + 1] = return_child_exit(status);
+	}
+	return (0);
+}
+
+void iterate_cmd(t_list	**current, int *cmd_index)
+{
+	*current = (*current)->next;
+	(*cmd_index)++;
+}
+// PID Array: created to store the PIDs of each child process as they are forked
+// Storing PIDs: Each time call fork(), store the resulting PID in the pids array
+int execute_pipe(t_shell *m, t_list *parser, int num_pipes, int i)
+{
+	t_list	*p;
+	pid_t	pids[num_pipes + 1];
+	int		pipes[2 * num_pipes];
+
+	p = parser;
+	if (set_close_pipe(num_pipes, pipes, 'S') == -1)
+		return (p_error2("pipe", NULL));
+	while (p)
+	{
+		t_command *c = (t_command *)(p->content);
+		pids[i] = fork();
+		if (pids[i] == -1)
+			return (p_error2("fork", NULL));
+		if (pids[i] == 0)
+		{
+			if (upd_fd(&i, pipes, &p, num_pipes) || setup_redirection(c, m))
+				return (errno);
+			execve(c->full_path, c->cmd, NULL);
+			exit(p_error2("execve", NULL));
+		}
+		iterate_cmd(&p, &i);
+	}
+	set_close_pipe(num_pipes, pipes, 'C');
+	wait_children(m, num_pipes, pids);
+	return (0);
+}
+
 int	execute_command(t_shell *m, t_list *parser)
 {
-	pid_t		pid;
-	int			status;
+	pid_t		pids[1];
 	t_command	*p;
 
 	(void)m;
 	p = ((t_command *)(parser->content));
-	pid = fork();
-	if (pid == 0)
+	pids[0] = fork();
+	if (pids[0] == -1)
+		return (p_error2("fork", NULL));
+	else if (pids[0] == 0)
 	{
 		setup_redirection(p, m);
 		execve(p->full_path, p->cmd, NULL);
-		exit(127);
+		exit(p_error2("execve", NULL));
 	}
-	else if (pid > 0)
-	{
-		waitpid(pid, &status, 0);
-		return (return_child_exit(status));
-	}
-	else
-		return (-1);
+	wait_children(m, 0, pids);
 	return (0);
 }
 
@@ -255,31 +180,30 @@ int	execute_command(t_shell *m, t_list *parser)
 */
 int	executor_loop(t_shell *m)
 {
-	t_command	*p;
-	t_command	*p_next;
-	t_list		*parser;
+	t_command	*c;
+	t_list		*p;
 	int			num_pipes;
+	int			cmd_index;
 
-	parser = m->parser;
-	while (parser)
+	cmd_index = 0;
+	p = m->parser;
+	while (p)
 	{
-		p = ((t_command *)(parser->content));
-		if (parser->next)
-			p_next = ((t_command *)(parser->next->content));
-		if (p_next && p_next->cmd_splitter == PIPE)
+		c = ((t_command *)(p->content));
+		if (p->next && ((t_command *)(p->next->content))->cmd_splitter == PIPE)
 		{
 			num_pipes = count_pipes(m);
-			m->ex_status = execute_pipe(m, parser, num_pipes);
+			m->exit_statuses[0] = execute_pipe(m, p, num_pipes, cmd_index);
 			while (num_pipes-- + 1 > 0)
-				parser = parser->next;
+				p = p->next;
 		}
-		else if ((p->cmd_splitter == OR && m->ex_status != 0)
-			|| (p->cmd_splitter == AND && m->ex_status == 0)
-			|| p->cmd_splitter == NONE)
+		else if ((c->cmd_splitter == OR && m->ex_status != 0)
+			|| (c->cmd_splitter == AND && m->ex_status == 0)
+			|| c->cmd_splitter == NONE)
 		{
-			m->ex_status = execute_command(m, parser);
-			parser = parser->next;
+			m->exit_statuses[0] = execute_command(m, p);
+			p = p->next;
 		}
 	}
-	return (m->ex_status);
+	return (m->exit_statuses[0]);
 }
