@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:19:38 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/22 20:56:56 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 19:07:51 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,13 @@ void	ctrl_c(int sig)
 	g_sig = 1;
 }
 
-void	tcseta(void)
+/*
+^used to enable canonical mode
+^CANONICAL MODE: waits for user to press enter before befire sending input
+^prints error if it's unable to get the current terminal attributes
+^Disables control character VQUIT == CTRL+\
+*/
+void	set_terminal_attr(void)
 {
 	struct termios	term1;
 
@@ -58,7 +64,7 @@ void	tcseta(void)
 
 void	handle_signals(void)
 {
-	tcseta();
+	set_terminal_attr();
 	signal(SIGINT, ctrl_c);
 	signal(SIGQUIT, ctrl_d);
 }

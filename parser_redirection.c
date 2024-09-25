@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/24 19:21:21 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 19:27:21 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 /*
 **	// Redirect input if infile is set and not STDIN
 	if (c->infile != STDIN_FILENO)
-	// Redirect output if outfile is set and not STDOUT
+	Redirect output if outfile is set and not STDOUT
 	if (c->outfile != STDOUT_FILENO)
 */
 int	setup_redirection(t_command *c, t_shell *m)
