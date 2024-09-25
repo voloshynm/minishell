@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/23 14:03:47 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/24 23:52:15 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ static int	parse_command(t_command *c, t_lexer **l)
 	return (0);
 }
 
-int	parse_commands(t_shell *m)
-{
+int	parse_commands(t_shell *m){
 	t_command	*c;
 	t_lexer		*l;
 
@@ -104,7 +103,6 @@ void	free_parser(t_list **parser)
 		p = *parser;
 		*parser = (*parser)->next;
 		command = ((t_command *)p->content);
-		free_ft_split(command->cmd);
 		free(command->full_path);
 		free(p);
 	}

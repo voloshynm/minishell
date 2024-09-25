@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/20 20:02:39 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 00:01:22 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ int	p_error(int err_id, void *arg)
 	return (err_id);
 }
 
+
+/*
+^Checks for simple input errors before splitting into tokens,
+^Examples: <> <<< |& etc... 
+*/
 int	input_error(char *input)
 {
 	char	token_type;

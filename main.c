@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/24 19:41:30 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 13:34:09 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,28 @@
 
 int		g_sig;
 
+/*
+^FIX PIPE SEG FAULT,  last_splitter_token was not being reset,
+^reset_vars() now is being called after every main_loop iteration.
+*/
+void	reset_vars(t_shell *m)
+{
+	m->lexer = NULL;
+	m->parser = NULL;
+	m->input = NULL;
+	m->ex_status = 0;
+	m->pipefd[0] = 0;
+	m->pipefd[1] = 1;
+	m->last_splitter_token = NONE;
+}
+
 void	init_shell_vars(t_shell *m)
 {
 	m->envp = ft_split(getenv("PATH"), ':');
 	m->pwd = getenv("PWD");
 	m->oldpwd = getenv("OLDPWD");
-	m->lexer = NULL;
-	m->parser = NULL;
-	m->input = NULL;
 	m->pid = getpid();
-	m->ex_status = 0;
-	m->pipefd[0] = 0;
-	m->pipefd[1] = 1;
-	m->last_splitter_token = NONE;
+	reset_vars(m);
 }
 
 void	prompt_loop(t_shell *m)
@@ -39,14 +48,17 @@ void	prompt_loop(t_shell *m)
 			printf("exit\n");
 			break ;
 		}
-		if (*m->input == 0)
+		if (ft_strcount(m->input, ' ') == (int)ft_strlen(m->input))
 			continue ;
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input))
-			parse_commands(m);
-		executor_loop(m);
-		free_lexer(&m->lexer);
-		free_parser(&m->parser);
+		{
+			if (!parse_commands(m))
+				executor_loop(m);
+			free_lexer(&m->lexer);
+			free_parser(&m->parser);
+			reset_vars(m);
+		}
 	}
 	rl_clear_history();
 }

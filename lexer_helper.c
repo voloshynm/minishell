@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/24 00:13:34 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/24 23:59:23 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ void	process_env_arg(t_lexer *lexer)
 }
 
 /*
-** Checks if quotes were properly closed, besides when its
-	single quotes inside of double quotes, or inversed.
-** Return a pointer to the closing quote of the String
+^ Checks if quotes were properly closed, besides when its
+^	single quotes inside of double quotes, or inversed.
+^ Return a pointer to the closing quote of the String
 */
 static char	*handle_quotes(char *input)
 {

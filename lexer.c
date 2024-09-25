@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/21 12:01:28 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 00:00:22 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ static void	join_same_tokens(t_lexer *lexer)
 }
 
 /*
-** Goes through the input to split it by token, ft_strchr return the position
-	of the found token **TOKENIZE_INPUT** split using (SPACE, >, <, |, ", ')
-	(QUOTES WILL THAN HAVE A DIFFERENT TREATMENT)
-** FT_STRCHR will determinate the type of TOKEN > < or | and then its
-	added to the token list.
+^ Goes through the input to split it by token, ft_strchr return the position
+^	of the found token **TOKENIZE_INPUT** split using (SPACE, >, <, |, ", ')
+^	(QUOTES WILL THAN HAVE A DIFFERENT TREATMENT)
+^ FT_STRCHR will determinate the type of TOKEN > < or | and then its
+^	added to the token list.
 */
 int	init_lexer(t_lexer **lexer, char *input)
 {
@@ -78,7 +78,6 @@ int	init_lexer(t_lexer **lexer, char *input)
 	while (l_start)
 	{
 		process_env_arg(l_start);
-		//printf("TOKEN: %s\n", l_start->str);
 		l_start = l_start->next;
 	}
 	return (0);
