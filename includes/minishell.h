@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/25 23:44:20 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:47:48 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,6 @@ enum		e_err_state
 	RED_HEREDOC_ERR = 9,
 	TMP_FILE_CREATION_ERR = 10,
 	DUP2_ERR = 11,
-	PIPE_ERR = 12,
-	FORK_ERR = 13,
-	EXEC_ERR = 127
 };
 
 // main.c: the main loop of minishell
