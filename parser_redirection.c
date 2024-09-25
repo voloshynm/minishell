@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/25 19:27:21 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 00:15:46 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,17 +107,17 @@ int	setup_redirection(t_command *c, t_shell *m)
 	{
 		m->pipefd[0] = dup(STDIN_FILENO);
 		if (m->pipefd[0] < 0)
-			return (p_error(DUP2_ERR, NULL));
+			return (p_error2("dup2", NULL));
 		if (dup2(c->infile, STDIN_FILENO) < 0)
-			return (p_error(DUP2_ERR, NULL));
+			return (p_error2("dup2", NULL));
 	}
 	if (c->outfile != STDOUT_FILENO)
 	{
 		m->pipefd[1] = dup(STDOUT_FILENO);
 		if (m->pipefd[1] < 0)
-			return (p_error(DUP2_ERR, NULL));
+			return (p_error2("dup2", NULL));
 		if (dup2(c->outfile, STDOUT_FILENO) < 0)
-			return (p_error(DUP2_ERR, NULL));
+			return (p_error2("dup2", NULL));
 	}
 	return (0);
 }

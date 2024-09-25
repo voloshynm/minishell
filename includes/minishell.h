@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/24 23:15:27 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:47:48 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 
 
 # define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
+# define MAX_FDS 4096
 
 extern int	g_sig;
 
@@ -54,6 +55,7 @@ typedef struct s_shell
 	char	*pwd;
 	char	*oldpwd;
 	int		ex_status;
+	int		exit_statuses[MAX_FDS];
 	int		pipefd[2];
 	t_token	last_splitter_token;
 }			t_shell;
@@ -71,38 +73,42 @@ enum		e_err_state
 	RED_APPEND_ERR = 8,
 	RED_HEREDOC_ERR = 9,
 	TMP_FILE_CREATION_ERR = 10,
-	DUP2_ERR = 11
+	DUP2_ERR = 11,
 };
 
 // main.c: the main loop of minishell
-void		prompt_loop(t_shell *m);
+void	prompt_loop(t_shell *m);
 
 // error_handler.c: to handle input errors and print errors
-int			p_error(int err_id, void *arg);
-int			input_error(char *input);
+int		p_error(int err_id, void *arg);
+int		p_error2(char *str, void *arg);
+int		input_error(char *input);
 
 // parser.c: to parse tokens into commands with its path
-int			parse_commands(t_shell *m);
-void		free_parser(t_list **parser);
+int		parse_commands(t_shell *m);
+void	free_parser(t_list **parser);
 
 // parser_path.c: to get full path of the command for exec
-int			parse_full_path(t_command *c, t_shell *m);
-int			is_builtin(t_command *p);
-int			is_bin(t_shell *m, t_command *p);
+int		parse_full_path(t_command *c, t_shell *m);
+int		is_builtin(t_command *p);
+int		is_bin(t_shell *m, t_command *p);
 
-int			print_parser(t_shell *minihell);
+int		print_parser(t_shell *minihell);
 
 // parser_redirection.c: to handle redirections
-int			parse_redirection(t_command *c, t_token token, char *filename,
-				t_shell *m);
-int			setup_redirection(t_command *c, t_shell *m);
+int		parse_redirection(t_command *c, t_token token, char *filename,
+			t_shell *m);
+int		setup_redirection(t_command *c, t_shell *m);
+void	restore_and_close_files(t_command *c, t_shell *m);
 
-void		restore_and_close_files(t_command *c, t_shell *m);
 // executor.c: to execute the command
-int			executor_loop(t_shell *m);
+int		executor_loop(t_shell *m);
+int		return_child_exit(int status);
+int		wait_children(t_shell *m, int num_pipes, int pids[]);
+int		execute_pipe(t_shell *m, t_list *parser, int num_pipes, int i);
+
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
-
 void	handle_signals(void);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/25 00:01:22 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:43:08 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 **	Prints the error
 	Frees the resources
 	Returns the error
-	//if (err_id == ALLOC_FAILURE || err_id == CMD_NOT_EXIST
-	//	|| err_id == ENV_VAR_NOT_EXIST)
-	//	;
 */
 int	p_error(int err_id, void *arg)
 {
@@ -42,11 +39,24 @@ int	p_error(int err_id, void *arg)
 		printf("Error: Error opening heredoc file\n");
 	else if (err_id == TMP_FILE_CREATION_ERR)
 		printf("Error: Error creating temporary file\n");
+	else if (err_id == FORK_ERR)
+		perror("fork");
 	else if (err_id == DUP2_ERR)
-		printf("Error: dup2 failed\n");
+		perror("dup2");
+	else if (err_id == EXEC_ERR)
+		perror("execve");
 	return (err_id);
 }
-
+/*
+**	updated function to use perror
+**	returns actual error id through errno
+*/
+int	p_error2(char *str, void *arg)
+{
+	(void)arg;
+	perror(str);
+	return (errno);
+}
 
 /*
 ^Checks for simple input errors before splitting into tokens,
