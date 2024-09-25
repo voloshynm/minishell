@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/25 21:14:18 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/25 23:43:08 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 **	Prints the error
 	Frees the resources
 	Returns the error
-	//if (err_id == ALLOC_FAILURE || err_id == CMD_NOT_EXIST
-	//	|| err_id == ENV_VAR_NOT_EXIST)
-	//	;
 */
 int	p_error(int err_id, void *arg)
 {
@@ -50,6 +47,10 @@ int	p_error(int err_id, void *arg)
 		perror("execve");
 	return (err_id);
 }
+/*
+**	updated function to use perror
+**	returns actual error id through errno
+*/
 int	p_error2(char *str, void *arg)
 {
 	(void)arg;

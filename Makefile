@@ -1,7 +1,7 @@
 SRC =   main.c 											\
 		lexer.c lexer_utils.c lexer_helper.c 			\
 		parser.c parser_redirection.c parser_path.c		\
-		executor.c 										\
+		executor.c executor_pipe.c						\
 		error_handler.c 								\
 		signals.c
 		
