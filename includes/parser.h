@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:31 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/18 22:49:28 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/26 17:45:39 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_command
 	int			infile;
 	int			outfile;
 	t_token		cmd_splitter;
+	t_token		last_splitter_token;
 }				t_command;
 
 #endif

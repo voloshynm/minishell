@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/25 23:47:48 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/26 21:26:50 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,8 @@ void	restore_and_close_files(t_command *c, t_shell *m);
 int		executor_loop(t_shell *m);
 int		return_child_exit(int status);
 int		wait_children(t_shell *m, int num_pipes, int pids[]);
-int		execute_pipe(t_shell *m, t_list *parser, int num_pipes, int i);
+int		execute_command(t_shell *m, t_list **p);
+int		execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
 
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"

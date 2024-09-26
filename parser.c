@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/24 23:52:15 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:30:23 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,8 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 		return (p_error(ALLOC_FAILURE, NULL));
 	(*c)->infile = STDIN_FILENO;
 	(*c)->outfile = STDOUT_FILENO;
-	if (m->last_splitter_token != NONE)
-		(*c)->cmd_splitter = m->last_splitter_token;
-	else
-		(*c)->cmd_splitter = NONE;
+	(*c)->cmd_splitter = NONE;
+	(*c)->last_splitter_token = m->last_splitter_token;
 	return (OK);
 }
 
@@ -64,6 +62,21 @@ static int	parse_command(t_command *c, t_lexer **l)
 	return (0);
 }
 
+void	free_parser(t_list **parser)
+{
+	t_list		*p;
+	t_command	*command;
+
+	while (*parser)
+	{
+		p = *parser;
+		*parser = (*parser)->next;
+		command = ((t_command *)p->content);
+		free(command->full_path);
+		free(p);
+	}
+}
+
 int	parse_commands(t_shell *m){
 	t_command	*c;
 	t_lexer		*l;
@@ -85,6 +98,7 @@ int	parse_commands(t_shell *m){
 		}
 		if (l && is_token_pipish(l))
 		{
+			c->cmd_splitter = l->token;
 			m->last_splitter_token = l->token;
 			l = l->next;
 		}
@@ -93,17 +107,3 @@ int	parse_commands(t_shell *m){
 	return (OK);
 }
 
-void	free_parser(t_list **parser)
-{
-	t_list		*p;
-	t_command	*command;
-
-	while (*parser)
-	{
-		p = *parser;
-		*parser = (*parser)->next;
-		command = ((t_command *)p->content);
-		free(command->full_path);
-		free(p);
-	}
-}

@@ -14,6 +14,7 @@ static int	set_close_pipe(int num_pipes, int pipes[], char c)
 			if (pipe(pipes + i * 2) == -1)
 				return (-1);
 		}
+		printf("NUmber of pipes created in set_close_pipe: %d\n", i+1);
 	}
 	if (c == 'C')
 	{
@@ -32,47 +33,48 @@ static int	upd_fd(int *cmd_index, int pipes[], t_list **current, int num_pipes)
 {
 	if (*cmd_index > 0)
 	{
+		printf("dup2: Redirecting pipe for stdin from pipe[%d]\n", (*cmd_index - 1) * 2);
 		if (dup2(pipes[(*cmd_index - 1) * 2], STDIN_FILENO) == -1)
 			return (p_error2("dup2", NULL));
 	}
-	if ((*current)->next)
+	if ((*current)->next && ((t_command *)((*current)->content))->cmd_splitter == PIPE)
 	{
+		printf("dup2: Redirecting pipe for stdout to pipe[%d]\n", *cmd_index * 2 + 1);
 		if (dup2(pipes[*cmd_index * 2 + 1], STDOUT_FILENO) == -1)
 			return (p_error2("dup2", NULL));
 	}
 	set_close_pipe(num_pipes, pipes, 'C');
 	return (0);
 }
-static void iterate_cmd(t_list	**current, int *cmd_index)
+static void iterate_cmd(t_list	**p, int *cmd_index)
 {
-	*current = (*current)->next;
+	*p = (*p)->next;
 	(*cmd_index)++;
 }
+
 // PID Array: created to store the PIDs of each child process as they are forked
 // Storing PIDs: Each time call fork(), store the resulting PID in the pids array
-int execute_pipe(t_shell *m, t_list *parser, int num_pipes, int i)
+int execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 {
-	t_list	*p;
 	pid_t	pids[num_pipes + 1];
 	int		pipes[2 * num_pipes];
 
-	p = parser;
 	if (set_close_pipe(num_pipes, pipes, 'S') == -1)
 		return (p_error2("pipe", NULL));
-	while (p)
+	while (p && i < num_pipes + 1)
 	{
-		t_command *c = (t_command *)(p->content);
+		t_command *c = (t_command *)((*p)->content);
 		pids[i] = fork();
 		if (pids[i] == -1)
 			return (p_error2("fork", NULL));
 		if (pids[i] == 0)
 		{
-			if (upd_fd(&i, pipes, &p, num_pipes) || setup_redirection(c, m))
+			if (upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
 				return (errno);
 			execve(c->full_path, c->cmd, NULL);
 			exit(p_error2("execve", NULL));
 		}
-		iterate_cmd(&p, &i);
+		iterate_cmd(p, &i);
 	}
 	set_close_pipe(num_pipes, pipes, 'C');
 	wait_children(m, num_pipes, pids);

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/25 23:43:41 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/26 23:02:27 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,39 @@ int	wait_children(t_shell *m, int num_pipes, int pids[])
 	return (0);
 }
 
-static int	execute_command(t_shell *m, t_list *parser)
+int	execute_command(t_shell *m, t_list **p)
 {
 	pid_t		pids[1];
-	t_command	*p;
+	t_command	*c;
 
 	(void)m;
-	p = ((t_command *)(parser->content));
+	c = ((t_command *)((*p)->content));
 	pids[0] = fork();
 	if (pids[0] == -1)
 		return (p_error2("fork", NULL));
 	else if (pids[0] == 0)
 	{
-		setup_redirection(p, m);
-		execve(p->full_path, p->cmd, NULL);
+		setup_redirection(c, m);
+		execve(c->full_path, c->cmd, NULL);
 		exit(p_error2("execve", NULL));
 	}
 	wait_children(m, 0, pids);
+	(*p) = (*p)->next;
 	return (0);
+}
+int	is_failed_splitter_or_and(t_command	*c, t_shell *m)
+{
+	if ((c->last_splitter_token == OR && m->ex_status == 0)
+			|| (c->last_splitter_token == AND && m->ex_status != 0))
+		return (1);
+	return (0);
+}
+
+static void	reset_std_fds(t_shell *m)
+{
+	// Reset stdout and stdin before executing a non-piped command
+	dup2(m->pipefd[1], STDOUT_FILENO);
+	dup2(m->pipefd[0], STDIN_FILENO);
 }
 
 /*
@@ -106,24 +121,23 @@ int	executor_loop(t_shell *m)
 	int			num_pipes;
 	int			cmd_index;
 
-	cmd_index = 0;
 	p = m->parser;
 	while (p)
 	{
+		cmd_index = 0;
 		c = ((t_command *)(p->content));
-		if (p->next && ((t_command *)(p->next->content))->cmd_splitter == PIPE)
+		if (is_failed_splitter_or_and(c, m))
+			p = p->next;	
+		else if (c->cmd_splitter == PIPE)
 		{
 			num_pipes = count_pipes(m);
-			m->exit_statuses[0] = execute_pipe(m, p, num_pipes, cmd_index);
-			while (num_pipes-- + 1 > 0)
-				p = p->next;
+			printf("num_pipes = %d\n", num_pipes);
+			m->exit_statuses[0] = execute_pipe(m, &p, num_pipes, cmd_index);
 		}
-		else if ((c->cmd_splitter == OR && m->ex_status != 0)
-			|| (c->cmd_splitter == AND && m->ex_status == 0)
-			|| c->cmd_splitter == NONE)
+		else
 		{
-			m->exit_statuses[0] = execute_command(m, p);
-			p = p->next;
+			reset_std_fds(m);
+			m->exit_statuses[0] = execute_command(m, &p);
 		}
 	}
 	return (m->exit_statuses[0]);
