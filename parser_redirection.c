@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/26 02:53:07 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 19:59:25 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,17 @@ static void	heredoc_readline(const char *delimiter, int tmp_fd)
 {
 	char	*line;
 
-	while (1)
+	g_sig_pid = 2;
+	while (g_sig_pid == 2)
 	{
-		g_sig_pid = 1;
 		line = readline("heredoc> ");
 		if (!line)
 			break ;
+		if (g_sig_pid == 1)
+		{
+			free(line);
+			break ;
+		}
 		if (line && ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		{
 			free(line);

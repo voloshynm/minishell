@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/26 00:23:36 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:07:14 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,10 @@ static int	parse_command(t_command *c, t_lexer **l)
 	return (0);
 }
 
-int	parse_commands(t_shell *m){
+int	parse_commands(t_shell *m, t_lexer *l)
+{
 	t_command	*c;
-	t_lexer		*l;
-
-	l = m->lexer;
+	
 	while (l)
 	{
 		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l))
@@ -79,6 +78,8 @@ int	parse_commands(t_shell *m){
 		{
 			if (parse_redirection(c, l->token, (l->next)->str, m))
 				return (m->ex_status);
+			if (g_sig_pid == 1)
+				return (RED_HEREDOC_ERR);
 			if (l->next->next && (l->next->next)->token == WORD)
 				return (p_error(UNEXPEC_TOKEN, l->str));
 			l = l->next->next;
@@ -89,14 +90,13 @@ int	parse_commands(t_shell *m){
 			l = l->next;
 		}
 	}
-	//print_parser(m);
 	return (OK);
 }
 
 void	free_parser(t_list **parser)
 {
-	t_list		*p;
-	t_command	*command;
+	t_list *p;
+	t_command *command;
 
 	while (*parser)
 	{

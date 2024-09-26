@@ -6,30 +6,38 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:19:38 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/26 02:54:50 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 23:02:31 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void clear_rl_line(void)
+void	clear_rl_line(void)
 {
-    rl_replace_line("", 0); 
-    rl_on_new_line();        
+	rl_replace_line("", 0);
+	rl_on_new_line();
 	if (g_sig_pid == 0 || g_sig_pid == 1)
-    	rl_redisplay();        
+		rl_redisplay();
 }
 
-void handle_sigint(int code)
+void	handle_sigint(int code)
 {
-	
-    (void)code; 
-    write(1, "\n", 1); 
-    clear_rl_line();    
+	(void)code;
+	if (g_sig_pid == 2)
+	{
+		write(1, "\033[A", 3);
+		ioctl(0, TIOCSTI, "\n"); // This is to simulate a new line
+	}
+	else
+	{
+		write(1, "\n", 1);
+		clear_rl_line();
+	}
+	g_sig_pid = 1;
 }
 
-void handle_signals(void)
+void	handle_signals(void)
 {
-    signal(SIGINT, &handle_sigint);
-    signal(SIGQUIT, SIG_IGN);      
+	signal(SIGINT, &handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 }

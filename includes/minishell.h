@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/26 02:13:45 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:07:54 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int		p_error2(char *str, void *arg);
 int		input_error(char *input);
 
 // parser.c: to parse tokens into commands with its path
-int		parse_commands(t_shell *m);
+int		parse_commands(t_shell *m, t_lexer *l);
 void	free_parser(t_list **parser);
 
 // parser_path.c: to get full path of the command for exec
