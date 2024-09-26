@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/25 23:47:48 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/26 02:13:45 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 # define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
 # define MAX_FDS 4096
 
-extern int	g_sig;
+extern int	g_sig_pid;
 
 /*
 **	*cmds	= linked list of t_command with all commands, separated by pipes
@@ -104,11 +104,12 @@ void	restore_and_close_files(t_command *c, t_shell *m);
 // executor.c: to execute the command
 int		executor_loop(t_shell *m);
 int		return_child_exit(int status);
-int		wait_children(t_shell *m, int num_pipes, int pids[]);
+int		wait_children(t_shell *m, int num_pipes, int pid);
 int		execute_pipe(t_shell *m, t_list *parser, int num_pipes, int i);
 
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
 void	handle_signals(void);
 
+void handle_sigint(int code);
 #endif

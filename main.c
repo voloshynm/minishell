@@ -6,13 +6,13 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/26 00:14:08 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 02:10:09 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-int		g_sig;
+int		g_sig_pid;
 
 /*
 ^FIX PIPE SEG FAULT,  last_splitter_token was not being reset,
@@ -28,6 +28,7 @@ void	reset_vars(t_shell *m)
 	m->lexer = NULL;
 	m->parser = NULL;
 	m->input = NULL;
+	g_sig_pid = 0;
 	m->ex_status = 0;
 	while(++i < MAX_FDS)
 		m->exit_statuses[i] = -300;

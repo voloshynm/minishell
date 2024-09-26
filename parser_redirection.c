@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/26 00:15:46 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 02:53:07 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static void	heredoc_readline(const char *delimiter, int tmp_fd)
 
 	while (1)
 	{
+		g_sig_pid = 1;
 		line = readline("heredoc> ");
 		if (!line)
 			break ;

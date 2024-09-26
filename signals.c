@@ -6,65 +6,30 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:19:38 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/25 19:07:51 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 02:54:50 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void	ctrl_d(int sig)
+void clear_rl_line(void)
 {
-	(void)sig;
-	rl_on_new_line();
-	printf("\033[K");
-	rl_redisplay();
-	g_sig = 0;
+    rl_replace_line("", 0); 
+    rl_on_new_line();        
+	if (g_sig_pid == 0 || g_sig_pid == 1)
+    	rl_redisplay();        
 }
 
-void	ctrl_c(int sig)
+void handle_sigint(int code)
 {
-	(void)sig;
-	if (g_sig == 2)
-	{
-		write(1, "\033[A", 3);
-		ioctl(0, TIOCSTI, "\n");
-	}
-	else
-	{
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	g_sig = 1;
+	
+    (void)code; 
+    write(1, "\n", 1); 
+    clear_rl_line();    
 }
 
-/*
-^used to enable canonical mode
-^CANONICAL MODE: waits for user to press enter before befire sending input
-^prints error if it's unable to get the current terminal attributes
-^Disables control character VQUIT == CTRL+\
-*/
-void	set_terminal_attr(void)
+void handle_signals(void)
 {
-	struct termios	term1;
-
-	if (tcgetattr(STDIN_FILENO, &term1) != 0)
-		exit((perror("error"), -1));
-	else
-	{
-		term1.c_cc[VQUIT] = _POSIX_VDISABLE;
-		term1.c_lflag |= ECHOE | ICANON;
-		if (tcsetattr(STDIN_FILENO, TCSANOW, &term1) != 0)
-			exit((perror("error"), -1));
-		if (tcgetattr(STDIN_FILENO, &term1) != 0)
-			exit((perror("error"), -1));
-	}
-}
-
-void	handle_signals(void)
-{
-	set_terminal_attr();
-	signal(SIGINT, ctrl_c);
-	signal(SIGQUIT, ctrl_d);
+    signal(SIGINT, &handle_sigint);
+    signal(SIGQUIT, SIG_IGN);      
 }

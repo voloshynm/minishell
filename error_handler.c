@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/25 23:43:08 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/26 00:19:14 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,8 @@ int	p_error(int err_id, void *arg)
 		printf("Error: Error opening heredoc file\n");
 	else if (err_id == TMP_FILE_CREATION_ERR)
 		printf("Error: Error creating temporary file\n");
-	else if (err_id == FORK_ERR)
-		perror("fork");
 	else if (err_id == DUP2_ERR)
 		perror("dup2");
-	else if (err_id == EXEC_ERR)
-		perror("execve");
 	return (err_id);
 }
 /*

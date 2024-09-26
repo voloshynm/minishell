@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/24 23:52:15 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 00:23:36 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	parse_commands(t_shell *m){
 		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l))
 			return (ALLOC_FAILURE);
 		if (parse_full_path(c, m))
-			return (m->ex_status);
+			return (CMD_NOT_EXIST);
 		while (l && is_token_redir(l))
 		{
 			if (parse_redirection(c, l->token, (l->next)->str, m))
