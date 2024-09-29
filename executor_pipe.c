@@ -26,7 +26,7 @@ int	count_pipes(t_shell *m)
 	Wait for the next child process
 	The assignment exited_pid = wait(&status); is done before the while loop,
 	and repeated inside the loop after handling each child process.
-	The while loop checks exited_pid > 0, which continues the loop 
+	The while loop checks exited_pid > 0, which continues the loop
 	as long as wait() successfully returns a child process's PID.
 	Handle any errors in wait
 	(*)
@@ -41,7 +41,7 @@ int	count_pipes(t_shell *m)
 	(typically in the range of 0 to 255).
 	*Return -1* for Abnormal Termination (e.g., it was killed by a signal)
 */
-int wait_children(t_shell *m)
+int	wait_children(t_shell *m)
 {
 	int	status;
 	int	exited_pid;
@@ -61,8 +61,8 @@ int wait_children(t_shell *m)
 // (c == 'C') Close all pipe file descriptors in child or parent
 static int	set_close_pipe(int num_pipes, int pipes[], char c)
 {
-	int		i;
-	
+	int	i;
+
 	i = -1;
 	if (c == 'S')
 	{
@@ -71,12 +71,11 @@ static int	set_close_pipe(int num_pipes, int pipes[], char c)
 			if (pipe(pipes + i * 2) == -1)
 				return (-1);
 		}
-		printf("NUmber of pipes created in set_close_pipe: %d\n", i+1);
 	}
 	if (c == 'C')
 	{
 		while (++i < 2 * num_pipes)
-		close(pipes[i]);
+			close(pipes[i]);
 	}
 	return (0);
 }
@@ -93,7 +92,8 @@ static int	upd_fd(int *cmd_index, int pipes[], t_list **current, int num_pipes)
 		if (dup2(pipes[(*cmd_index - 1) * 2], STDIN_FILENO) == -1)
 			return (p_error2("dup2", NULL));
 	}
-	if ((*current)->next && ((t_command *)((*current)->content))->cmd_splitter == PIPE)
+	if ((*current)->next
+		&& ((t_command *)((*current)->content))->cmd_splitter == PIPE)
 	{
 		if (dup2(pipes[*cmd_index * 2 + 1], STDOUT_FILENO) == -1)
 			return (p_error2("dup2", NULL));
@@ -102,16 +102,17 @@ static int	upd_fd(int *cmd_index, int pipes[], t_list **current, int num_pipes)
 	return (0);
 }
 // PID Array: created to store the PIDs of each child process as they are forked
-// Storing PIDs: Each time call fork(), store the resulting PID in the pids array
-int execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
+// Storing PIDs: Each time call fork(),store the resulting PID in the pids array
+int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 {
-	int		pipes[2 * num_pipes];
+	int			pipes[2 * num_pipes];
+	t_command	*c;
 
 	if (set_close_pipe(num_pipes, pipes, 'S') == -1)
 		return (p_error2("pipe", NULL));
 	while ((*p) && ++i < num_pipes + 1)
 	{
-		t_command *c = (t_command *)((*p)->content);
+		c = (t_command *)((*p)->content);
 		g_sig_pid = fork();
 		if (g_sig_pid == -1)
 			return (p_error2("fork", NULL));

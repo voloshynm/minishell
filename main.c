@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/29 15:46:55 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/29 19:42:48 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,11 @@ int		g_sig_pid;
 */
 void	reset_vars(t_shell *m)
 {
-	int	i;
-
-	i = -1;
 	m->lexer = NULL;
 	m->parser = NULL;
 	m->input = NULL;
 	g_sig_pid = 0;
 	m->ex_status = 0;
-	while (++i < MAX_FDS)
-		m->exit_statuses[i] = -300;
 	m->pipefd[0] = dup(STDIN_FILENO);
 	m->pipefd[1] = dup(STDOUT_FILENO);
 	m->last_splitter_token = NONE;
@@ -61,8 +56,8 @@ void	prompt_loop(t_shell *m)
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input))
 		{
-			if (!parse_commands(m, m->lexer))
-				executor_loop(m);
+			parse_commands(m, m->lexer);
+			executor_loop(m);
 			free_lexer(&m->lexer);
 			free_parser(&m->parser);
 			reset_vars(m);
