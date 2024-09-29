@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/29 15:03:02 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/29 15:46:55 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	prompt_loop(t_shell *m)
 	rl_clear_history();
 }
 
-int	main(int argc, char **argv, char **env)
+int	main(int argc, char **argv)
 {
 	t_shell m;
 
@@ -80,14 +80,6 @@ int	main(int argc, char **argv, char **env)
 	{
 		printf("Minishell cannot be launched with arguments\n");
 		return (EXIT_FAILURE);
-	}
-	int i = 0;
-	while (env[i])
-	{
-		if (i == 24)
-			env[i] = "PWD=/home/sandre-a";
-		printf("%d - %s\n\n", i, env[i]);
-		i++;
 	}
 	handle_signals();
 	init_shell_vars(&m);

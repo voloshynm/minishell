@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/09/26 21:26:50 by mvoloshy         ###   ########.fr       */
-=======
-/*   Updated: 2024/09/26 20:07:54 by sandre-a         ###   ########.fr       */
->>>>>>> c4231a3e5527bee5116b825f176a97cb3f4b7eef
+/*   Updated: 2024/09/29 15:41:35 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,15 +103,10 @@ void	restore_and_close_files(t_command *c, t_shell *m);
 
 // executor.c: to execute the command
 int		executor_loop(t_shell *m);
-int		return_child_exit(int status);
-<<<<<<< HEAD
-int		wait_children(t_shell *m, int num_pipes, int pids[]);
+int		count_pipes(t_shell *m);
+int		wait_children(t_shell *m);
 int		execute_command(t_shell *m, t_list **p);
 int		execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
-=======
-int		wait_children(t_shell *m, int num_pipes, int pid);
-int		execute_pipe(t_shell *m, t_list *parser, int num_pipes, int i);
->>>>>>> c4231a3e5527bee5116b825f176a97cb3f4b7eef
 
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"

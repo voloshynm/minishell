@@ -1,5 +1,62 @@
 #include "includes/minishell.h"
 
+int	count_pipes(t_shell *m)
+{
+	t_list		*tmp;
+	int			count;
+	t_command	*p;
+
+	tmp = m->parser;
+	count = 0;
+	while (tmp)
+	{
+		p = ((t_command *)(tmp->content));
+		if (p->cmd_splitter == PIPE)
+			count++;
+		if (p->cmd_splitter != PIPE && count > 0)
+			break ;
+		tmp = tmp->next;
+	}
+	return (count);
+}
+
+/*
+	Wait for all child processes to terminate
+	Update the exit status of the last child process(*)
+	Wait for the next child process
+	The assignment exited_pid = wait(&status); is done before the while loop,
+	and repeated inside the loop after handling each child process.
+	The while loop checks exited_pid > 0, which continues the loop 
+	as long as wait() successfully returns a child process's PID.
+	Handle any errors in wait
+	(*)
+	Check if the Child Terminated Normally:
+	*Bitwise AND with 0x7F*: checks the lower 7 bits of the status variable
+	Normal Termination: If the result is 0, it indicates that the child process
+	terminated normally (i.e., it exited without being killed by a signal).
+	*Right Shift:((status >> 8) & 0xFF)* The expression status >> 8 shifts
+	the bits of status 8 places to the right. The result is then masked with
+	0xFF to ensure we only get the lower 8 bits (the actual exit code).
+	*Return Value:* This value represents the exit status of the child process
+	(typically in the range of 0 to 255).
+	*Return -1* for Abnormal Termination (e.g., it was killed by a signal)
+*/
+int wait_children(t_shell *m)
+{
+	int	status;
+	int	exited_pid;
+
+	exited_pid = wait(&status);
+	while (exited_pid > 0)
+	{
+		m->ex_status = (status >> 8) & 0xFF;
+		exited_pid = wait(&status);
+	}
+	if (exited_pid == -1 && errno != ECHILD)
+		return (p_error2("wait", NULL));
+	return (m->ex_status);
+}
+
 // (c == 'S') Set all pipes
 // (c == 'C') Close all pipe file descriptors in child or parent
 static int	set_close_pipe(int num_pipes, int pipes[], char c)
@@ -33,25 +90,17 @@ static int	upd_fd(int *cmd_index, int pipes[], t_list **current, int num_pipes)
 {
 	if (*cmd_index > 0)
 	{
-		printf("dup2: Redirecting pipe for stdin from pipe[%d]\n", (*cmd_index - 1) * 2);
 		if (dup2(pipes[(*cmd_index - 1) * 2], STDIN_FILENO) == -1)
 			return (p_error2("dup2", NULL));
 	}
 	if ((*current)->next && ((t_command *)((*current)->content))->cmd_splitter == PIPE)
 	{
-		printf("dup2: Redirecting pipe for stdout to pipe[%d]\n", *cmd_index * 2 + 1);
 		if (dup2(pipes[*cmd_index * 2 + 1], STDOUT_FILENO) == -1)
 			return (p_error2("dup2", NULL));
 	}
 	set_close_pipe(num_pipes, pipes, 'C');
 	return (0);
 }
-static void iterate_cmd(t_list	**p, int *cmd_index)
-{
-	*p = (*p)->next;
-	(*cmd_index)++;
-}
-
 // PID Array: created to store the PIDs of each child process as they are forked
 // Storing PIDs: Each time call fork(), store the resulting PID in the pids array
 int execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
@@ -60,7 +109,7 @@ int execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 
 	if (set_close_pipe(num_pipes, pipes, 'S') == -1)
 		return (p_error2("pipe", NULL));
-	while ((*p) && i < num_pipes + 1)
+	while ((*p) && ++i < num_pipes + 1)
 	{
 		t_command *c = (t_command *)((*p)->content);
 		g_sig_pid = fork();
@@ -73,9 +122,8 @@ int execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 			execve(c->full_path, c->cmd, NULL);
 			exit(p_error2("execve", NULL));
 		}
-		iterate_cmd(p, &i);
+		*p = (*p)->next;
 	}
 	set_close_pipe(num_pipes, pipes, 'C');
-	wait_children(m, num_pipes, g_sig_pid);
-	return (0);
+	return (wait_children(m));
 }
