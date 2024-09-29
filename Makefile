@@ -43,6 +43,7 @@ builtin: libft
 	${CC} ${CFLAGS} builtins/cd.c -o builtins/cd -L${LIBFT_PATH} -lft 
 
 
+
 clean:
 	${MAKE} -C ${LIBFT_PATH} clean 
 	${RM} ${OBJS}
@@ -51,6 +52,7 @@ clean:
 fclean: clean
 	${RM} ${NAME};
 	${RM} -rf ${LIBFT_PATH}
+	${RM} builtins/echo builtins/cd
 
 re: fclean all
 

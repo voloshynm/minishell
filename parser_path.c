@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/26 20:08:10 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/29 15:03:33 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,10 @@ int	parse_full_path(t_command *c, t_shell *m)
 		free(temp);
 	}
 	else
+	{
 		printf("%s: command not found\n", c->cmd[0]);
+		return (CMD_NOT_EXIST);
+	}
 	return (0);
 }
 

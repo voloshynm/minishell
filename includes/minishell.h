@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/09/26 21:26:50 by mvoloshy         ###   ########.fr       */
+=======
+/*   Updated: 2024/09/26 20:07:54 by sandre-a         ###   ########.fr       */
+>>>>>>> c4231a3e5527bee5116b825f176a97cb3f4b7eef
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +41,7 @@
 # define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
 # define MAX_FDS 4096
 
-extern int	g_sig;
+extern int	g_sig_pid;
 
 /*
 **	*cmds	= linked list of t_command with all commands, separated by pipes
@@ -85,7 +89,7 @@ int		p_error2(char *str, void *arg);
 int		input_error(char *input);
 
 // parser.c: to parse tokens into commands with its path
-int		parse_commands(t_shell *m);
+int		parse_commands(t_shell *m, t_lexer *l);
 void	free_parser(t_list **parser);
 
 // parser_path.c: to get full path of the command for exec
@@ -104,12 +108,18 @@ void	restore_and_close_files(t_command *c, t_shell *m);
 // executor.c: to execute the command
 int		executor_loop(t_shell *m);
 int		return_child_exit(int status);
+<<<<<<< HEAD
 int		wait_children(t_shell *m, int num_pipes, int pids[]);
 int		execute_command(t_shell *m, t_list **p);
 int		execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
+=======
+int		wait_children(t_shell *m, int num_pipes, int pid);
+int		execute_pipe(t_shell *m, t_list *parser, int num_pipes, int i);
+>>>>>>> c4231a3e5527bee5116b825f176a97cb3f4b7eef
 
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
 void	handle_signals(void);
 
+void handle_sigint(int code);
 #endif

@@ -56,18 +56,17 @@ static void iterate_cmd(t_list	**p, int *cmd_index)
 // Storing PIDs: Each time call fork(), store the resulting PID in the pids array
 int execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 {
-	pid_t	pids[num_pipes + 1];
 	int		pipes[2 * num_pipes];
 
 	if (set_close_pipe(num_pipes, pipes, 'S') == -1)
 		return (p_error2("pipe", NULL));
-	while (p && i < num_pipes + 1)
+	while ((*p) && i < num_pipes + 1)
 	{
 		t_command *c = (t_command *)((*p)->content);
-		pids[i] = fork();
-		if (pids[i] == -1)
+		g_sig_pid = fork();
+		if (g_sig_pid == -1)
 			return (p_error2("fork", NULL));
-		if (pids[i] == 0)
+		if (g_sig_pid == 0)
 		{
 			if (upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
 				return (errno);
@@ -77,6 +76,6 @@ int execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 		iterate_cmd(p, &i);
 	}
 	set_close_pipe(num_pipes, pipes, 'C');
-	wait_children(m, num_pipes, pids);
+	wait_children(m, num_pipes, g_sig_pid);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/26 12:21:00 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/29 15:02:46 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	p_error(int err_id, void *arg)
 		printf("Error: Error opening heredoc file\n");
 	else if (err_id == TMP_FILE_CREATION_ERR)
 		printf("Error: Error creating temporary file\n");
+	else if (err_id == DUP2_ERR)
+		perror("dup2");
 	return (err_id);
 }
 /*

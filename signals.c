@@ -6,59 +6,38 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:19:38 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/22 20:56:56 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/26 23:02:31 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void	ctrl_d(int sig)
+void	clear_rl_line(void)
 {
-	(void)sig;
+	rl_replace_line("", 0);
 	rl_on_new_line();
-	printf("\033[K");
-	rl_redisplay();
-	g_sig = 0;
+	if (g_sig_pid == 0 || g_sig_pid == 1)
+		rl_redisplay();
 }
 
-void	ctrl_c(int sig)
+void	handle_sigint(int code)
 {
-	(void)sig;
-	if (g_sig == 2)
+	(void)code;
+	if (g_sig_pid == 2)
 	{
 		write(1, "\033[A", 3);
-		ioctl(0, TIOCSTI, "\n");
+		ioctl(0, TIOCSTI, "\n"); // This is to simulate a new line
 	}
 	else
 	{
 		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		clear_rl_line();
 	}
-	g_sig = 1;
-}
-
-void	tcseta(void)
-{
-	struct termios	term1;
-
-	if (tcgetattr(STDIN_FILENO, &term1) != 0)
-		exit((perror("error"), -1));
-	else
-	{
-		term1.c_cc[VQUIT] = _POSIX_VDISABLE;
-		term1.c_lflag |= ECHOE | ICANON;
-		if (tcsetattr(STDIN_FILENO, TCSANOW, &term1) != 0)
-			exit((perror("error"), -1));
-		if (tcgetattr(STDIN_FILENO, &term1) != 0)
-			exit((perror("error"), -1));
-	}
+	g_sig_pid = 1;
 }
 
 void	handle_signals(void)
 {
-	tcseta();
-	signal(SIGINT, ctrl_c);
-	signal(SIGQUIT, ctrl_d);
+	signal(SIGINT, &handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 }

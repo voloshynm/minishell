@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/26 20:30:23 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/29 15:02:24 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,36 +62,22 @@ static int	parse_command(t_command *c, t_lexer **l)
 	return (0);
 }
 
-void	free_parser(t_list **parser)
+int	parse_commands(t_shell *m, t_lexer *l)
 {
-	t_list		*p;
-	t_command	*command;
-
-	while (*parser)
-	{
-		p = *parser;
-		*parser = (*parser)->next;
-		command = ((t_command *)p->content);
-		free(command->full_path);
-		free(p);
-	}
-}
-
-int	parse_commands(t_shell *m){
 	t_command	*c;
-	t_lexer		*l;
-
-	l = m->lexer;
+	
 	while (l)
 	{
 		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l))
 			return (ALLOC_FAILURE);
 		if (parse_full_path(c, m))
-			return (m->ex_status);
+			return (CMD_NOT_EXIST);
 		while (l && is_token_redir(l))
 		{
 			if (parse_redirection(c, l->token, (l->next)->str, m))
 				return (m->ex_status);
+			if (g_sig_pid == 1)
+				return (RED_HEREDOC_ERR);
 			if (l->next->next && (l->next->next)->token == WORD)
 				return (p_error(UNEXPEC_TOKEN, l->str));
 			l = l->next->next;
@@ -103,7 +89,20 @@ int	parse_commands(t_shell *m){
 			l = l->next;
 		}
 	}
-	//print_parser(m);
 	return (OK);
 }
 
+void	free_parser(t_list **parser)
+{
+	t_list *p;
+	t_command *command;
+
+	while (*parser)
+	{
+		p = *parser;
+		*parser = (*parser)->next;
+		command = ((t_command *)p->content);
+		free(command->full_path);
+		free(p);
+	}
+}

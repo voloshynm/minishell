@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/20 22:31:16 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/25 15:26:04 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef enum e_token
 }					t_token;
 
 /*
-**	lexer stores tokenized elements of the input. 
+**	lexer stores tokenized elements of the input.
 **	during the tokenization it consumes > and > and then conbines into e.g.>>
 **	tokenizer checks for the erroneous input, after tokenization and analysis
 **	eventually we replace the env variable with its value

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/25 23:23:58 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/26 19:59:25 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,17 @@ static void	heredoc_readline(const char *delimiter, int tmp_fd)
 {
 	char	*line;
 
-	while (1)
+	g_sig_pid = 2;
+	while (g_sig_pid == 2)
 	{
 		line = readline("heredoc> ");
 		if (!line)
 			break ;
+		if (g_sig_pid == 1)
+		{
+			free(line);
+			break ;
+		}
 		if (line && ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		{
 			free(line);
@@ -98,7 +104,7 @@ int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 /*
 **	// Redirect input if infile is set and not STDIN
 	if (c->infile != STDIN_FILENO)
-	// Redirect output if outfile is set and not STDOUT
+	Redirect output if outfile is set and not STDOUT
 	if (c->outfile != STDOUT_FILENO)
 */
 int	setup_redirection(t_command *c, t_shell *m)
