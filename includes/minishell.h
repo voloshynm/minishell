@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/29 19:42:31 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/30 22:21:24 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ enum		e_err_state
 	ALLOC_FAILURE = 1,
 	UNEXPEC_TOKEN = 2,
 	QUOTE_ERROR = 3,
-	CMD_NOT_EXIST = 4,
+	CMD_NOT_EXIST = 14,
+	CMD_TOO_MANY_ARGS = 4,
 	ENV_VAR_NOT_EXIST = 5,
 	RED_IN_ERR = 6,
 	RED_OUT_ERR = 7,
@@ -110,6 +111,9 @@ int		execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
 void	handle_signals(void);
+void 	handle_sigint(int code);
 
-void handle_sigint(int code);
+// Builtins
+int	cd(t_command *c);
+
 #endif

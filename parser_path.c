@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_path.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/29 17:59:51 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/30 23:42:46 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,18 @@ int	is_builtin(t_command *c)
 	DIR				*directory;
 	struct dirent	*entry;
 	char			path[PATH_MAX];
+	char            *target_file;
 
 	getcwd(path, sizeof(path));
 	c->full_path = ft_strjoin(path, "/builtins");
 	directory = opendir(c->full_path);
+	target_file = ft_strjoin(c->cmd[0], ".c");
 	while (directory)
 	{
 		entry = readdir(directory);
 		if (!entry)
 			break ;
-		if (!ft_strcmp(c->cmd[0], entry->d_name))
+		if (!ft_strcmp(target_file, entry->d_name))
 		{
 			closedir(directory);
 			return (1);
@@ -68,7 +70,7 @@ int	is_bin(t_shell *m, t_command *c)
 int	parse_full_path(t_command *c, t_shell *m)
 {
 	char		*temp;
-	
+
 	is_builtin(c);
 	if (!c->full_path)
 		is_bin(m, c);

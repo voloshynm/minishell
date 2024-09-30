@@ -1,11 +1,11 @@
 SRC =   main.c 											\
+		builtins/cd.c									\
 		lexer.c lexer_utils.c lexer_helper.c 			\
 		parser.c parser_redirection.c parser_path.c		\
 		executor.c executor_pipe.c						\
 		error_handler.c 								\
 		signals.c
 		
-
 
 OBJS = ${SRC:.c=.o}
 NAME = minishell
@@ -28,7 +28,7 @@ WHITE = \033[0;97m
 
 all: libft ${NAME}
 
-${NAME}: ${OBJS} builtin
+${NAME}: ${OBJS}
 	${CC} ${CFLAGS} ${OBJS} -o ${NAME} -L${LIBFT_PATH} -lft -lreadline
 
 libft:
@@ -38,9 +38,9 @@ libft:
 	fi
 	${MAKE} all -C ${LIBFT_PATH}
 
-builtin: libft 
+#builtin: libft 
 #	${CC} ${CFLAGS} builtins/echo.c -o builtins/echo -L${LIBFT_PATH} -lft
-	${CC} ${CFLAGS} builtins/cd.c -o builtins/cd -L${LIBFT_PATH} -lft 
+#	${CC} ${CFLAGS} builtins/cd.c -o builtins/cd -L${LIBFT_PATH} -lft 
 
 clean:
 	${MAKE} -C ${LIBFT_PATH} clean 

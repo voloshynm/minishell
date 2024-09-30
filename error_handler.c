@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/29 15:02:46 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/30 22:49:39 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ int	p_error(int err_id, void *arg)
 	else if (err_id == QUOTE_ERROR)
 		printf("Error: Invalid quote usage\n");
 	else if (err_id == CMD_NOT_EXIST)
-		printf("Error: %s: command not found\n", (char *) arg);
+		printf("%s: command not found\n", (char *) arg);
+	else if (err_id == CMD_TOO_MANY_ARGS)
+		printf("cd: too many arguments\n");
 	else if (err_id == ENV_VAR_NOT_EXIST)
 		printf("Error: Not able to get timestamp error\n");
 	else if (err_id == RED_IN_ERR)

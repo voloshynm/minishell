@@ -118,6 +118,8 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 			return (p_error2("fork", NULL));
 		if (g_sig_pid == 0)
 		{
+			if (!ft_strcmp(c->cmd[0], "cd"))
+				exit(0);
 			if (upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
 				return (errno);
 			execve(c->full_path, c->cmd, NULL);

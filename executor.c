@@ -6,22 +6,31 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/30 20:13:22 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/30 23:26:23 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
+int	run_builtin(t_shell *m, t_list **parser, t_command *c)
+{
+	if (!ft_strcmp(c->cmd[0], "cd"))
+		m->ex_status = cd(c);
+	(*parser) = (*parser)->next;
+	return(m->ex_status);
+}
+
 int	execute_command(t_shell *m, t_list **parser)
 {
 	t_command	*c;
 
-	p = ((t_command *)((*parser)->content));
-	if (p->full_path == NULL)
+	c = ((t_command *)((*parser)->content));
+	if (!ft_strcmp(c->cmd[0], "cd"))
+		return(run_builtin(m, parser, c));
+	if (c->full_path == NULL)
 	{
-		printf("%s: command not found\n", p->cmd[0]);
 		(*parser) = (*parser)->next;
-		return (CMD_NOT_EXIST);
+		return (p_error(CMD_NOT_EXIST, c->cmd[0]));
 	}
 	g_sig_pid = fork();
 	if (g_sig_pid == -1)
@@ -65,31 +74,31 @@ static void	advance_after_bypassing_splitter_or_and(t_list **p, t_shell *m)
 	}
 }
 
-int	valid_command_in_pipe(t_list **p, int num_pipes)
+int	is_invalid_command_in_pipe(t_shell *m, t_list **p, int num_pipes)
 {
 	t_list		*start;
 	t_command	*c;
-	bool		flag;
+	bool		is_invalid;
 
 	start = *p;
+	is_invalid = false;
 	while (num_pipes + 1)
 	{
 		c = ((t_command *)((*p)->content));
-		if (c->full_path == NULL)
+		if (c->full_path == NULL && ft_strcmp(c->cmd[0], "cd"))
 		{
-			if (!flag)
+			if (!is_invalid)
 				printf("%s: command not found\n", c->cmd[0]);
-			flag = true;
+			is_invalid = true;
 		}
 		*p = (*p)->next;
 		num_pipes--;
 	}
-	if (!flag)
-	{
-		*p = start;
-		return (1);
-	}
-	return (0);
+	if (is_invalid)
+		m->ex_status = CMD_NOT_EXIST;
+	else
+		*p = start;	
+	return (is_invalid);
 }
 /*
 **	take the standard output (stdout) of the command on its left
@@ -117,7 +126,7 @@ int	executor_loop(t_shell *m)
 		else if (c->cmd_splitter == PIPE)
 		{
 			num_pipes = count_pipes(m);
-			if (valid_command_in_pipe(&p, num_pipes))
+			if (!is_invalid_command_in_pipe(m, &p, num_pipes))
 				m->ex_status = execute_pipe(m, &p, num_pipes, cmd_index);
 		}
 		else
