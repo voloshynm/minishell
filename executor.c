@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/29 15:56:12 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/30 19:45:02 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 int	execute_command(t_shell *m, t_list **parser)
 {
-	t_command	*p;
+	t_command	*c;
 
-	p = ((t_command *)((*parser)->content));
+	c = ((t_command *)((*parser)->content));
 	g_sig_pid = fork();
 	if (g_sig_pid == -1)
 		return (p_error2("fork", NULL));
 	else if (g_sig_pid == 0)
 	{
-		setup_redirection(p, m);
-		execve(p->full_path, p->cmd, NULL);
+		setup_redirection(c, m);
+		execve(c->full_path, c->cmd, NULL);
 		exit(p_error2("execve", NULL));
 	}
 	(*parser) = (*parser)->next;
@@ -84,10 +84,10 @@ int	executor_loop(t_shell *m)
 		else if (c->cmd_splitter == PIPE)
 		{
 			num_pipes = count_pipes(m);
-			m->exit_statuses[0] = execute_pipe(m, &p, num_pipes, cmd_index);
+			m->ex_status = execute_pipe(m, &p, num_pipes, cmd_index);
 		}
 		else
-			m->exit_statuses[0] = execute_command(m, &p);
+			m->ex_status = execute_command(m, &p);
 	}
-	return (m->exit_statuses[0]);
+	return (m->ex_status);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/24 23:59:23 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/09/30 19:53:55 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ static char	*handle_quotes(char *input)
 	}
 	if (count % 2 == 1)
 	{
-		printf("Invalid quote usage\n");
-		exit(EXIT_FAILURE);
+		p_error(QUOTE_ERROR, "Invalid quote usage\n");
+		return (NULL);
 	}
 	last_quote++;
 	last_quote = ft_strchr(last_quote, quote_type);

@@ -71,7 +71,6 @@ static int	set_close_pipe(int num_pipes, int pipes[], char c)
 			if (pipe(pipes + i * 2) == -1)
 				return (-1);
 		}
-		printf("NUmber of pipes created in set_close_pipe: %d\n", i+1);
 	}
 	if (c == 'C')
 	{
