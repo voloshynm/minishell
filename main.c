@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/29 19:35:28 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:12:18 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@ int		g_sig_pid;
 */
 void	reset_vars(t_shell *m)
 {
-	int	i;
-
-	i = -1;
 	m->lexer = NULL;
 	m->parser = NULL;
 	m->input = NULL;

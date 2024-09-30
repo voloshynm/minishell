@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/30 19:45:02 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:13:22 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,13 @@ int	execute_command(t_shell *m, t_list **parser)
 {
 	t_command	*c;
 
-	c = ((t_command *)((*parser)->content));
+	p = ((t_command *)((*parser)->content));
+	if (p->full_path == NULL)
+	{
+		printf("%s: command not found\n", p->cmd[0]);
+		(*parser) = (*parser)->next;
+		return (CMD_NOT_EXIST);
+	}
 	g_sig_pid = fork();
 	if (g_sig_pid == -1)
 		return (p_error2("fork", NULL));
@@ -32,10 +38,10 @@ int	execute_command(t_shell *m, t_list **parser)
 /*
 **	checking if condition for OR or AND is satisfied
 */
-static int	is_bypassing_splitter_or_and(t_command	*c, t_shell *m)
+static int	is_bypassing_splitter_or_and(t_command *c, t_shell *m)
 {
 	if ((c->last_splitter_token == OR && m->ex_status == 0)
-			|| (c->last_splitter_token == AND && m->ex_status != 0))
+		|| (c->last_splitter_token == AND && m->ex_status != 0))
 		return (1);
 	return (0);
 }
@@ -57,6 +63,33 @@ static void	advance_after_bypassing_splitter_or_and(t_list **p, t_shell *m)
 			num_pipes--;
 		}
 	}
+}
+
+int	valid_command_in_pipe(t_list **p, int num_pipes)
+{
+	t_list		*start;
+	t_command	*c;
+	bool		flag;
+
+	start = *p;
+	while (num_pipes + 1)
+	{
+		c = ((t_command *)((*p)->content));
+		if (c->full_path == NULL)
+		{
+			if (!flag)
+				printf("%s: command not found\n", c->cmd[0]);
+			flag = true;
+		}
+		*p = (*p)->next;
+		num_pipes--;
+	}
+	if (!flag)
+	{
+		*p = start;
+		return (1);
+	}
+	return (0);
 }
 /*
 **	take the standard output (stdout) of the command on its left
@@ -84,7 +117,8 @@ int	executor_loop(t_shell *m)
 		else if (c->cmd_splitter == PIPE)
 		{
 			num_pipes = count_pipes(m);
-			m->ex_status = execute_pipe(m, &p, num_pipes, cmd_index);
+			if (valid_command_in_pipe(&p, num_pipes))
+				m->ex_status = execute_pipe(m, &p, num_pipes, cmd_index);
 		}
 		else
 			m->ex_status = execute_command(m, &p);

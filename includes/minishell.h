@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/29 15:41:35 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/29 19:42:31 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct s_shell
 	char	*pwd;
 	char	*oldpwd;
 	int		ex_status;
-	int		exit_statuses[MAX_FDS];
 	int		pipefd[2];
 	t_token	last_splitter_token;
 }			t_shell;

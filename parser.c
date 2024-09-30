@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/29 15:02:24 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/29 17:00:17 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,7 @@ int	parse_commands(t_shell *m, t_lexer *l)
 	{
 		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l))
 			return (ALLOC_FAILURE);
-		if (parse_full_path(c, m))
-			return (CMD_NOT_EXIST);
+		parse_full_path(c, m);
 		while (l && is_token_redir(l))
 		{
 			if (parse_redirection(c, l->token, (l->next)->str, m))

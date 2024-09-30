@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_path.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/29 15:03:33 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/09/29 17:59:51 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,6 @@ int	parse_full_path(t_command *c, t_shell *m)
 		temp = ft_strjoin(c->full_path, "/");
 		c->full_path = ft_strjoin(temp, c->cmd[0]);
 		free(temp);
-	}
-	else
-	{
-		printf("%s: command not found\n", c->cmd[0]);
-		return (CMD_NOT_EXIST);
 	}
 	return (0);
 }

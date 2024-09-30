@@ -42,8 +42,6 @@ builtin: libft
 #	${CC} ${CFLAGS} builtins/echo.c -o builtins/echo -L${LIBFT_PATH} -lft
 	${CC} ${CFLAGS} builtins/cd.c -o builtins/cd -L${LIBFT_PATH} -lft 
 
-
-
 clean:
 	${MAKE} -C ${LIBFT_PATH} clean 
 	${RM} ${OBJS}
