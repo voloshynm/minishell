@@ -105,7 +105,7 @@ static int	upd_fd(int *cmd_index, int pipes[], t_list **current, int num_pipes)
 // Storing PIDs: Each time call fork(),store the resulting PID in the pids array
 int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 {
-	int			pipes[2 * num_pipes];
+	int			pipes[8192];
 	t_command	*c;
 
 	if (set_close_pipe(num_pipes, pipes, 'S') == -1)
@@ -118,15 +118,16 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 			return (p_error2("fork", NULL));
 		if (g_sig_pid == 0)
 		{
-			if (!ft_strcmp(c->cmd[0], "cd"))
-				exit(0);
 			if (upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
 				return (errno);
+			if (is_builtin(c, m))
+				exit(run_builtin(m, p, c));
 			execve(c->full_path, c->cmd, NULL);
 			exit(p_error2("execve", NULL));
 		}
 		*p = (*p)->next;
 	}
 	set_close_pipe(num_pipes, pipes, 'C');
+	restore_and_close_files(c, m);
 	return (wait_children(m));
 }

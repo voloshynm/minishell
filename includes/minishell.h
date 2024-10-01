@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/30 22:21:24 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/01 22:46:33 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,18 @@
 extern int	g_sig_pid;
 
 /*
+**	struct for envp variables, for easier navigation
+*/
+typedef struct s_envp
+{
+	char			*key;
+	char			*value;
+	char			*key_value;
+	struct t_envp	*next;
+	struct t_envp	*prev;
+}			t_envp;
+
+/*
 **	*cmds	= linked list of t_command with all commands, separated by pipes
 	**envv	= array containing keys and values for the shell environment
 	ex_status	= exit status of most recently executed cmd
@@ -52,10 +64,14 @@ typedef struct s_shell
 	t_list	*parser;
 	pid_t	pid;
 	char	**envp;
+	t_envp	*envp1;
+	char	**envpath;
 	char	*pwd;
 	char	*oldpwd;
+	char	*original_pwd;
 	int		ex_status;
 	int		pipefd[2];
+	int		is_unique_cmd;
 	t_token	last_splitter_token;
 }			t_shell;
 
@@ -74,6 +90,7 @@ enum		e_err_state
 	RED_HEREDOC_ERR = 9,
 	TMP_FILE_CREATION_ERR = 10,
 	DUP2_ERR = 11,
+	CMD_TOO_FEW_ARGS = 12
 };
 
 // main.c: the main loop of minishell
@@ -90,7 +107,7 @@ void	free_parser(t_list **parser);
 
 // parser_path.c: to get full path of the command for exec
 int		parse_full_path(t_command *c, t_shell *m);
-int		is_builtin(t_command *p);
+int		is_builtin(t_command *c, t_shell *m);
 int		is_bin(t_shell *m, t_command *p);
 
 int		print_parser(t_shell *minihell);
@@ -107,6 +124,7 @@ int		count_pipes(t_shell *m);
 int		wait_children(t_shell *m);
 int		execute_command(t_shell *m, t_list **p);
 int		execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
+int		run_builtin(t_shell *m, t_list **parser, t_command *c);
 
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
@@ -114,6 +132,8 @@ void	handle_signals(void);
 void 	handle_sigint(int code);
 
 // Builtins
-int	cd(t_command *c);
+int		echo(char **arg);
+int		cd(char **arg, t_shell *m);
+int		pwd();
 
 #endif

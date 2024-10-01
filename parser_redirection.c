@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/26 19:59:25 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/01 16:30:10 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	setup_redirection(t_command *c, t_shell *m)
 
 /*
 **	// Restore stdin from pipefd[0] and close infile if it was redirected
-	// Restore stdout from pipefd[1] and close outfile if it was redirected
+**	// Restore stdout from pipefd[1] and close outfile if it was redirected
 */
 void	restore_and_close_files(t_command *c, t_shell *m)
 {

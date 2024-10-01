@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/25 00:00:22 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/01 21:59:35 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static void	join_same_tokens(t_lexer *lexer)
 ^	(QUOTES WILL THAN HAVE A DIFFERENT TREATMENT)
 ^ FT_STRCHR will determinate the type of TOKEN > < or | and then its
 ^	added to the token list.
+TODO: implement error handler for "add_to_token_list(lexer, token);""
 */
 int	init_lexer(t_lexer **lexer, char *input)
 {
@@ -77,7 +78,8 @@ int	init_lexer(t_lexer **lexer, char *input)
 	l_start = *lexer;
 	while (l_start)
 	{
-		process_env_arg(l_start);
+		if (process_env_arg(l_start) == ALLOC_FAILURE)
+			return (p_error(ALLOC_FAILURE, NULL));
 		l_start = l_start->next;
 	}
 	return (0);

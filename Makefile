@@ -1,12 +1,11 @@
 SRC =   main.c 											\
-		builtins/cd.c									\
 		lexer.c lexer_utils.c lexer_helper.c 			\
 		parser.c parser_redirection.c parser_path.c		\
 		executor.c executor_pipe.c						\
 		error_handler.c 								\
-		signals.c
+		signals.c										\
+		builtins/cd.c builtins/pwd.c builtins/echo.c 	\
 		
-
 OBJS = ${SRC:.c=.o}
 NAME = minishell
 CC = cc
@@ -33,14 +32,10 @@ ${NAME}: ${OBJS}
 
 libft:
 	if [ ! -d "$(LIBFT_PATH)" ]; then \
-        echo "downloading libft..."; \
+		echo "downloading libft..."; \
 		git clone -b additional_functions git@github.com:Sergio0227/Libft.git $(LIBFT_PATH); \
 	fi
 	${MAKE} all -C ${LIBFT_PATH}
-
-#builtin: libft 
-#	${CC} ${CFLAGS} builtins/echo.c -o builtins/echo -L${LIBFT_PATH} -lft
-#	${CC} ${CFLAGS} builtins/cd.c -o builtins/cd -L${LIBFT_PATH} -lft 
 
 clean:
 	${MAKE} -C ${LIBFT_PATH} clean 
@@ -50,7 +45,6 @@ clean:
 fclean: clean
 	${RM} ${NAME};
 	${RM} -rf ${LIBFT_PATH}
-	${RM} builtins/echo builtins/cd
 
 re: fclean all
 

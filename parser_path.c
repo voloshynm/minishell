@@ -6,22 +6,21 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/30 23:42:46 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/01 20:11:19 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-int	is_builtin(t_command *c)
+int	is_builtin(t_command *c, t_shell *m)
 {
 	DIR				*directory;
 	struct dirent	*entry;
-	char			path[PATH_MAX];
-	char            *target_file;
+	char			*target_file;
+	char			*cmd_path;
 
-	getcwd(path, sizeof(path));
-	c->full_path = ft_strjoin(path, "/builtins");
-	directory = opendir(c->full_path);
+	cmd_path = ft_strjoin(m->original_pwd, "/builtins");
+	directory = opendir(cmd_path);
 	target_file = ft_strjoin(c->cmd[0], ".c");
 	while (directory)
 	{
@@ -31,11 +30,13 @@ int	is_builtin(t_command *c)
 		if (!ft_strcmp(target_file, entry->d_name))
 		{
 			closedir(directory);
+			c->full_path = cmd_path;
+			free(target_file);
 			return (1);
 		}
 	}
-	free(c->full_path);
-	c->full_path = NULL;
+	free(cmd_path);
+	free(target_file);
 	closedir(directory);
 	return (0);
 }
@@ -47,9 +48,9 @@ int	is_bin(t_shell *m, t_command *c)
 	int				i;
 
 	i = -1;
-	while (m->envp[++i])
+	while (m->envpath[++i])
 	{
-		directory = opendir(m->envp[i]);
+		directory = opendir(m->envpath[i]);
 		while (directory)
 		{
 			entry = readdir(directory);
@@ -57,7 +58,7 @@ int	is_bin(t_shell *m, t_command *c)
 				break ;
 			if (!ft_strcmp(c->cmd[0], entry->d_name))
 			{
-				c->full_path = m->envp[i];
+				c->full_path = m->envpath[i];
 				closedir(directory);
 				return (1);
 			}
@@ -71,7 +72,7 @@ int	parse_full_path(t_command *c, t_shell *m)
 {
 	char		*temp;
 
-	is_builtin(c);
+	is_builtin(c, m);
 	if (!c->full_path)
 		is_bin(m, c);
 	if (c->full_path)

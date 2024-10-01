@@ -6,34 +6,35 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:13:26 by eyasa             #+#    #+#             */
-/*   Updated: 2024/09/29 19:16:34 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/01 16:26:24 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	main(int argc, char **args)
+int	echo(char **arg)
 {
-	int	i;
-	int	newline;
-	int	j;
-
-	(void) argc;
+	int		i;
+	int		newline;
+	int		j;
+	char	**cmd;
+	
+	cmd = arg;
 	i = 0;
 	newline = 1;
-	while (args[++i] && args[i][0] == '-' && args[i][1] == 'n')
+	while (cmd[++i] && cmd[i][0] == '-' && cmd[i][1] == 'n')
 	{
 		j = 1;
-		while (args[i][j] == 'n')
+		while (cmd[i][j] == 'n')
 			j++;
-		if (args[i][j] != '\0')
+		if (cmd[i][j] != '\0')
 			break ;
 		newline = 0;
 	}
-	while (args[i++])
+	while (cmd[i++])
 	{
-		ft_putstr_fd(args[i - 1], 1);
-		if (args[i])
+		ft_putstr_fd(cmd[i - 1], 1);
+		if (cmd[i])
 			ft_putstr_fd(" ", 1);
 	}
 	if (newline)

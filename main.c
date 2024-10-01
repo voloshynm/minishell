@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/30 20:12:18 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/01 22:41:09 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,13 @@ void	reset_vars(t_shell *m)
 	m->last_splitter_token = NONE;
 }
 
-void	init_shell_vars(t_shell *m)
+void	init_shell_vars(t_shell *m, char **envp)
 {
-	m->envp = ft_split(getenv("PATH"), ':');
-	m->pwd = getenv("PWD");
+	(void)envp;
+	m->envpath = ft_split(getenv("PATH"), ':');
+	m->original_pwd = getenv("PWD");
+	// init_envp(m, envp);
+	m->pwd = m->original_pwd;
 	m->oldpwd = getenv("OLDPWD");
 	m->pid = getpid();
 	reset_vars(m);
@@ -66,7 +69,7 @@ void	prompt_loop(t_shell *m)
 	rl_clear_history();
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 	t_shell m;
 
@@ -77,7 +80,7 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	handle_signals();
-	init_shell_vars(&m);
+	init_shell_vars(&m, envp);
 	prompt_loop(&m);
 	return (0);
 }

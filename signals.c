@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:19:38 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/26 23:02:31 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/01 16:03:02 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ void	clear_rl_line(void)
 	if (g_sig_pid == 0 || g_sig_pid == 1)
 		rl_redisplay();
 }
-
+//ioctl(0, TIOCSTI, "\n"); This is to simulate a new line
 void	handle_sigint(int code)
 {
 	(void)code;
 	if (g_sig_pid == 2)
 	{
 		write(1, "\033[A", 3);
-		ioctl(0, TIOCSTI, "\n"); // This is to simulate a new line
+		ioctl(0, TIOCSTI, "\n");
 	}
 	else
 	{

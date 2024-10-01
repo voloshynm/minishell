@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/30 20:12:49 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/01 22:56:40 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 	while (*s >= 'A' && *s <= 'Z')
 		s++;
 	tmp_1 = ft_strndup(start, s - start);
+	if (tmp_1 == NULL)
+		return (NULL);
 	tmp_2 = getenv(tmp_1);
 	if (!tmp_2)
 		tmp_2 = "";
@@ -38,12 +40,14 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 	tmp_2 = ft_strndup(lexer->str,
 			ft_strlen(lexer->str) - ft_strlen(start) - 1);
 	new_str = ft_strjoin(tmp_2, tmp_1);
+	if (tmp_1 == NULL || tmp_2 == NULL)
+		return (NULL);
 	free(tmp_1);
 	free(tmp_2);
 	return (new_str);
 }
 
-void	process_env_arg(t_lexer *lexer)
+int	process_env_arg(t_lexer *lexer)
 {
 	char	*s;
 	char    *tmp;
@@ -53,14 +57,21 @@ void	process_env_arg(t_lexer *lexer)
 		tmp = lexer->str;
 		lexer->str = ft_str_rm_front_chars(lexer->str, 1);
 		free(tmp);
+		if (lexer->str == NULL)
+			return (ALLOC_FAILURE);
 	}
 	s = lexer->str;
 	while (*s)
 	{
 		if (*s == '$' && ft_isalnum(*(s + 1)))
+		{
 			lexer->str = replace_env_arg(++s, lexer);
+			if (lexer->str == NULL)
+				return (ALLOC_FAILURE);
+		}
 		s++;
 	}
+	return (OK);
 }
 
 /*
@@ -120,19 +131,16 @@ char	*tokenize_input(char **input)
 	return (str);
 }
 
-void	add_to_token_list(t_lexer **lexer, char *str)
+int	add_to_token_list(t_lexer **lexer, char *str)
 {
 	t_lexer	*new_token;
 	t_lexer	*temp;
 
 	if (!*str)
-		return ;
+		return (OK);
 	new_token = malloc(sizeof(t_lexer));
 	if (new_token == NULL)
-	{
-		printf("Alloc error during tokenization");
-		exit(EXIT_FAILURE);
-	}
+		return(p_error(ALLOC_FAILURE, NULL));
 	new_token->str = str;
 	new_token->token = token_type(str);
 	new_token->next = NULL;
@@ -146,4 +154,5 @@ void	add_to_token_list(t_lexer **lexer, char *str)
 		temp->next = new_token;
 		new_token->prev = temp;
 	}
+	return (OK);
 }

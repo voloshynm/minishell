@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/30 23:26:23 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/01 20:30:12 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,16 @@
 int	run_builtin(t_shell *m, t_list **parser, t_command *c)
 {
 	if (!ft_strcmp(c->cmd[0], "cd"))
-		m->ex_status = cd(c);
+	{
+		m->ex_status = cd(c->cmd, m);
+		printf("m->oldpwd: %s\n", m->oldpwd);
+		printf("m->pwd: %s\n", m->pwd);
+	}
+	else if (!ft_strcmp(c->cmd[0], "pwd"))
+		m->ex_status = pwd();
+	else if (!ft_strcmp(c->cmd[0], "echo"))
+		m->ex_status = echo(c->cmd);
+	restore_and_close_files(c, m);
 	(*parser) = (*parser)->next;
 	return(m->ex_status);
 }
@@ -25,7 +34,8 @@ int	execute_command(t_shell *m, t_list **parser)
 	t_command	*c;
 
 	c = ((t_command *)((*parser)->content));
-	if (!ft_strcmp(c->cmd[0], "cd"))
+	setup_redirection(c, m);
+	if (is_builtin(c, m))
 		return(run_builtin(m, parser, c));
 	if (c->full_path == NULL)
 	{
@@ -37,10 +47,10 @@ int	execute_command(t_shell *m, t_list **parser)
 		return (p_error2("fork", NULL));
 	else if (g_sig_pid == 0)
 	{
-		setup_redirection(c, m);
 		execve(c->full_path, c->cmd, NULL);
 		exit(p_error2("execve", NULL));
 	}
+	restore_and_close_files(c, m);
 	(*parser) = (*parser)->next;
 	return (wait_children(m));
 }
@@ -85,7 +95,7 @@ int	is_invalid_command_in_pipe(t_shell *m, t_list **p, int num_pipes)
 	while (num_pipes + 1)
 	{
 		c = ((t_command *)((*p)->content));
-		if (c->full_path == NULL && ft_strcmp(c->cmd[0], "cd"))
+		if (c->full_path == NULL && !is_builtin(c, m))
 		{
 			if (!is_invalid)
 				printf("%s: command not found\n", c->cmd[0]);
