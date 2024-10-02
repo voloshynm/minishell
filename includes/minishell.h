@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/02 15:52:10 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:13:11 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,6 @@
 extern int	g_sig_pid;
 
 /*
-**	struct for envp variables, for easier navigation
-*/
-// typedef struct s_envp
-// {
-// 	char			*key;
-// 	char			*value;
-// 	char			*key_value;
-// 	struct t_envp	*next;
-// 	struct t_envp	*prev;
-// }			t_envp;
-
-/*
 **	*cmds	= linked list of t_command with all commands, separated by pipes
 	**envv	= array containing keys and values for the shell environment
 	ex_status	= exit status of most recently executed cmd
@@ -64,7 +52,6 @@ typedef struct s_shell
 	t_list	*parser;
 	pid_t	pid;
 	char	**envp;
-	// t_envp	*envp1;
 	char	**envpath;
 	char	*pwd;
 	char	*oldpwd;
