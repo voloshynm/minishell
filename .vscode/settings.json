@@ -1,0 +1,27 @@
+{
+	"files.associations": {
+		"*.ejs": "html",
+		"get_next_line.h": "c",
+		"cstdio": "c",
+		"minishell.h": "c",
+		"libft.h": "c",
+		"stdbool.h": "c",
+		"stdio.h": "c",
+		"readline.h": "c",
+		"dirent.h": "c",
+		"limits.h": "c",
+		"history.h": "c",
+		"signal.h": "c",
+		"lexer.h": "c",
+		"color.h": "c",
+		"termios.h": "c",
+		"types.h": "c",
+		"executor.h": "c",
+		"unistd.h": "c",
+		"fcntl.h": "c",
+		"parser.h": "c",
+		"stdlib.h": "c",
+		"wait.h": "c",
+		"ioctl.h": "c"
+	}
+}

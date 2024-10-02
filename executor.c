@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/02 15:51:41 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/02 21:12:23 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	run_builtin(t_shell *m, t_list **parser, t_command *c)
 	else if (!ft_strcmp(c->cmd[0], "echo"))
 		m->ex_status = echo(c->cmd);
 	else if (!ft_strcmp(c->cmd[0], "export"))
+		m->ex_status = export(m, c);
+	else if (!ft_strcmp(c->cmd[0], "unset"))
 		m->ex_status = export(m, c);
 	restore_and_close_files(c, m);
 	(*parser) = (*parser)->next;

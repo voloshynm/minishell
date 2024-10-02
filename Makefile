@@ -6,7 +6,7 @@ SRC =   main.c 											\
 		signals.c										\
 		environment.c utils.c							\
 		builtins/cd.c builtins/pwd.c builtins/echo.c 	\
-		builtins/export.c 
+		builtins/export.c builtins/unset.c 
 		
 OBJS = ${SRC:.c=.o}
 NAME = minishell

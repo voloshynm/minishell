@@ -1,5 +1,16 @@
 #include "includes/minishell.h"
 
+static void	free_ft_split_fixed(char **strings)
+{
+	char **orig = strings;
+	while (*strings != NULL)
+	{
+		free(*strings);
+		strings++;
+	}
+	free(orig);
+}
+
 static int	is_valid_key_value(const char* key_value)
 {
 	char	*s;
@@ -56,7 +67,7 @@ int add_to_envp(t_shell *m, char *key_value)
 	*(v++) = ft_strdup(key_value);
 	(v++);
 	*v = NULL;
-	free(m->envp - n);
+	free_ft_split_fixed(m->envp - n);
 	m->envp = v_start;
 	ft_str_bubble_sort(m->envp, n + 1);
 	return (0);
@@ -80,7 +91,7 @@ int	get_key_nmb(t_shell *m, char *key_value)
 	nmb = -1;
 	while (m->envp[++nmb])
 	{
-		if (!ft_strncmp(m->envp[++nmb], key_value, len))
+		if (!ft_strncmp(m->envp[nmb], key_value, len))
 			return(nmb);
 	}
 	return (0);
@@ -94,18 +105,24 @@ int	rm_from_envp(t_shell *m, char *key_value)
 	int		i;
 
 	n = sizeof_2d_array(m->envp);
+	nmb = get_key_nmb(m, key_value);
+	if (nmb == -1)
+		return (0);
 	v = (char **)malloc((n) * sizeof(char *));
 	if (v == NULL)
 		return (p_error(ALLOC_FAILURE, NULL));
-	nmb = get_key_nmb(m, key_value);
 	i = -1;
 	while (m->envp[++i] && i < nmb)
 		v[i] = m->envp[i];
-	while (m->envp[++i] && i < n)
-		v[i] = m->envp[i];
+	printf("ERROR");
+	while (m->envp[i + 1])
+	{
+		v[i] = m->envp[i + 1];
+		i++;
+	}
 	v[i] = NULL;
-	free(m->envp - n);
+	free_ft_split_fixed(m->envp);
 	m->envp = v;
-	ft_str_bubble_sort(m->envp, n);
+	ft_str_bubble_sort(m->envp, sizeof_2d_array(m->envp));
 	return (0);
 }
