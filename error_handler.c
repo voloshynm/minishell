@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/01 22:51:05 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:22:12 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int	p_error(int err_id, void *arg)
 		printf("Error: Error opening heredoc file\n");
 	else if (err_id == TMP_FILE_CREATION_ERR)
 		printf("Error: Error creating temporary file\n");
+	else if (err_id == INVAL_ENV_VAR)
+		printf("Error: not an identifier: `%s'\n", (char *) arg);
 	else if (err_id == DUP2_ERR)
 		perror("dup2");
 	return (err_id);

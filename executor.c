@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/01 20:30:12 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:51:41 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	run_builtin(t_shell *m, t_list **parser, t_command *c)
 {
 	if (!ft_strcmp(c->cmd[0], "cd"))
 	{
-		m->ex_status = cd(c->cmd, m);
+		m->ex_status = cd(m, c->cmd);
 		printf("m->oldpwd: %s\n", m->oldpwd);
 		printf("m->pwd: %s\n", m->pwd);
 	}
@@ -24,6 +24,8 @@ int	run_builtin(t_shell *m, t_list **parser, t_command *c)
 		m->ex_status = pwd();
 	else if (!ft_strcmp(c->cmd[0], "echo"))
 		m->ex_status = echo(c->cmd);
+	else if (!ft_strcmp(c->cmd[0], "export"))
+		m->ex_status = export(m, c);
 	restore_and_close_files(c, m);
 	(*parser) = (*parser)->next;
 	return(m->ex_status);

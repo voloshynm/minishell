@@ -6,13 +6,13 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:38:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/01 22:54:15 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:57:25 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	upd_pwds(char oldpwd[PATH_MAX], t_shell *m)
+static int	upd_pwds(t_shell *m, char oldpwd[PATH_MAX])
 {
 	char	pwd[PATH_MAX];
 	
@@ -23,7 +23,7 @@ static int	upd_pwds(char oldpwd[PATH_MAX], t_shell *m)
 	return (OK);
 }
 
-int		cd(char **arg, t_shell *m)
+int		cd(t_shell *m, char **arg)
 {
 	char	**cmd;
 	char	oldpwd[PATH_MAX];
@@ -37,5 +37,5 @@ int		cd(char **arg, t_shell *m)
 		return(p_error(CMD_TOO_FEW_ARGS, NULL));
 	else if (chdir(cmd[1]) == -1)
 		return(p_error2("cd", NULL));
-	return(upd_pwds(oldpwd, m));
+	return(upd_pwds(m, oldpwd));
 }

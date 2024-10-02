@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/01 22:41:09 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:57:55 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,9 @@ void	reset_vars(t_shell *m)
 
 void	init_shell_vars(t_shell *m, char **envp)
 {
-	(void)envp;
 	m->envpath = ft_split(getenv("PATH"), ':');
 	m->original_pwd = getenv("PWD");
-	// init_envp(m, envp);
+	init_envp(m, envp);
 	m->pwd = m->original_pwd;
 	m->oldpwd = getenv("OLDPWD");
 	m->pid = getpid();

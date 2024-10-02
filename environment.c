@@ -1,74 +1,77 @@
 #include "includes/minishell.h"
 
-t_envp	*find_by_key(t_envp **v, char *key)
+static int	is_valid_key_value(const char* key_value)
 {
+	char	*s;
 
-}
-
-t_envp	*find_prev_by_key(t_envp **v, char *key)
-{
-
-}
-
-void	put_var_in_envp_list(t_envp **v, t_envp *new_var)
-{
-	t_envp	*temp;
-
-	temp = find_prev_by_key(v, new_var->key);
-	if (temp->next)
+	s = (char *)key_value;
+	if (!ft_isalpha(*s))
+		return (0);
+	s++;
+	while (*s)
 	{
-		temp->next->prev = new_var;
-		new_var->next = temp->next;
+		if (!ft_isalnum(*s) && *s != '=')
+			return (0);
+		s++;
 	}
-	temp->next = new_var;
-	new_var->prev = temp;
+	return (1);
 }
 
-void	replace_var_in_envp_list(t_envp *temp, t_envp *new_var)
+int init_envp(t_shell *m, char **envp_arg)
 {
-	new_var->next = temp->next;
-	new_var->prev = temp->prev;
-	temp->prev->next = new_var;
-	temp->next->prev = new_var;
-	free(temp);
-}
+	char	**v;
+	int		n;
 
-void	add_to_envp_list(t_envp **v, const char *key_value)
-{
-	t_envp	*new_var;
-	t_envp	*temp;
-
-	if (!*key_value)
-		return ;
-	new_var = malloc(sizeof(t_envp));
-	if (new_var == NULL)
-		return(p_error(ALLOC_FAILURE, NULL));
-	new_var->key_value = key_value;
-	new_var->key = get_key();
-	new_var->value = get_value();
-	new_var->next = NULL;
-	new_var->prev = NULL;
-	if (*v == NULL)
-	{
-		*v = new_var;
-		return ;
-	}
-	temp = find_by_key(v, new_var->key);
-	if (temp != NULL)
-		replace_var_in_envp_list(temp, new_var);
-	else
-		put_var_in_envp_list(v, new_var);
-}
-
-int	init_envp(t_shell *m, char **envp)
-{
-	t_envp	*v;
-	int		cnt_el;
-	int		i;
-
-	v = NULL;
+	n = sizeof_2d_array(envp_arg);
+	v = (char **)malloc((n + 1) * sizeof(char *));
+	if (v == NULL)
+		return (p_error(ALLOC_FAILURE, NULL));
 	m->envp = v;
-	while(envp[++cnt_el] != NULL)
-		add_to_envp_list(&v, envp[cnt_el]);
+	while (*envp_arg)
+	{
+		*v = ft_strdup(*envp_arg);
+		v++;
+		envp_arg++;
+	}
+	*v = NULL;
+	ft_str_bubble_sort(m->envp, n);
+	return (0);
+}
 
+int add_to_envp(t_shell *m, char *key_value)
+{
+	char	**v;
+	char	**v_start;
+	int		n;
+
+	if (!is_valid_key_value(key_value))
+		return (INVAL_ENV_VAR);
+	n = sizeof_2d_array(m->envp);
+	v = (char **)malloc((n + 2) * sizeof(char *));
+	if (v == NULL)
+		return (p_error(ALLOC_FAILURE, NULL));
+	v_start = v;
+	while (*m->envp)
+	{
+		*(v) = *(m->envp);
+		m->envp++;
+		v++;
+	}
+			// *(v++) = *(m->envp++);
+	// *(v++) = ft_strdup(key_value);
+	*(v) = ft_strdup(key_value);
+	(v++);
+	*v = NULL;
+	free(m->envp - n);
+	m->envp = v_start;
+	ft_str_bubble_sort(m->envp, n + 1);
+	return (0);
+}
+void	print_envp(t_shell *m)
+{
+	char	**v;
+
+	v = m->envp;
+	while (*v)
+		printf("%s\n", *(v++));
 }

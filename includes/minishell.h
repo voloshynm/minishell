@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/01 22:46:33 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:52:10 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ extern int	g_sig_pid;
 /*
 **	struct for envp variables, for easier navigation
 */
-typedef struct s_envp
-{
-	char			*key;
-	char			*value;
-	char			*key_value;
-	struct t_envp	*next;
-	struct t_envp	*prev;
-}			t_envp;
+// typedef struct s_envp
+// {
+// 	char			*key;
+// 	char			*value;
+// 	char			*key_value;
+// 	struct t_envp	*next;
+// 	struct t_envp	*prev;
+// }			t_envp;
 
 /*
 **	*cmds	= linked list of t_command with all commands, separated by pipes
@@ -64,7 +64,7 @@ typedef struct s_shell
 	t_list	*parser;
 	pid_t	pid;
 	char	**envp;
-	t_envp	*envp1;
+	// t_envp	*envp1;
 	char	**envpath;
 	char	*pwd;
 	char	*oldpwd;
@@ -90,7 +90,8 @@ enum		e_err_state
 	RED_HEREDOC_ERR = 9,
 	TMP_FILE_CREATION_ERR = 10,
 	DUP2_ERR = 11,
-	CMD_TOO_FEW_ARGS = 12
+	CMD_TOO_FEW_ARGS = 12,
+	INVAL_ENV_VAR = 13
 };
 
 // main.c: the main loop of minishell
@@ -133,7 +134,18 @@ void 	handle_sigint(int code);
 
 // Builtins
 int		echo(char **arg);
-int		cd(char **arg, t_shell *m);
+int		cd(t_shell *m, char **arg);
 int		pwd();
+int		export(t_shell *m, t_command *c);
+
+//utils.c
+void	ft_str_swap(char **a, char **b);
+void	ft_str_bubble_sort(char **arr, int n);
+int 	sizeof_2d_array(char **arr);
+
+//environment.c
+int 	init_envp(t_shell *m, char **envp_arg);
+int 	add_to_envp(t_shell *m, char *key_value);
+void	print_envp(t_shell *m);
 
 #endif
