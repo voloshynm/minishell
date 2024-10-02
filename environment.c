@@ -45,21 +45,15 @@ int add_to_envp(t_shell *m, char *key_value)
 	int		n;
 
 	if (!is_valid_key_value(key_value))
-		return (INVAL_ENV_VAR);
+		return (p_error(INVAL_ENV_VAR, NULL));
 	n = sizeof_2d_array(m->envp);
 	v = (char **)malloc((n + 2) * sizeof(char *));
 	if (v == NULL)
 		return (p_error(ALLOC_FAILURE, NULL));
 	v_start = v;
 	while (*m->envp)
-	{
-		*(v) = *(m->envp);
-		m->envp++;
-		v++;
-	}
-			// *(v++) = *(m->envp++);
-	// *(v++) = ft_strdup(key_value);
-	*(v) = ft_strdup(key_value);
+		*(v++) = *(m->envp++);
+	*(v++) = ft_strdup(key_value);
 	(v++);
 	*v = NULL;
 	free(m->envp - n);
@@ -67,6 +61,7 @@ int add_to_envp(t_shell *m, char *key_value)
 	ft_str_bubble_sort(m->envp, n + 1);
 	return (0);
 }
+
 void	print_envp(t_shell *m)
 {
 	char	**v;
@@ -74,4 +69,43 @@ void	print_envp(t_shell *m)
 	v = m->envp;
 	while (*v)
 		printf("%s\n", *(v++));
+}
+
+int	get_key_nmb(t_shell *m, char *key_value)
+{
+	int		len;
+	int		nmb;
+
+	len = ft_strlen(key_value);
+	nmb = -1;
+	while (m->envp[++nmb])
+	{
+		if (!ft_strncmp(m->envp[++nmb], key_value, len))
+			return(nmb);
+	}
+	return (0);
+}
+
+int	rm_from_envp(t_shell *m, char *key_value)
+{
+	char	**v;
+	int		n;
+	int		nmb;
+	int		i;
+
+	n = sizeof_2d_array(m->envp);
+	v = (char **)malloc((n) * sizeof(char *));
+	if (v == NULL)
+		return (p_error(ALLOC_FAILURE, NULL));
+	nmb = get_key_nmb(m, key_value);
+	i = -1;
+	while (m->envp[++i] && i < nmb)
+		v[i] = m->envp[i];
+	while (m->envp[++i] && i < n)
+		v[i] = m->envp[i];
+	v[i] = NULL;
+	free(m->envp - n);
+	m->envp = v;
+	ft_str_bubble_sort(m->envp, n);
+	return (0);
 }

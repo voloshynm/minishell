@@ -10,7 +10,7 @@ int	export(t_shell *m, t_command *c)
 	while (c->cmd[i] != NULL)
 	{
 		if (add_to_envp(m, c->cmd[i]))
-			return (p_error(INVAL_ENV_VAR, c->cmd[i]));
+			return (-1);
 		i++;
 	}
 	return (0);

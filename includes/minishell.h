@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/02 16:13:11 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/02 20:33:37 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ int		echo(char **arg);
 int		cd(t_shell *m, char **arg);
 int		pwd();
 int		export(t_shell *m, t_command *c);
+int		unset(t_shell *m, t_command *c);
 
 //utils.c
 void	ft_str_swap(char **a, char **b);
@@ -134,5 +135,6 @@ int 	sizeof_2d_array(char **arr);
 int 	init_envp(t_shell *m, char **envp_arg);
 int 	add_to_envp(t_shell *m, char *key_value);
 void	print_envp(t_shell *m);
+int		rm_from_envp(t_shell *m, char *key_value);
 
 #endif
