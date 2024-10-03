@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/03 20:43:33 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:01:04 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,8 @@ int		cd(t_shell *m, char **arg);
 int		pwd();
 int		export(t_shell *m, t_command *c);
 int		unset(t_shell *m, t_command *c);
+int		env(t_shell *m, t_command *c);
+void	exit(t_shell *m);
 
 //environment.c
 int 	init_envp(t_shell *m, char **envp_arg);

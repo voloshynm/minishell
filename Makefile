@@ -8,6 +8,7 @@ SRC =   sources/main.c 															\
 		sources/environment_utils.c sources/environment_utils2.c				\
 		sources/builtins/cd.c sources/builtins/pwd.c sources/builtins/export.c 	\
 		sources/builtins/echo.c sources/builtins/unset.c sources/builtins/env.c \
+		sources/builtins/exit.c													\
 		
 OBJS = ${SRC:.c=.o}
 NAME = minishell
