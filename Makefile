@@ -1,13 +1,13 @@
-SRC =   main.c 											\
-		lexer.c lexer_utils.c lexer_helper.c 			\
-		parser.c parser_redirection.c parser_path.c		\
-		executor.c executor_pipe.c						\
-		error_handler.c 								\
-		signals.c										\
-		environment.c 									\
-		environment_utils.c environment_utils2.c		\
-		builtins/cd.c builtins/pwd.c builtins/export.c 	\
-		builtins/echo.c builtins/unset.c builtins/env.c \
+SRC =   sources/main.c 															\
+		sources/lexer.c sources/lexer_utils.c sources/lexer_helper.c 			\
+		sources/parser.c sources/parser_redirection.c sources/parser_path.c		\
+		sources/executor.c sources/executor_pipe.c								\
+		sources/error_handler.c 												\
+		sources/signals.c														\
+		sources/environment.c 													\
+		sources/environment_utils.c sources/environment_utils2.c				\
+		sources/builtins/cd.c sources/builtins/pwd.c sources/builtins/export.c 	\
+		sources/builtins/echo.c sources/builtins/unset.c sources/builtins/env.c \
 		
 OBJS = ${SRC:.c=.o}
 NAME = minishell

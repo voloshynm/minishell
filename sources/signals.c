@@ -1,43 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/09 16:13:26 by eyasa             #+#    #+#             */
-/*   Updated: 2024/10/01 16:26:24 by mvoloshy         ###   ########.fr       */
+/*   Created: 2024/09/22 19:19:38 by sandre-a          #+#    #+#             */
+/*   Updated: 2024/10/03 21:43:46 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	echo(char **arg)
+void	clear_rl_line(void)
 {
-	int		i;
-	int		newline;
-	int		j;
-	char	**cmd;
-	
-	cmd = arg;
-	i = 0;
-	newline = 1;
-	while (cmd[++i] && cmd[i][0] == '-' && cmd[i][1] == 'n')
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	if (g_sig_pid == 0 || g_sig_pid == 1)
+		rl_redisplay();
+}
+//ioctl(0, TIOCSTI, "\n"); This is to simulate a new line
+void	handle_sigint(int code)
+{
+	(void)code;
+	if (g_sig_pid == 2)
 	{
-		j = 1;
-		while (cmd[i][j] == 'n')
-			j++;
-		if (cmd[i][j] != '\0')
-			break ;
-		newline = 0;
+		write(1, "\033[A", 3);
+		ioctl(0, TIOCSTI, "\n");
 	}
-	while (cmd[i++])
+	else
 	{
-		ft_putstr_fd(cmd[i - 1], 1);
-		if (cmd[i])
-			ft_putstr_fd(" ", 1);
+		write(1, "\n", 1);
+		clear_rl_line();
 	}
-	if (newline)
-		ft_putstr_fd("\n", 1);
-	return (0);
+	g_sig_pid = 1;
+}
+
+void	handle_signals(void)
+{
+	signal(SIGINT, &handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 }

@@ -6,11 +6,11 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:38:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/02 15:57:25 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:41:23 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static int	upd_pwds(t_shell *m, char oldpwd[PATH_MAX])
 {

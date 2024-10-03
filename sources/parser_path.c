@@ -6,11 +6,11 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/03 19:34:50 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:49:58 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 int	directory_loop(t_command *c, DIR *d, char *target_file, char *cmd_path)
 {
@@ -40,7 +40,7 @@ int	is_builtin(t_command *c, t_shell *m)
 	char	*target_file;
 	char	*cmd_path;
 
-	cmd_path = ft_strjoin(m->original_pwd, "/builtins");
+	cmd_path = ft_strjoin(m->original_pwd, "/sources/builtins");
 	directory = opendir(cmd_path);
 	target_file = ft_strjoin(c->cmd[0], ".c");
 	if (directory_loop(c, directory, target_file, cmd_path))

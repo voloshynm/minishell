@@ -6,11 +6,11 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/01 16:30:10 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:43:36 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 /*
 **	function to read into heredoc

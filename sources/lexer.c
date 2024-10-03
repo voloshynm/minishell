@@ -6,11 +6,11 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/03 18:36:41 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:42:35 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 static int	unexpected_token(t_lexer *lexer)
 {

@@ -1,4 +1,4 @@
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 // Custom function to swap two strings
 void	ft_str_swap(char **a, char **b)
@@ -39,6 +39,7 @@ int sizeof_2d_array(char **arr)
 		n++;
 	return (n);
 }
+
 void	free_ft_split_fixed(char **arg)
 {
 	int	i;

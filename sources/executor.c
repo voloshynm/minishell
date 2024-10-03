@@ -6,11 +6,11 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/03 21:24:49 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:45:42 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 int	run_builtin(t_shell *m, t_list **parser, t_command *c)
 {
@@ -60,16 +60,7 @@ int	execute_command(t_shell *m, t_list **parser)
 	(*parser) = (*parser)->next;
 	return (wait_children(m));
 }
-/*
-**	checking if condition for OR or AND is satisfied
-*/
-static int	is_bypassing_splitter_or_and(t_command *c, t_shell *m)
-{
-	if ((c->last_splitter_token == OR && m->ex_status == 0)
-		|| (c->last_splitter_token == AND && m->ex_status != 0))
-		return (1);
-	return (0);
-}
+
 /*
 **	to go through elements in case of OR or AND if condition satisfied
 */
@@ -137,7 +128,8 @@ int	executor_loop(t_shell *m)
 	{
 		cmd_index = -1;
 		c = ((t_command *)(p->content));
-		if (is_bypassing_splitter_or_and(c, m))
+		if ((c->last_splitter_token == OR && m->ex_status == 0)
+		    || (c->last_splitter_token == AND && m->ex_status != 0))
 			advance_after_bypassing_splitter_or_and(&p, m);
 		else if (c->cmd_splitter == PIPE)
 		{

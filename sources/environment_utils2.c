@@ -1,4 +1,4 @@
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 void	print_envp(t_shell *m)
 {

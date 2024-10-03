@@ -6,11 +6,11 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/02 15:22:12 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:42:09 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 /*
 **	Prints the error

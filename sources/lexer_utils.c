@@ -6,11 +6,11 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:30:10 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/18 15:09:37 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 21:43:13 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 t_token	token_type(char *str)
 {
