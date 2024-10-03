@@ -39,3 +39,15 @@ int sizeof_2d_array(char **arr)
 		n++;
 	return (n);
 }
+void	free_ft_split_fixed(char **arg)
+{
+	int	i;
+
+	i = 0;
+	while (arg[i])
+	{
+		free(arg[i]);
+		i++;
+	}
+	free(arg);
+}

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/01 21:59:35 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 18:36:41 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,15 +89,23 @@ void	free_lexer(t_lexer **lexer)
 {
 	t_lexer	*token;
 
+	if (lexer == NULL || *lexer == NULL)
+		return;
 	while (*lexer)
 	{
 		token = get_first_token(*lexer);
+		if (token == NULL)
+			return;
 		*lexer = token->next;
 		if (*lexer)
 			(*lexer)->prev = NULL;
-		free(token->str);
+		if (token->str)
+			free(token->str);
+		token->str = NULL;
 		free(token);
+		token = NULL;
 	}
+	*lexer = NULL;
 }
 
 void	analyse_tokens(t_lexer *lexer)

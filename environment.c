@@ -1,34 +1,6 @@
 #include "includes/minishell.h"
 
-static void	free_ft_split_fixed(char **strings)
-{
-	char **orig = strings;
-	while (*strings != NULL)
-	{
-		free(*strings);
-		strings++;
-	}
-	free(orig);
-}
-
-static int	is_valid_key_value(const char* key_value)
-{
-	char	*s;
-
-	s = (char *)key_value;
-	if (!ft_isalpha(*s))
-		return (0);
-	s++;
-	while (*s)
-	{
-		if (!ft_isalnum(*s) && *s != '=')
-			return (0);
-		s++;
-	}
-	return (1);
-}
-
-int init_envp(t_shell *m, char **envp_arg)
+int	init_envp(t_shell *m, char **envp_arg)
 {
 	char	**v;
 	int		n;
@@ -49,14 +21,14 @@ int init_envp(t_shell *m, char **envp_arg)
 	return (0);
 }
 
-int add_to_envp(t_shell *m, char *key_value)
+int	add_to_envp(t_shell *m, char *key_value)
 {
 	char	**v;
 	char	**v_start;
 	int		n;
 
 	if (!is_valid_key_value(key_value))
-		return (p_error(INVAL_ENV_VAR, NULL));
+		return (INVAL_ENV_VAR);
 	n = sizeof_2d_array(m->envp);
 	v = (char **)malloc((n + 2) * sizeof(char *));
 	if (v == NULL)
@@ -65,36 +37,40 @@ int add_to_envp(t_shell *m, char *key_value)
 	while (*m->envp)
 		*(v++) = *(m->envp++);
 	*(v++) = ft_strdup(key_value);
-	(v++);
 	*v = NULL;
-	free_ft_split_fixed(m->envp - n);
+	free(m->envp - n);
 	m->envp = v_start;
 	ft_str_bubble_sort(m->envp, n + 1);
 	return (0);
 }
 
-void	print_envp(t_shell *m)
+int	update_var_in_envp(t_shell *m, char *key_value)
 {
-	char	**v;
+	char	*key;
+	char	*value;
+	char	**envp;
+	char	*tmp;
 
-	v = m->envp;
-	while (*v)
-		printf("%s\n", *(v++));
-}
-
-int	get_key_nmb(t_shell *m, char *key_value)
-{
-	int		len;
-	int		nmb;
-
-	len = ft_strlen(key_value);
-	nmb = -1;
-	while (m->envp[++nmb])
+	key = get_key(key_value);
+	value = get_value(key_value);
+	if (!key)
+		return (ALLOC_FAILURE);
+	envp = m->envp;
+	while (*envp && value)
 	{
-		if (!ft_strncmp(m->envp[nmb], key_value, len))
-			return(nmb);
+		if (!ft_strncmp(key, *envp, ft_strlen(key)))
+		{
+			tmp = ft_strdup(*envp);
+			rm_from_envp(m, tmp);
+			add_to_envp(m, key_value);
+			free(tmp);
+			break;
+		}
+		envp++;
 	}
-	return (0);
+	free(key);
+	free(value);
+	return (OK);
 }
 
 int	rm_from_envp(t_shell *m, char *key_value)
@@ -103,6 +79,7 @@ int	rm_from_envp(t_shell *m, char *key_value)
 	int		n;
 	int		nmb;
 	int		i;
+	int		j;
 
 	n = sizeof_2d_array(m->envp);
 	nmb = get_key_nmb(m, key_value);
@@ -111,17 +88,17 @@ int	rm_from_envp(t_shell *m, char *key_value)
 	v = (char **)malloc((n) * sizeof(char *));
 	if (v == NULL)
 		return (p_error(ALLOC_FAILURE, NULL));
-	i = -1;
-	while (m->envp[++i] && i < nmb)
-		v[i] = m->envp[i];
-	printf("ERROR");
-	while (m->envp[i + 1])
-	{
-		v[i] = m->envp[i + 1];
+	i = 0;
+	j = 0;
+	while (m->envp[i]) {
+		if (i != nmb)
+			v[j++] = m->envp[i];
+		else
+			free(m->envp[i]);
 		i++;
 	}
-	v[i] = NULL;
-	free_ft_split_fixed(m->envp);
+	v[j] = NULL;
+	free(m->envp);
 	m->envp = v;
 	ft_str_bubble_sort(m->envp, sizeof_2d_array(m->envp));
 	return (0);

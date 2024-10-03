@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/01 22:56:40 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 18:19:57 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,8 @@ char	*tokenize_input(char **input)
 	str = malloc(sizeof(char) * length + 1);
 	if (str == NULL)
 	{
-		printf("Alloc error during tokenization");
-		exit(EXIT_FAILURE);
+		p_error(ALLOC_FAILURE, NULL);
+		return(NULL);
 	}
 	ft_strlcpy(str, start, length + 1);
 	return (str);

@@ -4,9 +4,10 @@ SRC =   main.c 											\
 		executor.c executor_pipe.c						\
 		error_handler.c 								\
 		signals.c										\
-		environment.c utils.c							\
-		builtins/cd.c builtins/pwd.c builtins/echo.c 	\
-		builtins/export.c builtins/unset.c 
+		environment.c 									\
+		environment_utils.c environment_utils2.c		\
+		builtins/cd.c builtins/pwd.c builtins/export.c 	\
+		builtins/echo.c builtins/unset.c builtins/env.c \
 		
 OBJS = ${SRC:.c=.o}
 NAME = minishell

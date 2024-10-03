@@ -6,35 +6,45 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/01 20:11:19 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 19:34:50 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-int	is_builtin(t_command *c, t_shell *m)
+int	directory_loop(t_command *c, DIR *d, char *target_file, char *cmd_path)
 {
-	DIR				*directory;
 	struct dirent	*entry;
-	char			*target_file;
-	char			*cmd_path;
 
-	cmd_path = ft_strjoin(m->original_pwd, "/builtins");
-	directory = opendir(cmd_path);
-	target_file = ft_strjoin(c->cmd[0], ".c");
-	while (directory)
+	while (d)
 	{
-		entry = readdir(directory);
+		entry = readdir(d);
 		if (!entry)
 			break ;
-		if (!ft_strcmp(target_file, entry->d_name))
+		if (entry && !ft_strcmp(target_file, entry->d_name))
 		{
-			closedir(directory);
+			closedir(d);
+			if (c->full_path != NULL)
+				free(c->full_path);
 			c->full_path = cmd_path;
 			free(target_file);
 			return (1);
 		}
 	}
+	return (0);
+}
+
+int	is_builtin(t_command *c, t_shell *m)
+{
+	DIR		*directory;
+	char	*target_file;
+	char	*cmd_path;
+
+	cmd_path = ft_strjoin(m->original_pwd, "/builtins");
+	directory = opendir(cmd_path);
+	target_file = ft_strjoin(c->cmd[0], ".c");
+	if (directory_loop(c, directory, target_file, cmd_path))
+		return (1);
 	free(cmd_path);
 	free(target_file);
 	closedir(directory);
@@ -58,7 +68,7 @@ int	is_bin(t_shell *m, t_command *c)
 				break ;
 			if (!ft_strcmp(c->cmd[0], entry->d_name))
 			{
-				c->full_path = m->envpath[i];
+				c->full_path = ft_strdup(m->envpath[i]);
 				closedir(directory);
 				return (1);
 			}
@@ -70,7 +80,7 @@ int	is_bin(t_shell *m, t_command *c)
 
 int	parse_full_path(t_command *c, t_shell *m)
 {
-	char		*temp;
+	char	*temp;
 
 	is_builtin(c, m);
 	if (!c->full_path)
@@ -78,8 +88,13 @@ int	parse_full_path(t_command *c, t_shell *m)
 	if (c->full_path)
 	{
 		temp = ft_strjoin(c->full_path, "/");
+		if (!temp)
+			return (p_error(ALLOC_FAILURE, NULL));
+		free(c->full_path);
 		c->full_path = ft_strjoin(temp, c->cmd[0]);
 		free(temp);
+		if (!c->full_path)
+			return (p_error(ALLOC_FAILURE, NULL));
 	}
 	return (0);
 }

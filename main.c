@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/02 15:57:55 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 19:35:57 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,24 @@ void	init_shell_vars(t_shell *m, char **envp)
 	reset_vars(m);
 }
 
+void	free_all_resources(t_shell *m)
+{
+	free_parser(&m->parser);
+	free_lexer(&m->lexer);
+	free_ft_split_fixed(m->envp);
+	free_ft_split_fixed(m->envpath);
+	free(m->input);
+	m->lexer = NULL;
+	m->parser = NULL;
+	m->input = NULL;
+	m->envpath = NULL;
+	m->original_pwd = NULL;
+	m->pwd = NULL;
+	m->oldpwd = NULL;
+	m->pid = 0;
+	rl_clear_history();
+}
+
 void	prompt_loop(t_shell *m)
 {
 	while (1)
@@ -51,22 +69,27 @@ void	prompt_loop(t_shell *m)
 		if (m->input == NULL)
 		{
 			printf("exit\n");
-			break ;
+			free_all_resources(m);
+			break;
 		}
 		if (ft_strcount(m->input, ' ') == (int)ft_strlen(m->input))
-			continue ;
+			continue;
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input))
 		{
-			parse_commands(m, m->lexer);
-			executor_loop(m);
-			free_lexer(&m->lexer);
+			if (!parse_commands(m, m->lexer))
+				executor_loop(m);
 			free_parser(&m->parser);
+			free_lexer(&m->lexer);
 			reset_vars(m);
 		}
+		else
+			free_lexer(&m->lexer);
+		free(m->input);
 	}
 	rl_clear_history();
 }
+
 
 int	main(int argc, char **argv, char **envp)
 {

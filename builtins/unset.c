@@ -7,7 +7,6 @@ int	unset(t_shell *m, t_command *c)
 	i = 1;
 	while (c->cmd[i] != NULL)
 	{
-		printf("I AM HERE");
 		if (rm_from_envp(m, c->cmd[i]))
 			return (ALLOC_FAILURE);
 		i++;

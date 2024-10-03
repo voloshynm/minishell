@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/09/29 17:00:17 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/03 19:00:36 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,15 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 	t_list	*cmds_lst_el;
 
 	*c = ft_calloc(1, sizeof(t_command));
+	if (!(*c))
+		return (p_error(ALLOC_FAILURE, NULL));
 	cmds_lst_el = ft_lstnew(*c);
 	ft_lstadd_back(&m->parser, cmds_lst_el);
-	if (!(*c) || !cmds_lst_el || !m->parser)
+	if (!cmds_lst_el || !m->parser)
+	{
+		free(*c);
 		return (p_error(ALLOC_FAILURE, NULL));
+	}
 	(*c)->infile = STDIN_FILENO;
 	(*c)->outfile = STDOUT_FILENO;
 	(*c)->cmd_splitter = NONE;
@@ -51,10 +56,14 @@ static int	parse_command(t_command *c, t_lexer **l)
 	char	**cur_cmd;
 
 	cur_cmd = ft_calloc(get_cmd_len(*l) + 1, sizeof(char *));
+	if (!cur_cmd)
+		return (p_error(ALLOC_FAILURE, NULL));
 	c->cmd = cur_cmd;
 	while (*l && (*l)->token == WORD)
 	{
-		*cur_cmd = (*l)->str;
+		*cur_cmd = ft_strdup((*l)->str);
+		if (!*cur_cmd)
+			return (p_error(ALLOC_FAILURE, NULL));
 		*l = (*l)->next;
 		cur_cmd++;
 	}
@@ -93,15 +102,30 @@ int	parse_commands(t_shell *m, t_lexer *l)
 
 void	free_parser(t_list **parser)
 {
-	t_list *p;
-	t_command *command;
+	t_list		*p;
+	t_command	*command;
+	int			i;
 
+	if (parser == NULL)
+		return;
 	while (*parser)
 	{
 		p = *parser;
 		*parser = (*parser)->next;
 		command = ((t_command *)p->content);
+		if (command->cmd)
+		{
+			i = 0;
+			while (command->cmd[i])
+			{
+				free(command->cmd[i]);
+				i++;
+			}
+			free(command->cmd);
+		}
 		free(command->full_path);
+		free(command);
 		free(p);
 	}
+	*parser = NULL;
 }

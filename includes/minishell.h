@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/02 20:33:37 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 20:43:33 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,15 +126,24 @@ int		pwd();
 int		export(t_shell *m, t_command *c);
 int		unset(t_shell *m, t_command *c);
 
-//utils.c
-void	ft_str_swap(char **a, char **b);
-void	ft_str_bubble_sort(char **arr, int n);
-int 	sizeof_2d_array(char **arr);
-
 //environment.c
 int 	init_envp(t_shell *m, char **envp_arg);
 int 	add_to_envp(t_shell *m, char *key_value);
-void	print_envp(t_shell *m);
+int		update_var_in_envp(t_shell *m, char *key_value);
 int		rm_from_envp(t_shell *m, char *key_value);
+
+//environment_utils2.c
+void	free_ft_split_fixed(char **arg);
+void	ft_str_swap(char **a, char **b);
+void	ft_str_bubble_sort(char **arr, int n);
+int 	sizeof_2d_array(char **arr);
+int		is_var_in_envp(t_shell *m, char *key_value);
+
+//environment_utils2.c
+void	print_envp(t_shell *m);
+int		is_valid_key_value(const char* key_value);
+int		get_key_nmb(t_shell *m, char *key_value);
+char	*get_key(char *key_value);
+char	*get_value(char *key_value);
 
 #endif
