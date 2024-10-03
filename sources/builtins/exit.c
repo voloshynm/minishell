@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-void	exit(t_shell *m)
+void	exit_shell(t_shell *m)
 {
     free_all_resources(m);
     printf("exit\n");

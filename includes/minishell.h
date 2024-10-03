@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/03 22:01:04 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/03 22:03:59 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ enum		e_err_state
 
 // main.c: the main loop of minishell
 void	prompt_loop(t_shell *m);
+void	free_all_resources(t_shell *m);
 
 // error_handler.c: to handle input errors and print errors
 int		p_error(int err_id, void *arg);
@@ -126,7 +127,7 @@ int		pwd();
 int		export(t_shell *m, t_command *c);
 int		unset(t_shell *m, t_command *c);
 int		env(t_shell *m, t_command *c);
-void	exit(t_shell *m);
+void	exit_shell(t_shell *m);
 
 //environment.c
 int 	init_envp(t_shell *m, char **envp_arg);
