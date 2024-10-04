@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/03 21:42:35 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/04 20:59:51 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,14 @@ int	init_lexer(t_lexer **lexer, char *input)
 {
 	char	*token;
 	t_lexer	*l_start;
-	
+
 	if (input_error(input))
 		return (UNEXPEC_TOKEN);
 	while (input)
 	{
 		token = tokenize_input(&input);
+		if (!token)
+			return (QUOTE_ERROR);
 		add_to_token_list(lexer, token);
 		if (input)
 			if (ft_strchr(">|<&", *(input - 1)))
@@ -90,12 +92,12 @@ void	free_lexer(t_lexer **lexer)
 	t_lexer	*token;
 
 	if (lexer == NULL || *lexer == NULL)
-		return;
+		return ;
 	while (*lexer)
 	{
 		token = get_first_token(*lexer);
 		if (token == NULL)
-			return;
+			return ;
 		*lexer = token->next;
 		if (*lexer)
 			(*lexer)->prev = NULL;

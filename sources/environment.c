@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environment.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/04 16:03:31 by sandre-a          #+#    #+#             */
+/*   Updated: 2024/10/04 16:04:52 by sandre-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 int	init_envp(t_shell *m, char **envp_arg)
@@ -64,7 +76,7 @@ int	update_var_in_envp(t_shell *m, char *key_value)
 			rm_from_envp(m, tmp);
 			add_to_envp(m, key_value);
 			free(tmp);
-			break;
+			break ;
 		}
 		envp++;
 	}
@@ -90,7 +102,8 @@ int	rm_from_envp(t_shell *m, char *key_value)
 		return (p_error(ALLOC_FAILURE, NULL));
 	i = 0;
 	j = 0;
-	while (m->envp[i]) {
+	while (m->envp[i])
+	{
 		if (i != nmb)
 			v[j++] = m->envp[i];
 		else

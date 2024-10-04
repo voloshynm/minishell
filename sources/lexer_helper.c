@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/03 21:42:20 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/04 22:53:48 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 		tmp_2 = "";
 	free(tmp_1);
 	tmp_1 = ft_strjoin(tmp_2, s);
-	tmp_2 = ft_strndup(lexer->str,
-			ft_strlen(lexer->str) - ft_strlen(start) - 1);
+	tmp_2 = ft_strndup(lexer->str, ft_strlen(lexer->str) - ft_strlen(start)
+			- 1);
 	new_str = ft_strjoin(tmp_2, tmp_1);
 	if (tmp_1 == NULL || tmp_2 == NULL)
 		return (NULL);
@@ -50,7 +50,7 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 int	process_env_arg(t_lexer *lexer)
 {
 	char	*s;
-	char    *tmp;
+	char	*tmp;
 
 	if (*lexer->str == '\'' || *lexer->str == '\"')
 	{
@@ -73,7 +73,27 @@ int	process_env_arg(t_lexer *lexer)
 	}
 	return (OK);
 }
+static int	quotes_error(char *input, char opening_quote)
+{
+	int	count;
+	int	in_quote;
 
+	in_quote = -1;
+	count = 0;
+	while (*input)
+	{
+		if (*input == opening_quote)
+		{
+			count++;
+			in_quote = -in_quote;
+		}
+		if (in_quote == -1 && (*input == '\"' || *input == '\'')
+				&& *input != opening_quote)
+			count++;
+		input++;
+	}
+	return (count);
+}
 /*
 ^ Checks if quotes were properly closed, besides when its
 ^	single quotes inside of double quotes, or inversed.
@@ -81,27 +101,73 @@ int	process_env_arg(t_lexer *lexer)
 */
 static char	*handle_quotes(char *input)
 {
-	int		count;
 	char	quote_type;
-	char	*last_quote;
 
-	count = 0;
 	quote_type = *input;
-	last_quote = input;
-	while (*input)
-	{
-		if (*input == quote_type)
-			count++;
-		input++;
-	}
-	if (count % 2 == 1)
+	if (quotes_error(input, quote_type) % 2 == 1)
 	{
 		p_error(QUOTE_ERROR, "Invalid quote usage\n");
-		return (NULL);
+		return ("-1");
 	}
-	last_quote++;
-	last_quote = ft_strchr(last_quote, quote_type);
-	return (last_quote);
+	input++;
+	input = ft_strchr(input, quote_type);
+	while (*(input + 1) == quote_type)
+		input = ft_strchr(input += 2, quote_type);
+	if (*(input + 1) != 32 && *(input + 1) != 0)
+		input = ft_strchr(input += 2, 32);
+	return (input);
+}
+
+static char	*remove_quotes(char *str, int quotes_subtract, char quote_type)
+{
+	char	*new_str;
+	int		in_quote;
+	int		i;
+	int		j;
+
+	new_str = malloc(strlen(str - quotes_subtract) + 1);
+	if (!new_str)
+		return (NULL);
+	i = 0;
+	j = 0;
+	in_quote = 0;
+	while (str[i])
+	{
+		if (str[i] == quote_type)
+			in_quote = -in_quote;
+		if ((str[i] == '\"' || str[i] == '\'') && in_quote == -1)
+			i++;
+		else
+			new_str[j++] = str[i++];
+	}
+	new_str[j] = '\0';
+	return (new_str);
+}
+
+static char	*process_str(char *str)
+{
+	char	*new_str;
+	char	opening_quote_type;
+	int		i;
+	int		count;
+
+	opening_quote_type = '\0';
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == '\"' || str[i] == '\'')
+		{
+			if (opening_quote_type == '\0')
+				opening_quote_type = str[i];
+			count++;
+		}
+		i++;
+	}
+	if (opening_quote_type == '\0')
+		return (str);
+	new_str = remove_quotes(str, count, opening_quote_type);
+	return (new_str);
 }
 
 char	*tokenize_input(char **input)
@@ -113,10 +179,12 @@ char	*tokenize_input(char **input)
 	start = *input;
 	*input = ft_strpbrk(*input, " >|<&\'\"");
 	if (*input)
-	{
 		if (**input == '\'' || **input == '\"')
+		{
 			*input = handle_quotes(*input);
-	}
+			if (*input && !ft_strcmp(*input, "-1"))
+				return (NULL);
+		}
 	if (*input)
 		length = (start - (*input)++) * -1;
 	else
@@ -125,10 +193,10 @@ char	*tokenize_input(char **input)
 	if (str == NULL)
 	{
 		p_error(ALLOC_FAILURE, NULL);
-		return(NULL);
+		return (NULL);
 	}
 	ft_strlcpy(str, start, length + 1);
-	return (str);
+	return (process_str(str));
 }
 
 int	add_to_token_list(t_lexer **lexer, char *str)
@@ -140,7 +208,7 @@ int	add_to_token_list(t_lexer **lexer, char *str)
 		return (OK);
 	new_token = malloc(sizeof(t_lexer));
 	if (new_token == NULL)
-		return(p_error(ALLOC_FAILURE, NULL));
+		return (p_error(ALLOC_FAILURE, NULL));
 	new_token->str = str;
 	new_token->token = token_type(str);
 	new_token->next = NULL;

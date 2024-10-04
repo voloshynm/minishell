@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/03 22:03:24 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:57:36 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int	run_builtin(t_shell *m, t_list **parser, t_command *c)
 		m->ex_status = export(m, c);
 	else if (!ft_strcmp(c->cmd[0], "unset"))
 		m->ex_status = unset(m, c);
-    else if (!ft_strcmp(c->cmd[0], "exit"))
+	else if (!ft_strcmp(c->cmd[0], "exit"))
 		exit_shell(m);
 	restore_and_close_files(c, m);
 	(*parser) = (*parser)->next;
-	return(m->ex_status);
+	return (m->ex_status);
 }
 
 int	execute_command(t_shell *m, t_list **parser)
@@ -44,7 +44,7 @@ int	execute_command(t_shell *m, t_list **parser)
 	c = ((t_command *)((*parser)->content));
 	setup_redirection(c, m);
 	if (is_builtin(c, m))
-		return(run_builtin(m, parser, c));
+		return (run_builtin(m, parser, c));
 	if (c->full_path == NULL)
 	{
 		(*parser) = (*parser)->next;
@@ -106,9 +106,10 @@ int	is_invalid_command_in_pipe(t_shell *m, t_list **p, int num_pipes)
 	if (is_invalid)
 		m->ex_status = CMD_NOT_EXIST;
 	else
-		*p = start;	
+		*p = start;
 	return (is_invalid);
 }
+
 /*
 **	take the standard output (stdout) of the command on its left
 		and send it as the standard input (stdin) to the command on its righ
@@ -131,7 +132,7 @@ int	executor_loop(t_shell *m)
 		cmd_index = -1;
 		c = ((t_command *)(p->content));
 		if ((c->last_splitter_token == OR && m->ex_status == 0)
-		    || (c->last_splitter_token == AND && m->ex_status != 0))
+			|| (c->last_splitter_token == AND && m->ex_status != 0))
 			advance_after_bypassing_splitter_or_and(&p, m);
 		else if (c->cmd_splitter == PIPE)
 		{

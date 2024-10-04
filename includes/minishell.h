@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/03 22:03:59 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/04 16:16:02 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,19 @@
 # include "parser.h"
 # include <stdio.h>
 # include <dirent.h>
+# include <errno.h>
 # include <fcntl.h> // For open(), O_CREAT, etc.
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
-# include <errno.h>
 # include <stdlib.h> // For malloc(), free()
 # include <string.h> // For strcmp(), strlen()
+# include <sys/ioctl.h>
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h> // For read(), write(), close(), unlink()
-# include <sys/ioctl.h>
-
 
 # define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
 # define MAX_FDS 4096
@@ -82,71 +81,69 @@ enum		e_err_state
 };
 
 // main.c: the main loop of minishell
-void	prompt_loop(t_shell *m);
-void	free_all_resources(t_shell *m);
+void		prompt_loop(t_shell *m);
+void		free_all_resources(t_shell *m);
 
 // error_handler.c: to handle input errors and print errors
-int		p_error(int err_id, void *arg);
-int		p_error2(char *str, void *arg);
-int		input_error(char *input);
+int			p_error(int err_id, void *arg);
+int			p_error2(char *str, void *arg);
+int			input_error(char *input);
 
 // parser.c: to parse tokens into commands with its path
-int		parse_commands(t_shell *m, t_lexer *l);
-void	free_parser(t_list **parser);
+int			parse_commands(t_shell *m, t_lexer *l);
+void		free_parser(t_list **parser);
 
 // parser_path.c: to get full path of the command for exec
-int		parse_full_path(t_command *c, t_shell *m);
-int		is_builtin(t_command *c, t_shell *m);
-int		is_bin(t_shell *m, t_command *p);
+int			parse_full_path(t_command *c, t_shell *m);
+int			is_builtin(t_command *c, t_shell *m);
+int			is_bin(t_shell *m, t_command *p);
 
-int		print_parser(t_shell *minihell);
+int			print_parser(t_shell *minihell);
 
 // parser_redirection.c: to handle redirections
-int		parse_redirection(t_command *c, t_token token, char *filename,
-			t_shell *m);
-int		setup_redirection(t_command *c, t_shell *m);
-void	restore_and_close_files(t_command *c, t_shell *m);
+int			parse_redirection(t_command *c, t_token token, char *filename,
+				t_shell *m);
+int			setup_redirection(t_command *c, t_shell *m);
+void		restore_and_close_files(t_command *c, t_shell *m);
 
 // executor.c: to execute the command
-int		executor_loop(t_shell *m);
-int		count_pipes(t_shell *m);
-int		wait_children(t_shell *m);
-int		execute_command(t_shell *m, t_list **p);
-int		execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
-int		run_builtin(t_shell *m, t_list **parser, t_command *c);
-
+int			executor_loop(t_shell *m);
+int			count_pipes(t_shell *m);
+int			wait_children(t_shell *m);
+int			execute_command(t_shell *m, t_list **p);
+int			execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
+int			run_builtin(t_shell *m, t_list **parser, t_command *c);
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
-void	handle_signals(void);
-void 	handle_sigint(int code);
+void		handle_signals(void);
+void		handle_sigint(int code);
 
 // Builtins
-int		echo(char **arg);
-int		cd(t_shell *m, char **arg);
-int		pwd();
-int		export(t_shell *m, t_command *c);
-int		unset(t_shell *m, t_command *c);
-int		env(t_shell *m, t_command *c);
-void	exit_shell(t_shell *m);
+int			echo(char **arg);
+int			cd(t_shell *m, char **arg);
+int			pwd(void);
+int			export(t_shell *m, t_command *c);
+int			unset(t_shell *m, t_command *c);
+int			env(t_shell *m, t_command *c);
+void		exit_shell(t_shell *m);
 
-//environment.c
-int 	init_envp(t_shell *m, char **envp_arg);
-int 	add_to_envp(t_shell *m, char *key_value);
-int		update_var_in_envp(t_shell *m, char *key_value);
-int		rm_from_envp(t_shell *m, char *key_value);
+// environment.c
+int			init_envp(t_shell *m, char **envp_arg);
+int			add_to_envp(t_shell *m, char *key_value);
+int			update_var_in_envp(t_shell *m, char *key_value);
+int			rm_from_envp(t_shell *m, char *key_value);
 
-//environment_utils2.c
-void	free_ft_split_fixed(char **arg);
-void	ft_str_swap(char **a, char **b);
-void	ft_str_bubble_sort(char **arr, int n);
-int 	sizeof_2d_array(char **arr);
-int		is_var_in_envp(t_shell *m, char *key_value);
+// environment_utils2.c
+void		ft_str_swap(char **a, char **b);
+void		ft_str_bubble_sort(char **arr, int n);
+int			sizeof_2d_array(char **arr);
+int			is_var_in_envp(t_shell *m, char *key_value);
 
-//environment_utils2.c
-void	print_envp(t_shell *m);
-int		is_valid_key_value(const char* key_value);
-int		get_key_nmb(t_shell *m, char *key_value);
-char	*get_key(char *key_value);
-char	*get_value(char *key_value);
+// environment_utils2.c
+void		print_envp(t_shell *m);
+int			is_valid_key_value(const char *key_value);
+int			get_key_nmb(t_shell *m, char *key_value);
+char		*get_key(char *key_value);
+char		*get_value(char *key_value);
 
 #endif

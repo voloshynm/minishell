@@ -1,25 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environment_utils2.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/04 15:58:30 by sandre-a          #+#    #+#             */
+/*   Updated: 2024/10/04 16:02:49 by sandre-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
-
-void	print_envp(t_shell *m)
-{
-	char	**v;
-
-	v = m->envp;
-	while (*v)
-		printf("%s\n", *(v++));
-}
 
 int	get_key_nmb(t_shell *m, char *key_value)
 {
-	int		len;
-	int		nmb;
+	int	len;
+	int	nmb;
 
 	len = ft_strlen(key_value);
 	nmb = -1;
 	while (m->envp[++nmb])
 	{
 		if (!ft_strncmp(m->envp[nmb], key_value, len))
-			return(nmb);
+			return (nmb);
 	}
 	return (0);
 }
@@ -57,14 +60,13 @@ char	*get_value(char *key_value)
 			has_equal_sign = true;
 		i++;
 	}
-	if (!has_equal_sign
-		|| (has_equal_sign && !key_value[i]))
+	if (!has_equal_sign || (has_equal_sign && !key_value[i]))
 		return (NULL);
 	value = ft_strndup(key_value + i, len - i);
 	return (value);
 }
 
-int	is_valid_key_value(const char* key_value)
+int	is_valid_key_value(const char *key_value)
 {
 	char	*s;
 

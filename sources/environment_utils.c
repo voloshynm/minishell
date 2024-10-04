@@ -1,10 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environment_utils.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/04 15:29:10 by sandre-a          #+#    #+#             */
+/*   Updated: 2024/10/04 16:04:32 by sandre-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
+
+void	print_envp(t_shell *m)
+{
+	char	**v;
+
+	v = m->envp;
+	while (*v)
+		printf("%s\n", *(v++));
+}
 
 // Custom function to swap two strings
 void	ft_str_swap(char **a, char **b)
 {
-	char *temp;
-	
+	char	*temp;
+
 	temp = *a;
 	*a = *b;
 	*b = temp;
@@ -13,9 +34,9 @@ void	ft_str_swap(char **a, char **b)
 // Bubble sort function to sort array of strings
 void	ft_str_bubble_sort(char **arr, int n)
 {
-	int i;
-	int j;
-	
+	int	i;
+	int	j;
+
 	i = 0;
 	while (i < n - 1)
 	{
@@ -30,7 +51,7 @@ void	ft_str_bubble_sort(char **arr, int n)
 	}
 }
 
-int sizeof_2d_array(char **arr)
+int	sizeof_2d_array(char **arr)
 {
 	int	n;
 
@@ -38,17 +59,4 @@ int sizeof_2d_array(char **arr)
 	while (arr[n] != NULL)
 		n++;
 	return (n);
-}
-
-void	free_ft_split_fixed(char **arg)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		free(arg[i]);
-		i++;
-	}
-	free(arg);
 }

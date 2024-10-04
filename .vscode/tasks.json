@@ -7,8 +7,9 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${fileDirname}/*.c",
-                "${fileDirname}/libft/*.c",
+                "${workspaceFolder}/sources/*.c",
+                "${workspaceFolder}/sources/builtins/*.c",
+                "${workspaceFolder}/libft/*.c",
                 "-lreadline",
                 "-o",
                 "minishell"

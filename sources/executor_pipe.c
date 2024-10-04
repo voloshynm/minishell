@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor_pipe.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/04 15:57:12 by sandre-a          #+#    #+#             */
+/*   Updated: 2024/10/04 15:57:24 by sandre-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 int	count_pipes(t_shell *m)
@@ -101,6 +113,7 @@ static int	upd_fd(int *cmd_index, int pipes[], t_list **current, int num_pipes)
 	set_close_pipe(num_pipes, pipes, 'C');
 	return (0);
 }
+
 // PID Array: created to store the PIDs of each child process as they are forked
 // Storing PIDs: Each time call fork(),store the resulting PID in the pids array
 int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)

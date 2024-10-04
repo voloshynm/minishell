@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/03 21:43:42 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:55:12 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static int	parse_command(t_command *c, t_lexer **l)
 int	parse_commands(t_shell *m, t_lexer *l)
 {
 	t_command	*c;
-	
+
 	while (l)
 	{
 		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l))
@@ -107,7 +107,7 @@ void	free_parser(t_list **parser)
 	int			i;
 
 	if (parser == NULL)
-		return;
+		return ;
 	while (*parser)
 	{
 		p = *parser;
@@ -117,10 +117,7 @@ void	free_parser(t_list **parser)
 		{
 			i = 0;
 			while (command->cmd[i])
-			{
-				free(command->cmd[i]);
-				i++;
-			}
+				free(command->cmd[i++]);
 			free(command->cmd);
 		}
 		free(command->full_path);
