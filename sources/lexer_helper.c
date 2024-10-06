@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/04 22:53:48 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/06 19:33:16 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,7 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 int	process_env_arg(t_lexer *lexer)
 {
 	char	*s;
-	char	*tmp;
 
-	if (*lexer->str == '\'' || *lexer->str == '\"')
-	{
-		tmp = lexer->str;
-		lexer->str = ft_str_rm_front_chars(lexer->str, 1);
-		free(tmp);
-		if (lexer->str == NULL)
-			return (ALLOC_FAILURE);
-	}
 	s = lexer->str;
 	while (*s)
 	{
@@ -130,13 +121,18 @@ static char	*remove_quotes(char *str, int quotes_subtract, char quote_type)
 		return (NULL);
 	i = 0;
 	j = 0;
-	in_quote = 0;
+	in_quote = -1;
 	while (str[i])
 	{
 		if (str[i] == quote_type)
 			in_quote = -in_quote;
-		if ((str[i] == '\"' || str[i] == '\'') && in_quote == -1)
-			i++;
+		if (str[i] == '\"' || str[i] == '\'')
+		{
+			if (str[i] != quote_type && in_quote == 1)
+				new_str[j++] = str[i++];
+			else
+				i++;
+		}
 		else
 			new_str[j++] = str[i++];
 	}

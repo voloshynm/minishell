@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 20:59:51 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/06 19:27:45 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ TODO: implement error handler for "add_to_token_list(lexer, token);""
 int	init_lexer(t_lexer **lexer, char *input)
 {
 	char	*token;
-	t_lexer	*l_start;
+	//t_lexer	*l_start;
 
 	if (input_error(input))
 		return (UNEXPEC_TOKEN);
@@ -77,13 +77,13 @@ int	init_lexer(t_lexer **lexer, char *input)
 	analyse_tokens(*lexer);
 	if (unexpected_token(*lexer))
 		return (UNEXPEC_TOKEN);
-	l_start = *lexer;
-	while (l_start)
-	{
-		if (process_env_arg(l_start) == ALLOC_FAILURE)
-			return (p_error(ALLOC_FAILURE, NULL));
-		l_start = l_start->next;
-	}
+	//l_start = *lexer;
+	// while (l_start)
+	// {
+	// 	if (process_env_arg(l_start) == ALLOC_FAILURE)
+	// 		return (p_error(ALLOC_FAILURE, NULL));
+	// 	l_start = l_start->next;
+	// }
 	return (0);
 }
 
