@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/07 18:37:17 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/07 19:52:38 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 	retrieves the chars before $ sign into tmp1. Then it joins tmp2 and tmp1
 	in fact replacing the name of variable with the value.
 */
-static char	*replace_env_arg(char *s, t_lexer *lexer)
+static char	*replace_env_arg(char *s, char *str)
 {
 	char	*new_str;
 	char	*tmp_1;
@@ -37,8 +37,7 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 		tmp_2 = "";
 	free(tmp_1);
 	tmp_1 = ft_strjoin(tmp_2, s);
-	tmp_2 = ft_strndup(lexer->str, ft_strlen(lexer->str) - ft_strlen(start)
-			- 1);
+	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
 	new_str = ft_strjoin(tmp_2, tmp_1);
 	if (tmp_1 == NULL || tmp_2 == NULL)
 		return (NULL);
@@ -47,23 +46,35 @@ static char	*replace_env_arg(char *s, t_lexer *lexer)
 	return (new_str);
 }
 
-int	process_env_arg(t_lexer *lexer)
+int	process_env_arg(char **str)
 {
+	int		s_quote;
+	int		d_quote;
 	char	*s;
 
-	s = lexer->str;
+	s_quote = 0;
+	d_quote = 0;
+	s = *str;
 	while (*s)
 	{
-		if (*s == '$' && ft_isalnum(*(s + 1)))
+		if ((*s == '\'' && !d_quote) || (*s == '\"' && !s_quote))
 		{
-			lexer->str = replace_env_arg(++s, lexer);
-			if (lexer->str == NULL)
+			s_quote ^= (*s == '\'');
+			d_quote ^= (*s == '\"');
+			s++;
+			continue ;
+		}
+		if (!s_quote && *s == '$' && ft_isalnum(*(s + 1)))
+		{
+			*str = replace_env_arg(++s, *str);
+			if (*str == NULL)
 				return (ALLOC_FAILURE);
 		}
 		s++;
 	}
 	return (OK);
 }
+
 static int	quotes_error(char *input, char opening_quote)
 {
 	int	count;
@@ -109,19 +120,17 @@ static char	*handle_quotes(char *input)
 	return (input);
 }
 
-static char	*remove_quotes(char *str, int quotes_subtract, char quote_type)
+static char	*remove_quotes(char *str, char quote_type, int in_quote)
 {
 	char	*new_str;
-	int		in_quote;
 	int		i;
 	int		j;
 
-	new_str = malloc(strlen(str) - quotes_subtract + 1);
+	new_str = malloc(strlen(str) + 1);
 	if (!new_str)
 		return (NULL);
 	i = 0;
 	j = 0;
-	in_quote = -1;
 	while (str[i])
 	{
 		if (str[i] == quote_type)
@@ -160,9 +169,12 @@ static char	*process_str(char *str)
 		}
 		i++;
 	}
+	if (ft_strchr(str, '$'))
+		process_env_arg(&str);
 	if (opening_quote_type == '\0')
 		return (str);
-	new_str = remove_quotes(str, count, opening_quote_type);
+	new_str = remove_quotes(str, opening_quote_type, -1);
+	free(str);
 	return (new_str);
 }
 
@@ -213,7 +225,6 @@ int	add_to_token_list(t_lexer **lexer, char *str)
 		*lexer = new_token;
 	else
 	{
-		temp = *lexer;
 		temp = get_last_token(*lexer);
 		temp->next = new_token;
 		new_token->prev = temp;
