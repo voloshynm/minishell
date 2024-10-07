@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 22:46:36 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:06:37 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,14 @@ void	reset_vars(t_shell *m)
 void	init_shell_vars(t_shell *m, char **envp)
 {
 	m->envpath = ft_split(getenv("PATH"), ':');
-	m->original_pwd = getenv("PWD");
+	m->original_pwd = ft_strdup(getenv("PWD"));
+	if (!m->original_pwd)
+		p_error(ALLOC_FAILURE, NULL);
 	init_envp(m, envp);
 	m->pwd = ft_strdup(m->original_pwd);
-	m->oldpwd = getenv("OLDPWD");
+	m->oldpwd = ft_strdup(getenv("OLDPWD"));
+	if (!m->oldpwd)
+		p_error(ALLOC_FAILURE, NULL);
 	m->pid = getpid();
 	reset_vars(m);
 }
@@ -50,7 +54,10 @@ void	free_all_resources(t_shell *m)
 	free_ft_split(m->envp);
 	free_ft_split(m->envpath);
 	free(m->input);
-	free(m->pwd);
+	free(m->original_pwd);
+	if (m->pwd)
+		free(m->pwd);
+	free(m->oldpwd);
 	m->lexer = NULL;
 	m->parser = NULL;
 	m->input = NULL;

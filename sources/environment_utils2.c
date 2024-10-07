@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment_utils2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:58:30 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 16:02:49 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:22:46 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ int	is_valid_key_value(const char *key_value)
 	if (!ft_isalpha(*s))
 		return (0);
 	s++;
-	while (*s)
+	while (*s && *s != '=')
 	{
-		if (!ft_isalnum(*s) && *s != '=')
+		if (!ft_isalnum(*s))
 			return (0);
 		s++;
 	}
