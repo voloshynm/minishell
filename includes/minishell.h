@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 16:16:02 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/07 18:09:01 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # include <termios.h>
 # include <unistd.h> // For read(), write(), close(), unlink()
 
-# define PROMPT "\033[94mminishell\033[1;31m>\033[0m"
+# define PROMPT "\001\033[94m\002minishell\001\033[1;31m\002>\001\033[0m\002"
 # define MAX_FDS 4096
 
 extern int	g_sig_pid;

@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/06 19:33:16 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/07 18:37:17 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static char	*remove_quotes(char *str, int quotes_subtract, char quote_type)
 	int		i;
 	int		j;
 
-	new_str = malloc(strlen(str - quotes_subtract) + 1);
+	new_str = malloc(strlen(str) - quotes_subtract + 1);
 	if (!new_str)
 		return (NULL);
 	i = 0;
