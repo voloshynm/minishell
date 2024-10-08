@@ -5,13 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/09 16:13:26 by eyasa             #+#    #+#             */
-/*   Updated: 2024/10/08 12:21:48 by mvoloshy         ###   ########.fr       */
+/*   Created: 2024/10/08 16:45:16 by mvoloshy          #+#    #+#             */
+/*   Updated: 2024/10/08 16:45:18 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
 /*
 ^ bool is initialized to false, we invert the logic to print or not \n
 */
