@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/07 19:53:03 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/07 20:56:31 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int					is_token_pipish(t_lexer *l);
 int					add_to_token_list(t_lexer **lexer, char *str);
 char				*tokenize_input(char **input);
 int					process_env_arg(char **str);
+int					quotes_error(char *input);
 
 // lexer.c
 int					init_lexer(t_lexer **lexer, char *input);

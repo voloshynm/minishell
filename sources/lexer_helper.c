@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/07 19:52:38 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:34:27 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ static char	*replace_env_arg(char *s, char *str)
 	char	*start;
 
 	start = s;
-	while (*s >= 'A' && *s <= 'Z')
+	if (ft_isdigit(*s))
+		return (ft_strdup(++s));
+	while (ft_isalnum(*s))
 		s++;
 	tmp_1 = ft_strndup(start, s - start);
 	if (tmp_1 == NULL)
@@ -75,26 +77,26 @@ int	process_env_arg(char **str)
 	return (OK);
 }
 
-static int	quotes_error(char *input, char opening_quote)
+int	quotes_error(char *input)
 {
-	int	count;
-	int	in_quote;
+	int	s_quote;
+	int	d_quote;
+	int	i;
 
-	in_quote = -1;
-	count = 0;
-	while (*input)
+	s_quote = 0;
+	d_quote = 0;
+	i = 0;
+	while (input[i])
 	{
-		if (*input == opening_quote)
-		{
-			count++;
-			in_quote = -in_quote;
-		}
-		if (in_quote == -1 && (*input == '\"' || *input == '\'')
-				&& *input != opening_quote)
-			count++;
-		input++;
+		if (input[i] == '\'' && !d_quote)
+			s_quote ^= 1;
+		else if (input[i] == '\"' && !s_quote)
+			d_quote ^= 1;
+		i++;
 	}
-	return (count);
+	if (s_quote || d_quote)
+		return (1);
+	return (0);
 }
 /*
 ^ Checks if quotes were properly closed, besides when its
@@ -103,21 +105,26 @@ static int	quotes_error(char *input, char opening_quote)
 */
 static char	*handle_quotes(char *input)
 {
+	int		i;
+	char	*temp;
+	int		quote_count;
 	char	quote_type;
 
-	quote_type = *input;
-	if (quotes_error(input, quote_type) % 2 == 1)
+	quote_count = 0;
+	i = 0;
+	quote_type = input[i];
+	while (input[i] && input[i] != 32)
 	{
-		p_error(QUOTE_ERROR, "Invalid quote usage\n");
-		return ("-1");
+		if (input[i] == quote_type)
+			quote_count++;
+		i++;
 	}
-	input++;
-	input = ft_strchr(input, quote_type);
-	while (*(input + 1) == quote_type)
-		input = ft_strchr(input += 2, quote_type);
-	if (*(input + 1) != 32 && *(input + 1) != 0)
-		input = ft_strchr(input += 2, 32);
-	return (input);
+	if (quote_count % 2 == 0)
+		return (input + i);
+	temp = ft_strchr(input + i, quote_type);
+	if (*(temp + 1) == 32)
+		return (ft_strchr(input + i, quote_type));
+	return (NULL);
 }
 
 static char	*remove_quotes(char *str, char quote_type, int in_quote)
@@ -145,7 +152,7 @@ static char	*remove_quotes(char *str, char quote_type, int in_quote)
 		else
 			new_str[j++] = str[i++];
 	}
-	new_str[j] = '\0';
+	new_str[j] = 0;
 	return (new_str);
 }
 
@@ -188,11 +195,7 @@ char	*tokenize_input(char **input)
 	*input = ft_strpbrk(*input, " >|<&\'\"");
 	if (*input)
 		if (**input == '\'' || **input == '\"')
-		{
 			*input = handle_quotes(*input);
-			if (*input && !ft_strcmp(*input, "-1"))
-				return (NULL);
-		}
 	if (*input)
 		length = (start - (*input)++) * -1;
 	else

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 16:45:16 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/08 16:45:18 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/08 18:29:36 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 int	echo(char **cmd)
 {
 	int		i;
-	bool	newline;
+	int		newline;
 	int		j;
 
 	i = 1;
@@ -27,9 +27,9 @@ int	echo(char **cmd)
 		j = 1;
 		while (cmd[i][j] == 'n')
 			j++;
-		if (cmd[i++][j] != '\0')
+		if (cmd[i][j] != '\0')
 			break ;
-		newline = true;
+		newline = 0;
 	}
 	while (cmd[i++])
 	{
@@ -37,7 +37,7 @@ int	echo(char **cmd)
 		if (cmd[i])
 			ft_putstr_fd(" ", 1);
 	}
-	if (!newline)
+	if (newline)
 		ft_putstr_fd("\n", 1);
 	return (0);
 }
