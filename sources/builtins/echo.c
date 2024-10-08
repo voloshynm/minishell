@@ -6,38 +6,37 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 16:45:16 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/08 18:29:36 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/08 19:26:53 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 /*
-^ bool is initialized to false, we invert the logic to print or not \n
+	1. By default, print a newline
+	2. Check for the '-n' flag, which may appear multiple times
+	3. Write the remaining arguments
+	4. Write a newline unless '-n' was used
 */
 int	echo(char **cmd)
 {
-	int		i;
-	int		newline;
-	int		j;
+	int	print_new_line;
+	int	i;
 
+	print_new_line = 1;
 	i = 1;
-	newline = false;
-	while (cmd[i] && cmd[i][0] == '-' && cmd[i][1] == 'n')
+	while (cmd[i] && strcmp(cmd[i], "-n") == 0)
 	{
-		j = 1;
-		while (cmd[i][j] == 'n')
-			j++;
-		if (cmd[i][j] != '\0')
-			break ;
-		newline = 0;
+		print_new_line = 0;
+		i++;
 	}
-	while (cmd[i++])
+	while (cmd[i])
 	{
-		ft_putstr_fd(cmd[i - 1], 1);
+		write(STDOUT_FILENO, cmd[i], strlen(cmd[i]));
+		i++;
 		if (cmd[i])
-			ft_putstr_fd(" ", 1);
+			write(STDOUT_FILENO, " ", 1);
 	}
-	if (newline)
-		ft_putstr_fd("\n", 1);
+	if (print_new_line)
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
