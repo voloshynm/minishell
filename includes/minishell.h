@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/07 18:09:01 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/08 22:30:49 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ enum		e_err_state
 	ALLOC_FAILURE = 1,
 	UNEXPEC_TOKEN = 2,
 	QUOTE_ERROR = 3,
-	CMD_NOT_EXIST = 14,
+	CMD_NOT_EXIST = 127,
 	CMD_TOO_MANY_ARGS = 4,
 	ENV_VAR_NOT_EXIST = 5,
 	RED_IN_ERR = 6,

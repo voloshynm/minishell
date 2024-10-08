@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/08 16:34:27 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/08 22:32:24 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 	retrieves the chars before $ sign into tmp1. Then it joins tmp2 and tmp1
 	in fact replacing the name of variable with the value.
 */
-static char	*replace_env_arg(char *s, char *str)
+
+static char	*replace_real_arg(char *s, char *str)
 {
 	char	*new_str;
 	char	*tmp_1;
@@ -27,8 +28,6 @@ static char	*replace_env_arg(char *s, char *str)
 	char	*start;
 
 	start = s;
-	if (ft_isdigit(*s))
-		return (ft_strdup(++s));
 	while (ft_isalnum(*s))
 		s++;
 	tmp_1 = ft_strndup(start, s - start);
@@ -40,12 +39,59 @@ static char	*replace_env_arg(char *s, char *str)
 	free(tmp_1);
 	tmp_1 = ft_strjoin(tmp_2, s);
 	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
-	new_str = ft_strjoin(tmp_2, tmp_1);
 	if (tmp_1 == NULL || tmp_2 == NULL)
 		return (NULL);
+	new_str = ft_strjoin(tmp_2, tmp_1);
 	free(tmp_1);
 	free(tmp_2);
 	return (new_str);
+}
+
+static char	*replace_digit(char *s, char *str)
+{
+	char	*new_str;
+	char	*tmp_1;
+	char	*tmp_2;
+	char	*start;
+
+	start = s;
+	tmp_1 = s + 1;
+	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
+	if (tmp_1 == NULL || tmp_2 == NULL)
+		return (NULL);
+	new_str = ft_strjoin(tmp_2, tmp_1);
+	free(tmp_2);
+	return (new_str);
+}
+
+static char	*replace_quest_mark(char *s, char *str)
+{
+	char	*new_str;
+	char	*tmp_1;
+	char	*tmp_2;
+	char	*start;
+
+	start = s;
+	tmp_2 = ft_itoa(g_sig_pid);
+	if (!tmp_2)
+		tmp_2 = "";
+	tmp_1 = ft_strjoin(tmp_2, s + 1);
+	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
+	if (tmp_1 == NULL || tmp_2 == NULL)
+		return (NULL);
+	new_str = ft_strjoin(tmp_2, tmp_1);
+	free(tmp_1);
+	free(tmp_2);
+	return (new_str);
+}
+
+static char	*replace_env_arg(char *s, char *str)
+{
+	if (ft_isdigit(*s))
+		return (replace_digit(s, str));
+	else if (*s == '?')
+		return (replace_quest_mark(s, str));
+	return (replace_real_arg(s, str));
 }
 
 int	process_env_arg(char **str)
@@ -66,7 +112,8 @@ int	process_env_arg(char **str)
 			s++;
 			continue ;
 		}
-		if (!s_quote && *s == '$' && ft_isalnum(*(s + 1)))
+		if (!s_quote && *s == '$' 
+			&& (ft_isalnum(*(s + 1)) || *(s + 1) == '?'))
 		{
 			*str = replace_env_arg(++s, *str);
 			if (*str == NULL)
@@ -105,25 +152,25 @@ int	quotes_error(char *input)
 */
 static char	*handle_quotes(char *input)
 {
-	int		i;
 	char	*temp;
 	int		quote_count;
 	char	quote_type;
-
+	
 	quote_count = 0;
-	i = 0;
-	quote_type = input[i];
-	while (input[i] && input[i] != 32)
+	quote_type = *input;
+	while (*input && *input != 32)
 	{
-		if (input[i] == quote_type)
+		if (*input == quote_type)
 			quote_count++;
-		i++;
+		input++;
 	}
+	if (!*input)
+		input--;
 	if (quote_count % 2 == 0)
-		return (input + i);
-	temp = ft_strchr(input + i, quote_type);
+		return (input);
+	temp = ft_strchr(input, quote_type);
 	if (*(temp + 1) == 32)
-		return (ft_strchr(input + i, quote_type));
+		return (ft_strchr(input, quote_type));
 	return (NULL);
 }
 

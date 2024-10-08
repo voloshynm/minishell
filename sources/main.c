@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/08 18:30:11 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/08 22:33:44 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	reset_vars(t_shell *m)
 	m->lexer = NULL;
 	m->parser = NULL;
 	m->input = NULL;
-	g_sig_pid = 0;
+	g_sig_pid = m->ex_status;
 	m->ex_status = 0;
 	m->pipefd[0] = dup(STDIN_FILENO);
 	m->pipefd[1] = dup(STDOUT_FILENO);
@@ -44,6 +44,7 @@ void	init_shell_vars(t_shell *m, char **envp)
 	if (!m->oldpwd)
 		p_error(ALLOC_FAILURE, NULL);
 	m->pid = getpid();
+	m->ex_status = 0;
 	reset_vars(m);
 }
 

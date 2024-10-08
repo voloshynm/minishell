@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/07 21:26:18 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/08 20:40:54 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	execute_command(t_shell *m, t_list **parser)
 
 	c = ((t_command *)((*parser)->content));
 	setup_redirection(c, m);
-	if (is_builtin(c, m))
+	if (is_builtin(c, m) )
 		return (run_builtin(m, parser, c));
 	if (c->full_path == NULL)
 	{
