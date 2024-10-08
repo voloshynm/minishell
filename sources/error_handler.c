@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/04 15:58:05 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:12:16 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,12 @@ int	p_error2(char *str, void *arg)
 int	input_error(char *input)
 {
 	char	token_type;
-
+	
+	if (quotes_error(input))
+	{
+		p_error(QUOTE_ERROR, "Invalid quote usage\n");
+		return (-1);
+	}
 	while (1)
 	{
 		input = ft_strpbrk(input, "|&<>");

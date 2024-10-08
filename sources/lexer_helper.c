@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/07 19:52:38 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:19:02 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ static char	*replace_env_arg(char *s, char *str)
 		tmp_2 = "";
 	free(tmp_1);
 	tmp_1 = ft_strjoin(tmp_2, s);
-	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
+	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start)
+			- 1);
 	new_str = ft_strjoin(tmp_2, tmp_1);
 	if (tmp_1 == NULL || tmp_2 == NULL)
 		return (NULL);
@@ -75,26 +76,26 @@ int	process_env_arg(char **str)
 	return (OK);
 }
 
-static int	quotes_error(char *input, char opening_quote)
+int	quotes_error(char *input)
 {
-	int	count;
-	int	in_quote;
+	int	s_quote;
+	int	d_quote;
+	int	i;
 
-	in_quote = -1;
-	count = 0;
-	while (*input)
+	s_quote = 0;
+	d_quote = 0;
+	i = 0;
+	while (input[i])
 	{
-		if (*input == opening_quote)
-		{
-			count++;
-			in_quote = -in_quote;
-		}
-		if (in_quote == -1 && (*input == '\"' || *input == '\'')
-				&& *input != opening_quote)
-			count++;
-		input++;
+		if (input[i] == '\'' && !d_quote)
+			s_quote ^= 1;
+		else if (input[i] == '\"' && !s_quote)
+			d_quote ^= 1; 
+		i++;
 	}
-	return (count);
+	if (s_quote || d_quote)
+		return (1);
+	return (0);
 }
 /*
 ^ Checks if quotes were properly closed, besides when its
@@ -106,13 +107,6 @@ static char	*handle_quotes(char *input)
 	char	quote_type;
 
 	quote_type = *input;
-	if (quotes_error(input, quote_type) % 2 == 1)
-	{
-		p_error(QUOTE_ERROR, "Invalid quote usage\n");
-		return ("-1");
-	}
-	input++;
-	input = ft_strchr(input, quote_type);
 	while (*(input + 1) == quote_type)
 		input = ft_strchr(input += 2, quote_type);
 	if (*(input + 1) != 32 && *(input + 1) != 0)
@@ -188,11 +182,7 @@ char	*tokenize_input(char **input)
 	*input = ft_strpbrk(*input, " >|<&\'\"");
 	if (*input)
 		if (**input == '\'' || **input == '\"')
-		{
 			*input = handle_quotes(*input);
-			if (*input && !ft_strcmp(*input, "-1"))
-				return (NULL);
-		}
 	if (*input)
 		length = (start - (*input)++) * -1;
 	else
