@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 16:45:16 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/08 19:26:53 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/08 19:36:23 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,13 @@ int	echo(char **cmd)
 	int	i;
 
 	print_new_line = 1;
-	i = 1;
-	while (cmd[i] && strcmp(cmd[i], "-n") == 0)
-	{
+	i = 0;
+	while (cmd[++i] && strcmp(cmd[i], "-n") == 0)
 		print_new_line = 0;
-		i++;
-	}
 	while (cmd[i])
 	{
 		write(STDOUT_FILENO, cmd[i], strlen(cmd[i]));
-		i++;
-		if (cmd[i])
+		if (cmd[++i])
 			write(STDOUT_FILENO, " ", 1);
 	}
 	if (print_new_line)
