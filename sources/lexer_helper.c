@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/08 14:19:02 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:34:27 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ static char	*replace_env_arg(char *s, char *str)
 	char	*start;
 
 	start = s;
-	while (*s >= 'A' && *s <= 'Z')
+	if (ft_isdigit(*s))
+		return (ft_strdup(++s));
+	while (ft_isalnum(*s))
 		s++;
 	tmp_1 = ft_strndup(start, s - start);
 	if (tmp_1 == NULL)
@@ -37,8 +39,7 @@ static char	*replace_env_arg(char *s, char *str)
 		tmp_2 = "";
 	free(tmp_1);
 	tmp_1 = ft_strjoin(tmp_2, s);
-	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start)
-			- 1);
+	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
 	new_str = ft_strjoin(tmp_2, tmp_1);
 	if (tmp_1 == NULL || tmp_2 == NULL)
 		return (NULL);
@@ -90,7 +91,7 @@ int	quotes_error(char *input)
 		if (input[i] == '\'' && !d_quote)
 			s_quote ^= 1;
 		else if (input[i] == '\"' && !s_quote)
-			d_quote ^= 1; 
+			d_quote ^= 1;
 		i++;
 	}
 	if (s_quote || d_quote)
@@ -104,14 +105,26 @@ int	quotes_error(char *input)
 */
 static char	*handle_quotes(char *input)
 {
+	int		i;
+	char	*temp;
+	int		quote_count;
 	char	quote_type;
 
-	quote_type = *input;
-	while (*(input + 1) == quote_type)
-		input = ft_strchr(input += 2, quote_type);
-	if (*(input + 1) != 32 && *(input + 1) != 0)
-		input = ft_strchr(input += 2, 32);
-	return (input);
+	quote_count = 0;
+	i = 0;
+	quote_type = input[i];
+	while (input[i] && input[i] != 32)
+	{
+		if (input[i] == quote_type)
+			quote_count++;
+		i++;
+	}
+	if (quote_count % 2 == 0)
+		return (input + i);
+	temp = ft_strchr(input + i, quote_type);
+	if (*(temp + 1) == 32)
+		return (ft_strchr(input + i, quote_type));
+	return (NULL);
 }
 
 static char	*remove_quotes(char *str, char quote_type, int in_quote)
@@ -139,7 +152,7 @@ static char	*remove_quotes(char *str, char quote_type, int in_quote)
 		else
 			new_str[j++] = str[i++];
 	}
-	new_str[j] = '\0';
+	new_str[j] = 0;
 	return (new_str);
 }
 
