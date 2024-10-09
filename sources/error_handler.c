@@ -3,21 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/07 21:12:16 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:56:43 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/*
-**	Prints the error
-	Frees the resources
-	Returns the error
-*/
-int	p_error(int err_id, void *arg)
+static void	p_error_sub_1(int err_id, void *arg)
 {
 	if (err_id == ALLOC_FAILURE)
 		printf("Error: Memory allocation failure\n");
@@ -31,7 +26,11 @@ int	p_error(int err_id, void *arg)
 		printf("Error: cd: too many arguments\n");
 	else if (err_id == CMD_TOO_FEW_ARGS)
 		printf("Error: cd: required one argument\n");
-	else if (err_id == ENV_VAR_NOT_EXIST)
+}
+
+static void	p_error_sub_2(int err_id, void *arg)
+{
+	if (err_id == ENV_VAR_NOT_EXIST)
 		printf("Error: Not able to get timestamp error\n");
 	else if (err_id == RED_IN_ERR)
 		printf("Error: Error opening input file\n");
@@ -47,6 +46,17 @@ int	p_error(int err_id, void *arg)
 		printf("Error: not an identifier: `%s'\n", (char *)arg);
 	else if (err_id == DUP2_ERR)
 		perror("dup2");
+}
+
+/*
+**	Prints the error
+	Frees the resources
+	Returns the error
+*/
+int	p_error(int err_id, void *arg)
+{
+	p_error_sub_1(err_id, arg);
+	p_error_sub_2(err_id, arg);
 	return (err_id);
 }
 
@@ -68,7 +78,7 @@ int	p_error2(char *str, void *arg)
 int	input_error(char *input)
 {
 	char	token_type;
-	
+
 	if (quotes_error(input))
 	{
 		p_error(QUOTE_ERROR, "Invalid quote usage\n");

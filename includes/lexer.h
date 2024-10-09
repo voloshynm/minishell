@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/07 20:56:31 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 15:00:02 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,26 @@ typedef struct s_lexer
 }					t_lexer;
 
 // lexer_utils.c
-t_lexer				*get_last_token(t_lexer *lexer);
-t_lexer				*get_first_token(t_lexer *lexer);
-t_token				token_type(char *str);
-int					is_token_redir(t_lexer *l);
-int					is_token_pipish(t_lexer *l);
+t_lexer		*get_last_token(t_lexer *lexer);
+t_lexer		*get_first_token(t_lexer *lexer);
+t_token		token_type(char *str);
+int			is_token_redir(t_lexer *l);
+int			is_token_pipish(t_lexer *l);
 
 // lexer_helper.c
-int					add_to_token_list(t_lexer **lexer, char *str);
-char				*tokenize_input(char **input);
-int					process_env_arg(char **str);
-int					quotes_error(char *input);
+int			add_to_token_list(t_lexer **lexer, char *str);
+char		*tokenize_input(char **input);
+int			process_env_arg(char **str);
+char		*process_str(char *str);
+
+// lexer_quotes.c
+int			quotes_error(char *input);
+char		*handle_quotes(char *input);
+char		*remove_quotes(char *str, char quote_type, int in_quote);
 
 // lexer.c
-int					init_lexer(t_lexer **lexer, char *input);
-void				analyse_tokens(t_lexer *lexer);
-void				free_lexer(t_lexer **lexer);
+int			init_lexer(t_lexer **lexer, char *input);
+void		analyse_tokens(t_lexer *lexer);
+void		free_lexer(t_lexer **lexer);
 
 #endif

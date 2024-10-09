@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:03:31 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 16:04:52 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:58:37 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,17 +98,14 @@ int	rm_from_envp(t_shell *m, char *key_value)
 	if (nmb == -1)
 		return (0);
 	v = (char **)malloc((n) * sizeof(char *));
-	if (v == NULL)
-		return (p_error(ALLOC_FAILURE, NULL));
-	i = 0;
+	i = -1;
 	j = 0;
-	while (m->envp[i])
+	while (m->envp[++i])
 	{
 		if (i != nmb)
 			v[j++] = m->envp[i];
 		else
 			free(m->envp[i]);
-		i++;
 	}
 	v[j] = NULL;
 	free(m->envp);
