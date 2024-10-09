@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/04 15:55:12 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 22:51:00 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,9 @@ int	parse_commands(t_shell *m, t_lexer *l)
 				return (m->ex_status);
 			if (g_sig_pid == 1)
 				return (RED_HEREDOC_ERR);
-			if (l->next->next && (l->next->next)->token == WORD)
-				return (p_error(UNEXPEC_TOKEN, l->str));
 			l = l->next->next;
 		}
+		//print_parser(m);
 		if (l && is_token_pipish(l))
 		{
 			c->cmd_splitter = l->token;

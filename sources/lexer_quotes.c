@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:16 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/09 14:56:32 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:04:44 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ char	*handle_quotes(char *input)
 			quote_count++;
 		input++;
 	}
-	if (!*input)
-		input--;
 	if (quote_count % 2 == 0)
 		return (input);
 	temp = ft_strchr(input, quote_type);

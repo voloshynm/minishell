@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:29:37 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 15:32:34 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 19:10:59 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ int	export(t_shell *m, t_command *c)
 	{
 		is_valid = is_valid_key_value(c->cmd[i]);
 		if (!is_valid)
-			return (p_error(INVAL_ENV_VAR, c->cmd[i]));
+		{
+			p_error(INVAL_ENV_VAR, c->cmd[i]);
+			return (1);
+		}
 		if (is_var_in_envp(m, c->cmd[i]))
 			update_var_in_envp(m, c->cmd[i]);
 		else

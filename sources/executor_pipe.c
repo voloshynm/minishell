@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_pipe.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:57:12 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 15:57:24 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:15:42 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 		{
 			if (upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
 				return (errno);
-			if (is_builtin(c, m))
+			if (is_builtin(c))
 				exit(run_builtin(m, p, c));
 			execve(c->full_path, c->cmd, NULL);
 			exit(p_error2("execve", NULL));

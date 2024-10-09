@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:38:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/08 19:45:38 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/09 19:17:25 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ int	cd(t_shell *m, char **arg)
 
 	cmd = arg;
 	if (cmd[2] != NULL)
-		return (p_error(CMD_TOO_MANY_ARGS, NULL));
+	{
+		p_error(CMD_TOO_MANY_ARGS, NULL);
+		return (1);
+	}
 	else if (cmd[1] == NULL)
 		return (p_error(CMD_TOO_FEW_ARGS, NULL));
 	else if (chdir(cmd[1]) == -1)

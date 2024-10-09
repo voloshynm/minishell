@@ -3,47 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/09 14:56:43 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/09 19:19:58 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	p_error_sub_1(int err_id, void *arg)
+static void	p_error_sub_1(int err_id)
 {
 	if (err_id == ALLOC_FAILURE)
-		printf("Error: Memory allocation failure\n");
+		write(2,"Error: Memory allocation failure\n", 33);
 	else if (err_id == UNEXPEC_TOKEN)
-		printf("Syntax error near unexpected token `%s'\n", (char *)arg);
+		write(2,"Syntax error near unexpected token\n", 35);
 	else if (err_id == QUOTE_ERROR)
-		printf("Error: Invalid quote usage\n");
+		write(2,"Error: Invalid quote usage\n", 27);
 	else if (err_id == CMD_NOT_EXIST)
-		printf("%s: command not found\n", (char *)arg);
+		write(2,"Error: command not found\n", 25);
 	else if (err_id == CMD_TOO_MANY_ARGS)
-		printf("Error: cd: too many arguments\n");
+		write(2,"Error: cd: too many arguments\n" , 30);
 	else if (err_id == CMD_TOO_FEW_ARGS)
-		printf("Error: cd: required one argument\n");
+		write(2,"Error: cd: required one argument\n", 33);
 }
 
-static void	p_error_sub_2(int err_id, void *arg)
+static void	p_error_sub_2(int err_id)
 {
 	if (err_id == ENV_VAR_NOT_EXIST)
-		printf("Error: Not able to get timestamp error\n");
+		write(2,"Error: Not able to get timestamp error\n", 39);
 	else if (err_id == RED_IN_ERR)
-		printf("Error: Error opening input file\n");
+		write(2,"Error: Error opening input file\n", 32);
 	else if (err_id == RED_OUT_ERR)
-		printf("Error: Error opening output file\n");
+		write(2,"Error: Error opening output file\n", 33);
 	else if (err_id == RED_APPEND_ERR)
-		printf("Error: Error opening output file in append mode\n");
+		write(2,"Error: Error opening output file in append mode\n", 48);
 	else if (err_id == RED_HEREDOC_ERR)
-		printf("Error: Error opening heredoc file\n");
+		write(2,"Error: Error opening heredoc file\n", 34);
 	else if (err_id == TMP_FILE_CREATION_ERR)
-		printf("Error: Error creating temporary file\n");
+		write(2,"Error: Error creating temporary file\n", 37);
 	else if (err_id == INVAL_ENV_VAR)
-		printf("Error: not an identifier: `%s'\n", (char *)arg);
+		write(2,"Error: not a valid identifier\n", 30);
 	else if (err_id == DUP2_ERR)
 		perror("dup2");
 }
@@ -55,8 +55,9 @@ static void	p_error_sub_2(int err_id, void *arg)
 */
 int	p_error(int err_id, void *arg)
 {
-	p_error_sub_1(err_id, arg);
-	p_error_sub_2(err_id, arg);
+	(void) arg;
+	p_error_sub_1(err_id);
+	p_error_sub_2(err_id);
 	return (err_id);
 }
 
@@ -71,33 +72,3 @@ int	p_error2(char *str, void *arg)
 	return (errno);
 }
 
-/*
-^Checks for simple input errors before splitting into tokens,
-^Examples: <> <<< |& etc...
-*/
-int	input_error(char *input)
-{
-	char	token_type;
-
-	if (quotes_error(input))
-	{
-		p_error(QUOTE_ERROR, "Invalid quote usage\n");
-		return (-1);
-	}
-	while (1)
-	{
-		input = ft_strpbrk(input, "|&<>");
-		if (input)
-			token_type = *input;
-		if (!input)
-			break ;
-		if (*(++input) == ' ' || *input == '\t')
-		{
-			while (*input == ' ' || (*input == '\t' && *input))
-				input++;
-			if (*input == token_type)
-				return (p_error(2, &token_type));
-		}
-	}
-	return (0);
-}

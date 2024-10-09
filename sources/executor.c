@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/09 14:57:05 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:34:35 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	run_builtin(t_shell *m, t_list **parser, t_command *c)
 	else if (!ft_strcmp(c->cmd[0], "unset"))
 		m->ex_status = unset(m, c);
 	else if (!ft_strcmp(c->cmd[0], "exit"))
-		exit_shell(m);
+		exit_shell(m, c);
 	restore_and_close_files(c, m);
 	(*parser) = (*parser)->next;
 	return (m->ex_status);
@@ -39,7 +39,7 @@ int	execute_command(t_shell *m, t_list **parser)
 
 	c = ((t_command *)((*parser)->content));
 	setup_redirection(c, m);
-	if (is_builtin(c, m))
+	if (is_builtin(c))
 		return (run_builtin(m, parser, c));
 	if (c->full_path == NULL)
 	{
@@ -90,7 +90,7 @@ int	is_invalid_command_in_pipe(t_shell *m, t_list **p, int num_pipes)
 	while (num_pipes + 1)
 	{
 		c = ((t_command *)((*p)->content));
-		if (c->full_path == NULL && !is_builtin(c, m))
+		if (c->full_path == NULL && !is_builtin(c))
 		{
 			if (!is_invalid)
 				printf("%s: command not found\n", c->cmd[0]);

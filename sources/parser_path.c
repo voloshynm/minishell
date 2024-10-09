@@ -3,51 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   parser_path.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 15:28:12 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/09 22:31:03 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	directory_loop(t_command *c, DIR *d, char *target_file, char *cmd_path)
+int	is_builtin(t_command *c)
 {
-	struct dirent	*entry;
-
-	while (d)
-	{
-		entry = readdir(d);
-		if (!entry)
-			break ;
-		if (entry && !ft_strcmp(target_file, entry->d_name))
-		{
-			closedir(d);
-			if (c->full_path != NULL)
-				free(c->full_path);
-			c->full_path = cmd_path;
-			free(target_file);
-			return (1);
-		}
-	}
-	return (0);
-}
-
-int	is_builtin(t_command *c, t_shell *m)
-{
-	DIR		*directory;
-	char	*target_file;
-	char	*cmd_path;
-
-	cmd_path = ft_strjoin(m->original_pwd, "/sources/builtins");
-	directory = opendir(cmd_path);
-	target_file = ft_strjoin(c->cmd[0], ".c");
-	if (directory_loop(c, directory, target_file, cmd_path))
+	if (!ft_strcmp(c->cmd[0], "cd"))
 		return (1);
-	free(cmd_path);
-	free(target_file);
-	closedir(directory);
+	else if (!ft_strcmp(c->cmd[0], "pwd"))
+		return (1);
+	else if (!ft_strcmp(c->cmd[0], "echo"))
+		return (1);
+	else if (!ft_strcmp(c->cmd[0], "export"))
+		return (1);
+	else if (!ft_strcmp(c->cmd[0], "env"))
+		return (1);
+	else if (!ft_strcmp(c->cmd[0], "unset"))
+		return (1);
+	else if (!ft_strcmp(c->cmd[0], "exit"))
+		return (1);
 	return (0);
 }
 
@@ -82,8 +62,7 @@ int	parse_full_path(t_command *c, t_shell *m)
 {
 	char	*temp;
 
-	is_builtin(c, m);
-	if (!c->full_path)
+	if (!is_builtin(c))
 		is_bin(m, c);
 	if (c->full_path)
 	{
@@ -109,6 +88,7 @@ int	print_parser(t_shell *minihell)
 	i = 1;
 	while ((t_command *)(m->parser))
 	{
+		printf("Node %d\n", i);
 		test = (t_command *)(m->parser->content);
 		while (*test->cmd)
 		{

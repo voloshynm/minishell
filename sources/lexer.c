@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/09 14:50:35 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/09 20:29:31 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,11 @@ int	init_lexer(t_lexer **lexer, char *input)
 {
 	char	*token;
 
-	if (input_error(input))
-		return (UNEXPEC_TOKEN);
+	if (quotes_error(input))
+	{
+		p_error(QUOTE_ERROR, "Invalid quote usage\n");
+		return (-1);
+	}
 	while (input)
 	{
 		token = tokenize_input(&input);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/08 22:30:49 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/09 20:06:19 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void		free_parser(t_list **parser);
 
 // parser_path.c: to get full path of the command for exec
 int			parse_full_path(t_command *c, t_shell *m);
-int			is_builtin(t_command *c, t_shell *m);
+int			is_builtin(t_command *c);
 int			is_bin(t_shell *m, t_command *p);
 
 int			print_parser(t_shell *minihell);
@@ -125,7 +125,7 @@ int			pwd(void);
 int			export(t_shell *m, t_command *c);
 int			unset(t_shell *m, t_command *c);
 int			env(t_shell *m, t_command *c);
-void		exit_shell(t_shell *m);
+void		exit_shell(t_shell *m, t_command *c);
 
 // environment.c
 int			init_envp(t_shell *m, char **envp_arg);
