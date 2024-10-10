@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/09 19:19:58 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 18:21:09 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ static void	p_error_sub_2(int err_id)
 		write(2,"Error: not a valid identifier\n", 30);
 	else if (err_id == DUP2_ERR)
 		perror("dup2");
+	else if (err_id == IS_DIR)
+		write(2,"Error: Is a directory\n", 20);
 }
 
 /*
@@ -55,7 +57,7 @@ static void	p_error_sub_2(int err_id)
 */
 int	p_error(int err_id, void *arg)
 {
-	(void) arg;
+	(void) arg;	
 	p_error_sub_1(err_id);
 	p_error_sub_2(err_id);
 	return (err_id);

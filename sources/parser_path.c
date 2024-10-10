@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/09 22:31:03 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 19:06:17 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int	is_bin(t_shell *m, t_command *c)
 		}
 		closedir(directory);
 	}
+	if (opendir(*c->cmd))
+		return (126);
 	return (0);
 }
 
@@ -63,7 +65,8 @@ int	parse_full_path(t_command *c, t_shell *m)
 	char	*temp;
 
 	if (!is_builtin(c))
-		is_bin(m, c);
+		if (is_bin(m, c) == IS_DIR)
+			return(IS_DIR);
 	if (c->full_path)
 	{
 		temp = ft_strjoin(c->full_path, "/");

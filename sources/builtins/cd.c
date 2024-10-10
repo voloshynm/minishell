@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 19:38:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/09 19:17:25 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 17:51:38 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,9 @@ int	cd(t_shell *m, char **arg)
 	else if (cmd[1] == NULL)
 		return (p_error(CMD_TOO_FEW_ARGS, NULL));
 	else if (chdir(cmd[1]) == -1)
-		return (p_error2("cd", NULL));
+	{
+		p_error2("cd", NULL);
+		return (1);
+	}
 	return (upd_pwds(m));
 }

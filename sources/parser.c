@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/09 22:51:00 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 18:32:01 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ int	parse_commands(t_shell *m, t_lexer *l)
 				return (RED_HEREDOC_ERR);
 			l = l->next->next;
 		}
-		//print_parser(m);
 		if (l && is_token_pipish(l))
 		{
 			c->cmd_splitter = l->token;

@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/09 20:06:19 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 18:14:41 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ enum		e_err_state
 	ALLOC_FAILURE = 1,
 	UNEXPEC_TOKEN = 2,
 	QUOTE_ERROR = 3,
+	IS_DIR = 126,
 	CMD_NOT_EXIST = 127,
 	CMD_TOO_MANY_ARGS = 4,
 	ENV_VAR_NOT_EXIST = 5,
