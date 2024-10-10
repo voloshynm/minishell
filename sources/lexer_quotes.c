@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:16 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/10 20:50:02 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 21:41:29 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,28 @@ int	quotes_error(char *input)
 ^	single quotes inside of double quotes, or inversed.
 ^ Return a pointer to the closing quote of the String
 */
-char	*handle_quotes(char *input)
+int	handle_quotes(char *input)
 {
 	char	*temp;
 	int		quote_count;
 	char	quote_type;
+	int		i;
 
 	quote_count = 0;
-	quote_type = *input;
-	while (*input && *input != 32)
+	quote_type = input[0];
+	i = 0;
+	while (input[i] && input[i] != 32)
 	{
-		if (*input == quote_type)
+		if (input[i] == quote_type)
 			quote_count++;
-		input++;
+		i++;
 	}
 	if (quote_count % 2 == 0)
-		return (input - 1);
-	temp = ft_strchr(input, quote_type);
-	if (*(temp + 1) == 32)
-		return (ft_strchr(input, quote_type));
-	return (NULL);
+		return (i);
+	temp = ft_strchr(input + i, quote_type);
+	if (temp && *(temp + 1) == 32)
+		return (ft_strchr(input + i, quote_type) - input);
+	return (0);
 }
 
 char	*remove_quotes(char *str, char quote_type, int in_quote)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/10 19:35:26 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 21:41:41 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char		*process_str(char *str);
 
 // lexer_quotes.c
 int			quotes_error(char *input);
-char		*handle_quotes(char *input);
+int			handle_quotes(char *input);
 char		*remove_quotes(char *str, char quote_type, int in_quote);
 
 // lexer.c

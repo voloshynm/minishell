@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/10 20:48:57 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 22:23:00 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,11 @@ char	*tokenize_input(char **input)
 	int		length;
 
 	start = *input;
+	length = ft_strlen(start);
 	*input = ft_strpbrk(*input, " >|<&\'\"");
 	if (*input)
 		if (**input == '\'' || **input == '\"')
-			*input = handle_quotes(*input);
-	if (*input)
-		length = (start - (*input)++) * -1;
-	else
-		length = ft_strlen(start);
+			length = handle_quotes(*input);
 	str = malloc(sizeof(char) * length + 1);
 	if (str == NULL)
 	{
