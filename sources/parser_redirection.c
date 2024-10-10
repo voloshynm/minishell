@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/04 15:54:29 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 20:23:04 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 {
 	if (token == IN)
 	{
-		c->infile = open(filename, O_RDONLY);
+		c->infile = open(filename, O_RDONLY | O_CREAT);
 		if (c->infile < 0)
 			return (p_error(RED_IN_ERR, NULL));
 	}

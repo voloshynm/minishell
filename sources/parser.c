@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/10 18:32:01 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 20:10:09 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,16 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 static int	get_cmd_len(t_lexer *lexer)
 {
 	int		len;
+	int		redir;
 	t_lexer	*l;
 
 	l = lexer;
 	len = 0;
-	while (l && l->token == WORD)
+	redir = 0;
+	while (l && !is_token_pipish(l))
 	{
+		if (is_token_redir(l))
+			redir += 2;
 		len++;
 		l = l->next;
 	}
@@ -71,6 +75,25 @@ static int	parse_command(t_command *c, t_lexer **l)
 	return (0);
 }
 
+static int	add_to_command_list(t_command *c, t_lexer **l)
+{
+	int	i;
+
+	i = 0;
+	while (c->cmd[i])
+		i++;
+	while (*l && (*l)->token == WORD)
+	{
+		c->cmd[i] = ft_strdup((*l)->str);
+		if (!c->cmd[i])
+			return (p_error(ALLOC_FAILURE, NULL));
+		*l = (*l)->next;
+		i++;
+	}
+	c->cmd[i] = 0;
+	return (0);
+}
+
 int	parse_commands(t_shell *m, t_lexer *l)
 {
 	t_command	*c;
@@ -80,13 +103,18 @@ int	parse_commands(t_shell *m, t_lexer *l)
 		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l))
 			return (ALLOC_FAILURE);
 		parse_full_path(c, m);
-		while (l && is_token_redir(l))
+		while (l && !is_token_pipish(l))
 		{
-			if (parse_redirection(c, l->token, (l->next)->str, m))
-				return (m->ex_status);
-			if (g_sig_pid == 1)
-				return (RED_HEREDOC_ERR);
-			l = l->next->next;
+			if (is_token_redir(l))
+			{
+				if (parse_redirection(c, l->token, (l->next)->str, m))
+					return (m->ex_status);
+				if (g_sig_pid == 1)
+					return (RED_HEREDOC_ERR);
+				l = l->next->next;
+			}
+			if (l && l->token == WORD)
+				add_to_command_list(c, &l);
 		}
 		if (l && is_token_pipish(l))
 		{
