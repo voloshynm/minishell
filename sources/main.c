@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/11 16:53:55 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:35:25 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	prompt_loop(t_shell *m)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	m;
-	
+
 	(void)argv;
 	if (argc != 1)
 	{

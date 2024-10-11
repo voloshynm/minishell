@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/11 16:56:32 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:14:50 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,10 @@ int	executor_loop(t_shell *m)
 	t_command	*c;
 	t_list		*p;
 	int			num_pipes;
-	int			cmd_index;
 
 	p = m->parser;
 	while (p)
 	{
-		cmd_index = -1;
 		c = ((t_command *)(p->content));
 		if ((c->last_splitter_token == OR && m->ex_status == 0)
 			|| (c->last_splitter_token == AND && m->ex_status != 0))
@@ -134,17 +132,14 @@ int	executor_loop(t_shell *m)
 		{
 			num_pipes = count_pipes(m);
 			if (!is_invalid_command_in_pipe(m, &p, num_pipes) && !m->ex_status)
-				m->ex_status = execute_pipe(m, &p, num_pipes, cmd_index);
+				m->ex_status = execute_pipe(m, &p, num_pipes, -1);
 			else
 				p = p->next;
 		}
+		else if (c->infile >= 0 && c->outfile >= 0)
+			m->ex_status = execute_command(m, &p);
 		else
-		{
-			if (c->infile >= 0 && c->outfile >= 0)
-				m->ex_status = execute_command(m, &p);
-			else
-				p = p->next;
-		}
+			p = p->next;
 	}
 	return (m->ex_status);
 }

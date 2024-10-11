@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/10 19:06:17 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:29:28 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	parse_full_path(t_command *c, t_shell *m)
 
 	if (!is_builtin(c))
 		if (is_bin(m, c) == IS_DIR)
-			return(IS_DIR);
+			return (IS_DIR);
 	if (c->full_path)
 	{
 		temp = ft_strjoin(c->full_path, "/");
@@ -81,32 +81,59 @@ int	parse_full_path(t_command *c, t_shell *m)
 	return (0);
 }
 
-int	print_parser(t_shell *minihell)
+void	free_parser(t_list **parser)
 {
-	t_command	*test;
-	t_shell		*m;
+	t_list		*p;
+	t_command	*command;
 	int			i;
 
-	m = minihell;
-	i = 1;
-	while ((t_command *)(m->parser))
+	if (parser == NULL)
+		return ;
+	while (*parser)
 	{
-		printf("Node %d\n", i);
-		test = (t_command *)(m->parser->content);
-		while (*test->cmd)
+		p = *parser;
+		*parser = (*parser)->next;
+		command = ((t_command *)p->content);
+		if (command->cmd)
 		{
-			printf("CMD %d: %s\n", i, *test->cmd);
-			test->cmd++;
+			i = 0;
+			while (command->cmd[i])
+				free(command->cmd[i++]);
+			free(command->cmd);
 		}
-		printf("CMD %d path: %s\n", i, test->full_path);
-		if (test->cmd_splitter == PIPE)
-			printf("CMD %d splitter: PIPE\n", i);
-		else if (test->cmd_splitter == OR)
-			printf("CMD %d splitter: OR\n", i);
-		else if (test->cmd_splitter == AND)
-			printf("CMD %d splitter: AND\n", i);
-		m->parser = m->parser->next;
-		i++;
+		free(command->full_path);
+		free(command);
+		free(p);
 	}
-	return (0);
+	*parser = NULL;
 }
+//! DEBUGGING
+// int	print_parser(t_shell *minihell)
+// {
+// 	t_command	*test;
+// 	t_shell		*m;
+// 	int			i;
+
+// 	m = minihell;
+// 	i = 1;
+// 	while ((t_command *)(m->parser))
+// 	{
+// 		printf("Node %d\n", i);
+// 		test = (t_command *)(m->parser->content);
+// 		while (*test->cmd)
+// 		{
+// 			printf("CMD %d: %s\n", i, *test->cmd);
+// 			test->cmd++;
+// 		}
+// 		printf("CMD %d path: %s\n", i, test->full_path);
+// 		if (test->cmd_splitter == PIPE)
+// 			printf("CMD %d splitter: PIPE\n", i);
+// 		else if (test->cmd_splitter == OR)
+// 			printf("CMD %d splitter: OR\n", i);
+// 		else if (test->cmd_splitter == AND)
+// 			printf("CMD %d splitter: AND\n", i);
+// 		m->parser = m->parser->next;
+// 		i++;
+// 	}
+// 	return (0);
+// }

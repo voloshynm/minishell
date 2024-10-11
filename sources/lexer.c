@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/10 19:34:55 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:44:49 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ static int	unexpected_token(t_lexer *lexer)
 	t_lexer	*start;
 
 	start = lexer;
-	if (lexer->token == PIPE || lexer->token == AND || lexer->token == OR)
+	if (lexer && (lexer->token == PIPE || lexer->token == AND
+			|| lexer->token == OR))
 		return (p_error(2, lexer->str));
 	while (start)
 	{
@@ -29,10 +30,10 @@ static int	unexpected_token(t_lexer *lexer)
 			return (p_error(2, start->next->str));
 		start = start->next;
 	}
-	if ((get_last_token(lexer)->token >= 2
+	if (lexer && (get_last_token(lexer)->token >= 2
 			&& get_last_token(lexer)->token <= 5))
 		return (p_error(2, "newline"));
-	if (get_last_token(lexer)->token != WORD)
+	if (lexer && get_last_token(lexer)->token != WORD)
 		return (p_error(2, get_last_token(lexer)->str));
 	return (0);
 }
