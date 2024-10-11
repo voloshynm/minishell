@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:51 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/11 18:15:44 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:15:11 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	p_error_sub_2(int err_id)
 	else if (err_id == PERM_DENIED)
 		write(2, "Error: Permission denied\n", 25);
 	else if (err_id == IS_DIR)
-		write(2, "Error: Is a directory\n", 20);
+		write(2, "Error: Is a directory\n", 22);
 }
 
 /*

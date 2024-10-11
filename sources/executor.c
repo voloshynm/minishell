@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/11 18:14:50 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:28:49 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,12 @@ int	execute_command(t_shell *m, t_list **parser)
 	setup_redirection(c, m);
 	if (is_builtin(c))
 		return (run_builtin(m, parser, c));
-	if (c->full_path == NULL)
+	if (c->full_path == NULL || c->is_dir)
 	{
 		(*parser) = (*parser)->next;
+		if ((!ft_strncmp(c->cmd[0], "./", 2) || !ft_strncmp(c->cmd[0], "/", 1))
+			&& c->is_dir)
+			return (p_error(IS_DIR, NULL));
 		return (p_error(CMD_NOT_EXIST, c->cmd[0]));
 	}
 	g_sig_pid = fork();
