@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/10 20:10:09 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:52:34 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,8 @@ int	parse_commands(t_shell *m, t_lexer *l)
 		{
 			if (is_token_redir(l))
 			{
-				if (parse_redirection(c, l->token, (l->next)->str, m))
-					return (m->ex_status);
-				if (g_sig_pid == 1)
-					return (RED_HEREDOC_ERR);
+				if (!m->ex_status)
+					m->ex_status = parse_redirection(c, l->token, (l->next)->str, m);
 				l = l->next->next;
 			}
 			if (l && l->token == WORD)
@@ -123,7 +121,7 @@ int	parse_commands(t_shell *m, t_lexer *l)
 			l = l->next;
 		}
 	}
-	return (OK);
+	return (m->ex_status);
 }
 
 void	free_parser(t_list **parser)

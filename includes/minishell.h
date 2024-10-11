@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/10 18:14:41 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:21:45 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ enum		e_err_state
 	TMP_FILE_CREATION_ERR = 10,
 	DUP2_ERR = 11,
 	CMD_TOO_FEW_ARGS = 12,
-	INVAL_ENV_VAR = 13
+	INVAL_ENV_VAR = 13,
+	PERM_DENIED = 14
 };
 
 // main.c: the main loop of minishell

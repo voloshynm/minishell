@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/10 21:28:53 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:53:55 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ void	prompt_loop(t_shell *m)
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input))
 		{
-			if (!parse_commands(m, m->lexer))
-				executor_loop(m);
+			parse_commands(m, m->lexer);
+			executor_loop(m);
 			free_parser(&m->parser);
 			free_lexer(&m->lexer);
 			reset_vars(m);

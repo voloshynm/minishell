@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/09 17:34:35 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:56:32 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,11 +133,18 @@ int	executor_loop(t_shell *m)
 		else if (c->cmd_splitter == PIPE)
 		{
 			num_pipes = count_pipes(m);
-			if (!is_invalid_command_in_pipe(m, &p, num_pipes))
+			if (!is_invalid_command_in_pipe(m, &p, num_pipes) && !m->ex_status)
 				m->ex_status = execute_pipe(m, &p, num_pipes, cmd_index);
+			else
+				p = p->next;
 		}
 		else
-			m->ex_status = execute_command(m, &p);
+		{
+			if (c->infile >= 0 && c->outfile >= 0)
+				m->ex_status = execute_command(m, &p);
+			else
+				p = p->next;
+		}
 	}
 	return (m->ex_status);
 }
