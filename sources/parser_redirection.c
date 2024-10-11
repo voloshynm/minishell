@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/10 20:23:04 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:28:07 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,21 +76,21 @@ int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 {
 	if (token == IN)
 	{
-		c->infile = open(filename, O_RDONLY | O_CREAT);
+		c->infile = open(filename, O_RDONLY);
 		if (c->infile < 0)
-			return (p_error(RED_IN_ERR, NULL));
+		{
+			p_error(PERM_DENIED, NULL);
+			return (1);
+		}
 	}
-	else if (token == OUT)
+	else if (token == OUT || token == APPEND)
 	{
 		c->outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (c->outfile < 0)
-			return (p_error(RED_OUT_ERR, NULL));
-	}
-	else if (token == APPEND)
-	{
-		c->outfile = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (c->outfile < 0)
-			return (p_error(RED_APPEND_ERR, NULL));
+		if (c->outfile < 0 && (token == OUT || token == APPEND))
+		{
+			p_error(PERM_DENIED, NULL);
+			return (1);
+		}
 	}
 	else if (token == HEREDOC)
 	{

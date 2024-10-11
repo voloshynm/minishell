@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/10 20:10:09 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:38:36 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	get_cmd_len(t_lexer *lexer)
 	return (len);
 }
 
-static int	parse_command(t_command *c, t_lexer **l)
+static int	parse_command(t_command *c, t_lexer **l, t_shell *m)
 {
 	char	**cur_cmd;
 
@@ -71,6 +71,7 @@ static int	parse_command(t_command *c, t_lexer **l)
 		*l = (*l)->next;
 		cur_cmd++;
 	}
+	parse_full_path(c, m);
 	*cur_cmd = NULL;
 	return (0);
 }
@@ -100,21 +101,18 @@ int	parse_commands(t_shell *m, t_lexer *l)
 
 	while (l)
 	{
-		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l))
+		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l, m))
 			return (ALLOC_FAILURE);
-		parse_full_path(c, m);
 		while (l && !is_token_pipish(l))
 		{
 			if (is_token_redir(l))
 			{
-				if (parse_redirection(c, l->token, (l->next)->str, m))
-					return (m->ex_status);
-				if (g_sig_pid == 1)
-					return (RED_HEREDOC_ERR);
+				if (!m->ex_status)
+					m->ex_status = parse_redirection(c, l->token,
+							(l->next)->str, m);
 				l = l->next->next;
 			}
-			if (l && l->token == WORD)
-				add_to_command_list(c, &l);
+			add_to_command_list(c, &l);
 		}
 		if (l && is_token_pipish(l))
 		{
@@ -123,32 +121,5 @@ int	parse_commands(t_shell *m, t_lexer *l)
 			l = l->next;
 		}
 	}
-	return (OK);
-}
-
-void	free_parser(t_list **parser)
-{
-	t_list		*p;
-	t_command	*command;
-	int			i;
-
-	if (parser == NULL)
-		return ;
-	while (*parser)
-	{
-		p = *parser;
-		*parser = (*parser)->next;
-		command = ((t_command *)p->content);
-		if (command->cmd)
-		{
-			i = 0;
-			while (command->cmd[i])
-				free(command->cmd[i++]);
-			free(command->cmd);
-		}
-		free(command->full_path);
-		free(command);
-		free(p);
-	}
-	*parser = NULL;
+	return (m->ex_status);
 }

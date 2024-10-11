@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:16 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/10 21:41:29 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:56:29 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,13 @@ int	handle_quotes(char *input)
 		i++;
 	}
 	if (quote_count % 2 == 0)
-		return (i);
-	temp = ft_strchr(input + i, quote_type);
-	if (temp && *(temp + 1) == 32)
-		return (ft_strchr(input + i, quote_type) - input);
-	return (0);
+	{
+		return (input - 1);
+	}
+	temp = ft_strchr(input, quote_type);
+	if (*(temp + 1) == 32)
+		return (ft_strchr(input, quote_type));
+	return (NULL);
 }
 
 char	*remove_quotes(char *str, char quote_type, int in_quote)

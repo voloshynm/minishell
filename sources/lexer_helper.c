@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/10 22:23:00 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:56:36 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,21 @@ char	*process_str(char *str)
 	return (new_str);
 }
 
+int	has_2_quotes_in_row(char *start, int length)
+{
+	int	i;
+
+	i = 0;
+	while (i <= length)
+	{
+		if ((start[i] == '\"' && start[i + 1] == '\"') || (start[i] == '\''
+				&& start[i + 1] == '\''))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 char	*tokenize_input(char **input)
 {
 	char	*str;
@@ -59,6 +74,8 @@ char	*tokenize_input(char **input)
 		p_error(ALLOC_FAILURE, NULL);
 		return (NULL);
 	}
+	if (has_2_quotes_in_row(start, length))
+		length += 1;
 	ft_strlcpy(str, start, length + 1);
 	return (process_str(str));
 }

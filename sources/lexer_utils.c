@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:30:10 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 15:28:07 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 18:44:00 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_token	token_type(char *str)
 
 t_lexer	*get_last_token(t_lexer *lexer)
 {
-	while (lexer->next)
+	while (lexer && lexer->next)
 		lexer = lexer->next;
 	return (lexer);
 }

@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/09 17:34:35 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 19:28:49 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,12 @@ int	execute_command(t_shell *m, t_list **parser)
 	setup_redirection(c, m);
 	if (is_builtin(c))
 		return (run_builtin(m, parser, c));
-	if (c->full_path == NULL)
+	if (c->full_path == NULL || c->is_dir)
 	{
 		(*parser) = (*parser)->next;
+		if ((!ft_strncmp(c->cmd[0], "./", 2) || !ft_strncmp(c->cmd[0], "/", 1))
+			&& c->is_dir)
+			return (p_error(IS_DIR, NULL));
 		return (p_error(CMD_NOT_EXIST, c->cmd[0]));
 	}
 	g_sig_pid = fork();
@@ -120,12 +123,10 @@ int	executor_loop(t_shell *m)
 	t_command	*c;
 	t_list		*p;
 	int			num_pipes;
-	int			cmd_index;
 
 	p = m->parser;
 	while (p)
 	{
-		cmd_index = -1;
 		c = ((t_command *)(p->content));
 		if ((c->last_splitter_token == OR && m->ex_status == 0)
 			|| (c->last_splitter_token == AND && m->ex_status != 0))
@@ -133,11 +134,15 @@ int	executor_loop(t_shell *m)
 		else if (c->cmd_splitter == PIPE)
 		{
 			num_pipes = count_pipes(m);
-			if (!is_invalid_command_in_pipe(m, &p, num_pipes))
-				m->ex_status = execute_pipe(m, &p, num_pipes, cmd_index);
+			if (!is_invalid_command_in_pipe(m, &p, num_pipes) && !m->ex_status)
+				m->ex_status = execute_pipe(m, &p, num_pipes, -1);
+			else
+				p = p->next;
 		}
-		else
+		else if (c->infile >= 0 && c->outfile >= 0)
 			m->ex_status = execute_command(m, &p);
+		else
+			p = p->next;
 	}
 	return (m->ex_status);
 }
