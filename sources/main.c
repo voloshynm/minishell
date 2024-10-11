@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/09 20:52:55 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/10 21:28:53 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,11 @@ void	prompt_loop(t_shell *m)
 	}
 	rl_clear_history();
 }
-#include <stdint.h>
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	m;
-
+	
 	(void)argv;
 	if (argc != 1)
 	{
