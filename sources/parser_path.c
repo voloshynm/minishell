@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/11 19:16:32 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 20:33:47 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ int	is_bin(t_shell *m, t_command *c)
 		}
 		closedir(directory);
 	}
-	if (opendir(*c->cmd))
-		c->is_dir = IS_DIR;
 	return (0);
 }
 
