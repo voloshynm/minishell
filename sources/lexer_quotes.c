@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:16 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/11 20:00:27 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/10 21:34:49 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,19 @@ int	quotes_error(char *input)
 ^	single quotes inside of double quotes, or inversed.
 ^ Return a pointer to the closing quote of the String
 */
-char*	handle_quotes(char *input)
+char	*handle_quotes(char *input)
 {
 	char	*temp;
 	int		quote_count;
 	char	quote_type;
-	int		i;
 
 	quote_count = 0;
-	quote_type = input[0];
-	i = 0;
-	while (input[i] && input[i] != 32)
+	quote_type = *input;
+	while (*input && *input != 32)
 	{
-		if (input[i] == quote_type)
+		if (*input == quote_type)
 			quote_count++;
-		i++;
+		input++;
 	}
 	if (quote_count % 2 == 0)
 	{
