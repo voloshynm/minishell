@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:16 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/11 19:56:29 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/11 20:00:27 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	quotes_error(char *input)
 ^	single quotes inside of double quotes, or inversed.
 ^ Return a pointer to the closing quote of the String
 */
-int	handle_quotes(char *input)
+char*	handle_quotes(char *input)
 {
 	char	*temp;
 	int		quote_count;
