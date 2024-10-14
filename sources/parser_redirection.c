@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/11 20:33:52 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:52:20 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,16 +79,25 @@ int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 		c->infile = open(filename, O_RDONLY);
 		if (c->infile < 0)
 		{
-			p_error(PERM_DENIED, NULL);
+			perror(" ");
 			return (1);
 		}
 	}
-	else if (token == OUT || token == APPEND)
+	else if (token == OUT)
 	{
 		c->outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (c->outfile < 0 && (token == OUT || token == APPEND))
+		if (c->outfile < 0)
 		{
-			p_error(PERM_DENIED, NULL);
+			perror(" ");
+			return (1);
+		}
+	}
+	else if (token == APPEND)
+	{
+		c->outfile = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (c->outfile < 0)
+		{
+			perror(" ");
 			return (1);
 		}
 	}
@@ -96,7 +105,10 @@ int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 	{
 		c->infile = handle_heredoc(filename, m);
 		if (c->infile < 0)
-			return (p_error(RED_HEREDOC_ERR, NULL));
+		{
+			perror(" ");
+			return (1);
+		}
 	}
 	return (0);
 }
