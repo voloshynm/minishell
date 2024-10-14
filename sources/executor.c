@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/11 19:28:49 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/12 17:56:46 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,26 @@ int	run_builtin(t_shell *m, t_list **parser, t_command *c)
 	return (m->ex_status);
 }
 
+static int	is_dir_or_file(t_command *c)
+{
+	struct stat	file_stat;
+
+	if (opendir(c->cmd[0]) && (!ft_strncmp(c->cmd[0], "./", 2)
+			|| !ft_strncmp(c->cmd[0], "/", 1)))
+		return (write(2, "Error: Is a directory\n", 22), 126);
+	else if (!S_ISDIR(file_stat.st_mode) && !ft_strncmp(c->cmd[0], "./", 2))
+	{
+		if (access(c->cmd[0], F_OK) == 0)
+			return (write(2, "Error: Permission denied\n", 25), 126);
+		else
+			return (write(2, "Error: No such file or directory\n", 33), 127);
+	}
+	else if (!S_ISDIR(file_stat.st_mode) && access(c->cmd[0], X_OK) < 0
+		&& (!ft_strncmp(c->cmd[0], "/", 1)))
+		return (write(2, "Error: No such file or directory\n", 33), 127);
+	return (p_error(CMD_NOT_EXIST, c->cmd[0]));
+}
+
 int	execute_command(t_shell *m, t_list **parser)
 {
 	t_command	*c;
@@ -41,13 +61,10 @@ int	execute_command(t_shell *m, t_list **parser)
 	setup_redirection(c, m);
 	if (is_builtin(c))
 		return (run_builtin(m, parser, c));
-	if (c->full_path == NULL || c->is_dir)
+	if (c->full_path == NULL)
 	{
 		(*parser) = (*parser)->next;
-		if ((!ft_strncmp(c->cmd[0], "./", 2) || !ft_strncmp(c->cmd[0], "/", 1))
-			&& c->is_dir)
-			return (p_error(IS_DIR, NULL));
-		return (p_error(CMD_NOT_EXIST, c->cmd[0]));
+		return (is_dir_or_file(c));
 	}
 	g_sig_pid = fork();
 	if (g_sig_pid == -1)

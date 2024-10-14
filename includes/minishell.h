@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/11 18:35:14 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/11 20:46:02 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <errno.h>
 # include <fcntl.h> // For open(), O_CREAT, etc.
 # include <limits.h>
+# include <sys/stat.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -67,7 +68,6 @@ enum		e_err_state
 	ALLOC_FAILURE = 1,
 	UNEXPEC_TOKEN = 2,
 	QUOTE_ERROR = 3,
-	IS_DIR = 126,
 	CMD_NOT_EXIST = 127,
 	CMD_TOO_MANY_ARGS = 4,
 	ENV_VAR_NOT_EXIST = 5,
