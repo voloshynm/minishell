@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/12 17:56:46 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/15 12:20:43 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ int	executor_loop(t_shell *m)
 		else if (c->cmd_splitter == PIPE)
 		{
 			num_pipes = count_pipes(m);
-			if (!is_invalid_command_in_pipe(m, &p, num_pipes) && !m->ex_status)
+			if (!is_invalid_command_in_pipe(m, &p, num_pipes))
 				m->ex_status = execute_pipe(m, &p, num_pipes, -1);
 			else
 				p = p->next;

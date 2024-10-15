@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_pipe.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:57:12 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/09 17:15:42 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/15 12:20:30 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,13 @@ static int	upd_fd(int *cmd_index, int pipes[], t_list **current, int num_pipes)
 	if (*cmd_index > 0)
 	{
 		if (dup2(pipes[(*cmd_index - 1) * 2], STDIN_FILENO) == -1)
-			return (p_error2("dup2", NULL));
+			return (1);
 	}
 	if ((*current)->next
 		&& ((t_command *)((*current)->content))->cmd_splitter == PIPE)
 	{
 		if (dup2(pipes[*cmd_index * 2 + 1], STDOUT_FILENO) == -1)
-			return (p_error2("dup2", NULL));
+			return (1);
 	}
 	set_close_pipe(num_pipes, pipes, 'C');
 	return (0);
@@ -123,6 +123,7 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 
 	if (set_close_pipe(num_pipes, pipes, 'S') == -1)
 		return (p_error2("pipe", NULL));
+	// printf("g_sig_pid %d\n", g_sig_pid);
 	while ((*p) && ++i < num_pipes + 1)
 	{
 		c = (t_command *)((*p)->content);
@@ -132,11 +133,12 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 		if (g_sig_pid == 0)
 		{
 			if (upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
-				return (errno);
+				exit(1);
 			if (is_builtin(c))
 				exit(run_builtin(m, p, c));
+			// printf("Full Path of cmd:%s %s is :%s\n", c->cmd[0],c->cmd[1], c->full_path);
 			execve(c->full_path, c->cmd, NULL);
-			exit(p_error2("execve", NULL));
+			exit(1);
 		}
 		*p = (*p)->next;
 	}

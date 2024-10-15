@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/14 13:52:20 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/15 12:19:28 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,40 +75,17 @@ static int	handle_heredoc(const char *delimiter, t_shell *m)
 int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 {
 	if (token == IN)
-	{
 		c->infile = open(filename, O_RDONLY);
-		if (c->infile < 0)
-		{
-			perror(" ");
-			return (1);
-		}
-	}
 	else if (token == OUT)
-	{
 		c->outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (c->outfile < 0)
-		{
-			perror(" ");
-			return (1);
-		}
-	}
 	else if (token == APPEND)
-	{
 		c->outfile = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (c->outfile < 0)
-		{
-			perror(" ");
-			return (1);
-		}
-	}
 	else if (token == HEREDOC)
-	{
 		c->infile = handle_heredoc(filename, m);
-		if (c->infile < 0)
-		{
-			perror(" ");
-			return (1);
-		}
+	if (c->infile < 0 || c->outfile < 0)
+	{
+		perror(" ");
+		return (1);
 	}
 	return (0);
 }
@@ -121,21 +98,23 @@ int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 */
 int	setup_redirection(t_command *c, t_shell *m)
 {
+	if (c->infile < 0 || c->outfile < 0)
+		return (1);
 	if (c->infile != STDIN_FILENO)
 	{
 		m->pipefd[0] = dup(STDIN_FILENO);
 		if (m->pipefd[0] < 0)
-			return (p_error2("dup2", NULL));
+			return (errno);
 		if (dup2(c->infile, STDIN_FILENO) < 0)
-			return (p_error2("dup2", NULL));
+			return (errno);
 	}
 	if (c->outfile != STDOUT_FILENO)
 	{
 		m->pipefd[1] = dup(STDOUT_FILENO);
 		if (m->pipefd[1] < 0)
-			return (p_error2("dup2", NULL));
+			return (errno);
 		if (dup2(c->outfile, STDOUT_FILENO) < 0)
-			return (p_error2("dup2", NULL));
+			return (errno);
 	}
 	return (0);
 }
