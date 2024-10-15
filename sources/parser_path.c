@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_path.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/11 20:33:47 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/15 14:55:56 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int	parse_full_path(t_command *c, t_shell *m)
 {
 	char	*temp;
 
+	if (c->cmd[0] == NULL)
+		return (1);
 	if (!is_builtin(c))
 		is_bin(m, c);
 	if (c->full_path)

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/15 12:20:43 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/15 16:27:55 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,30 +99,50 @@ static void	advance_after_bypassing_splitter_or_and(t_list **p, t_shell *m)
 	}
 }
 
-int	is_invalid_command_in_pipe(t_shell *m, t_list **p, int num_pipes)
+// int	is_invalid_command_in_pipe(t_shell *m, t_list **p, int num_pipes)
+// {
+// 	t_list		*start;
+// 	t_command	*c;
+// 	bool		is_invalid;
+
+// 	start = *p;
+// 	is_invalid = false;
+// 	while (num_pipes + 1)
+// 	{
+// 		c = ((t_command *)((*p)->content));
+// 		if (c->full_path == NULL && !is_builtin(c))
+// 		{
+// 			if (!is_invalid)
+// 				printf("%s: command not found\n", c->cmd[0]);
+// 			is_invalid = true;
+// 		}
+// 		*p = (*p)->next;
+// 		num_pipes--;
+// 	}
+// 	if (is_invalid)
+// 		m->ex_status = CMD_NOT_EXIST;
+// 	else
+// 		*p = start;
+// 	return (is_invalid);
+// }
+
+int	is_invalid_command_in_pipe(t_shell *m, t_list **p)
 {
-	t_list		*start;
 	t_command	*c;
 	bool		is_invalid;
 
-	start = *p;
 	is_invalid = false;
-	while (num_pipes + 1)
+	c = ((t_command *)((*p)->content));
+	if (c->full_path == NULL && !is_builtin(c))
 	{
-		c = ((t_command *)((*p)->content));
-		if (c->full_path == NULL && !is_builtin(c))
-		{
-			if (!is_invalid)
-				printf("%s: command not found\n", c->cmd[0]);
-			is_invalid = true;
-		}
-		*p = (*p)->next;
-		num_pipes--;
+		if (!is_invalid)
+			printf("%s: command not found\n", c->cmd[0]);
+		is_invalid = true;
 	}
+	if (*p && (*p)->next && is_invalid)
+		*p = (*p)->next;
 	if (is_invalid)
 		m->ex_status = CMD_NOT_EXIST;
-	else
-		*p = start;
 	return (is_invalid);
 }
 
@@ -151,10 +171,7 @@ int	executor_loop(t_shell *m)
 		else if (c->cmd_splitter == PIPE)
 		{
 			num_pipes = count_pipes(m);
-			if (!is_invalid_command_in_pipe(m, &p, num_pipes))
-				m->ex_status = execute_pipe(m, &p, num_pipes, -1);
-			else
-				p = p->next;
+			m->ex_status = execute_pipe(m, &p, num_pipes, -1);
 		}
 		else if (c->infile >= 0 && c->outfile >= 0)
 			m->ex_status = execute_command(m, &p);

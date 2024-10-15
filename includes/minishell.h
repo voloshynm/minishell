@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/15 12:20:38 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/15 15:19:14 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ void		free_all_resources(t_shell *m);
 // error_handler.c: to handle input errors and print errors
 int			p_error(int err_id, void *arg);
 int			p_error2(char *str, void *arg);
-int			input_error(char *input);
 
 // parser.c: to parse tokens into commands with its path
 int			parse_commands(t_shell *m, t_lexer *l);
@@ -115,6 +114,7 @@ int			wait_children(t_shell *m);
 int			execute_command(t_shell *m, t_list **p);
 int			execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
 int			run_builtin(t_shell *m, t_list **parser, t_command *c);
+int			is_invalid_command_in_pipe(t_shell *m, t_list **p);
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
 void		handle_signals(void);

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/15 12:19:28 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/15 16:35:53 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
 */
 int	setup_redirection(t_command *c, t_shell *m)
 {
-	if (c->infile < 0 || c->outfile < 0)
-		return (1);
 	if (c->infile != STDIN_FILENO)
 	{
 		m->pipefd[0] = dup(STDIN_FILENO);

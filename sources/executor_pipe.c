@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:57:12 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/15 12:20:30 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/15 16:37:48 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,6 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 
 	if (set_close_pipe(num_pipes, pipes, 'S') == -1)
 		return (p_error2("pipe", NULL));
-	// printf("g_sig_pid %d\n", g_sig_pid);
 	while ((*p) && ++i < num_pipes + 1)
 	{
 		c = (t_command *)((*p)->content);
@@ -132,11 +131,11 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 			return (p_error2("fork", NULL));
 		if (g_sig_pid == 0)
 		{
-			if (upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
+			if (is_invalid_command_in_pipe(m, p)
+				|| upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
 				exit(1);
 			if (is_builtin(c))
 				exit(run_builtin(m, p, c));
-			// printf("Full Path of cmd:%s %s is :%s\n", c->cmd[0],c->cmd[1], c->full_path);
 			execve(c->full_path, c->cmd, NULL);
 			exit(1);
 		}
