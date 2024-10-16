@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/15 16:58:11 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/16 02:56:45 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,25 +98,22 @@ static int	add_to_command_list(t_command *c, t_lexer **l)
 int	parse_commands(t_shell *m, t_lexer *l)
 {
 	t_command	*c;
-	int			r_err;
 
 	while (l)
 	{
-		r_err = 0;
+		m->ex_status = 0;
 		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l, m))
 			return (ALLOC_FAILURE);
 		while (l && !is_token_pipish(l))
 		{
 			if (is_token_redir(l))
 			{
-				if (!r_err)
-					r_err = parse_redirection(c, l->token, (l->next)->str, m);
+				if (!m->ex_status)
+					m->ex_status = parse_redir(c, l->token, (l->next)->str, m);
 				l = l->next->next;
 			}
 			add_to_command_list(c, &l);
 		}
-		if (r_err)
-			m->ex_status = r_err;
 		if (l && is_token_pipish(l))
 		{
 			c->cmd_splitter = l->token;

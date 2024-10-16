@@ -6,7 +6,7 @@
 /*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/10 21:56:06 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/16 03:11:16 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,44 +20,50 @@ char	*process_str(char *str)
 	int		count;
 
 	opening_quote_type = '\0';
-	i = 0;
+	i = -1;
 	count = 0;
-	while (str[i])
+	while (str[++i])
 	{
 		if (str[i] == '\"' || str[i] == '\'')
 		{
-			if (opening_quote_type == '\0')
-				opening_quote_type = str[i];
+			opening_quote_type = str[i];
 			count++;
 		}
-		i++;
 	}
 	if (ft_strchr(str, '$'))
 		process_env_arg(&str);
 	if (opening_quote_type == '\0')
 		return (str);
 	new_str = remove_quotes(str, opening_quote_type, -1);
-	free(str);
 	return (new_str);
 }
 
-int	has_2_quotes_in_row(char *start, int length)
+static int	get_length(char *start, char **input)
 {
+	int	length;
 	int	i;
 
 	i = 0;
+	if (*input)
+		length = (start - (*input)++) * -1;
+	else
+		length = ft_strlen(start);
 	while (i <= length)
 	{
 		if ((start[i] == '\"' && start[i + 1] == '\"') || (start[i] == '\''
 				&& start[i + 1] == '\''))
-			return (1);
+		{
+			length++;
+			break ;
+		}
 		i++;
 	}
-	return (0);
+	return (length);
 }
 
 char	*tokenize_input(char **input)
 {
+	char	*temp;
 	char	*str;
 	char	*start;
 	int		length;
@@ -67,20 +73,16 @@ char	*tokenize_input(char **input)
 	if (*input)
 		if (**input == '\'' || **input == '\"')
 			*input = handle_quotes(*input);
-	if (*input)
-		length = (start - (*input)++) * -1;
-	else
-		length = ft_strlen(start);
+	length = get_length(start, input);
 	str = malloc(sizeof(char) * length + 1);
 	if (str == NULL)
-	{
-		p_error(ALLOC_FAILURE, NULL);
-		return (NULL);
-	}
-	if (has_2_quotes_in_row(start, length))
-		length += 1;
+		return (p_error(ALLOC_FAILURE, NULL), NULL);
 	ft_strlcpy(str, start, length + 1);
-	return (process_str(str));
+	temp = str;
+	str = process_str(str);
+	if (temp != str)
+		free(temp);
+	return (str);
 }
 
 int	add_to_token_list(t_lexer **lexer, char *str)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/15 15:19:14 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/16 02:58:11 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int			is_bin(t_shell *m, t_command *p);
 int			print_parser(t_shell *minihell);
 
 // parser_redirection.c: to handle redirections
-int			parse_redirection(t_command *c, t_token token, char *filename,
+int			parse_redir(t_command *c, t_token token, char *filename,
 				t_shell *m);
 int			setup_redirection(t_command *c, t_shell *m);
 void		restore_and_close_files(t_command *c, t_shell *m);

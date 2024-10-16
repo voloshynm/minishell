@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_pipe.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:57:12 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/15 16:37:48 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/16 02:55:32 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,13 +135,12 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 				|| upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
 				exit(1);
 			if (is_builtin(c))
-				exit(run_builtin(m, p, c));
+				exit(run_builtin(m, p, (t_command *)((*p)->content)));
 			execve(c->full_path, c->cmd, NULL);
 			exit(1);
 		}
 		*p = (*p)->next;
 	}
 	set_close_pipe(num_pipes, pipes, 'C');
-	restore_and_close_files(c, m);
-	return (wait_children(m));
+	return (restore_and_close_files(c, m), 0);
 }

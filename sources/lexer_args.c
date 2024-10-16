@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/09 14:51:36 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/16 01:14:42 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static char	*replace_real_arg(char *s, char *str)
 	char	*start;
 
 	start = s;
+	if (ft_strcmp(s, "EMPTY") == 0)
+		return ("");
 	while (ft_isalnum(*s))
 		s++;
 	tmp_1 = ft_strndup(start, s - start);

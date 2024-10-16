@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/15 16:35:53 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/16 02:56:38 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	handle_heredoc(const char *delimiter, t_shell *m)
 /*
 **	open proper infile or outfile depending on the redirection token type
 */
-int	parse_redirection(t_command *c, t_token token, char *filename, t_shell *m)
+int	parse_redir(t_command *c, t_token token, char *filename, t_shell *m)
 {
 	if (token == IN)
 		c->infile = open(filename, O_RDONLY);

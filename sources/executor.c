@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/15 16:27:55 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/16 02:55:19 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static int	is_dir_or_file(t_command *c)
 {
 	struct stat	file_stat;
 
+	stat(c->cmd[0], &file_stat);
 	if (opendir(c->cmd[0]) && (!ft_strncmp(c->cmd[0], "./", 2)
 			|| !ft_strncmp(c->cmd[0], "/", 1)))
 		return (write(2, "Error: Is a directory\n", 22), 126);
@@ -126,26 +127,6 @@ static void	advance_after_bypassing_splitter_or_and(t_list **p, t_shell *m)
 // 	return (is_invalid);
 // }
 
-int	is_invalid_command_in_pipe(t_shell *m, t_list **p)
-{
-	t_command	*c;
-	bool		is_invalid;
-
-	is_invalid = false;
-	c = ((t_command *)((*p)->content));
-	if (c->full_path == NULL && !is_builtin(c))
-	{
-		if (!is_invalid)
-			printf("%s: command not found\n", c->cmd[0]);
-		is_invalid = true;
-	}
-	if (*p && (*p)->next && is_invalid)
-		*p = (*p)->next;
-	if (is_invalid)
-		m->ex_status = CMD_NOT_EXIST;
-	return (is_invalid);
-}
-
 /*
 **	take the standard output (stdout) of the command on its left
 		and send it as the standard input (stdin) to the command on its righ
@@ -172,6 +153,7 @@ int	executor_loop(t_shell *m)
 		{
 			num_pipes = count_pipes(m);
 			m->ex_status = execute_pipe(m, &p, num_pipes, -1);
+			wait_children(m);
 		}
 		else if (c->infile >= 0 && c->outfile >= 0)
 			m->ex_status = execute_command(m, &p);

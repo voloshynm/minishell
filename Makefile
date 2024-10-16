@@ -2,7 +2,7 @@ SRC =   sources/main.c 															\
 		sources/lexer.c sources/lexer_utils.c sources/lexer_helper.c 			\
 		sources/lexer_args.c sources/lexer_quotes.c					 			\
 		sources/parser.c sources/parser_redirection.c sources/parser_path.c		\
-		sources/executor.c sources/executor_pipe.c								\
+		sources/executor.c sources/executor_pipe.c	sources/executor_utils.c	\
 		sources/error_handler.c 												\
 		sources/signals.c														\
 		sources/environment.c 													\

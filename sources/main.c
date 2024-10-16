@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/11 20:18:09 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/16 02:40:05 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	free_all_resources(t_shell *m)
 	free_lexer(&m->lexer);
 	free_ft_split(m->envp);
 	free_ft_split(m->envpath);
-	free(m->input);
 	free(m->original_pwd);
 	if (m->pwd)
 		free(m->pwd);
@@ -71,6 +70,8 @@ void	free_all_resources(t_shell *m)
 
 void	prompt_loop(t_shell *m)
 {
+	char	*input_ptr;
+
 	while (1)
 	{
 		m->input = readline(PROMPT);
@@ -80,8 +81,7 @@ void	prompt_loop(t_shell *m)
 			free_all_resources(m);
 			break ;
 		}
-		if (ft_strcount(m->input, ' ') == (int)ft_strlen(m->input))
-			continue ;
+		input_ptr = m->input;
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input))
 		{
@@ -93,9 +93,8 @@ void	prompt_loop(t_shell *m)
 		}
 		else
 			free_lexer(&m->lexer);
-		free(m->input);
+		free(input_ptr);
 	}
-	rl_clear_history();
 }
 
 int	main(int argc, char **argv, char **envp)
