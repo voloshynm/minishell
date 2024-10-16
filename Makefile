@@ -36,10 +36,6 @@ ${NAME}: ${OBJS}
 	${CC} ${CFLAGS} ${OBJS} -o ${NAME} -L${LIBFT_PATH} -lft -lreadline
 
 libft:
-	if [ ! -d "$(LIBFT_PATH)" ]; then \
-		echo "downloading libft..."; \
-		git clone -b additional_functions git@github.com:Sergio0227/Libft.git $(LIBFT_PATH); \
-	fi
 	${MAKE} all -C ${LIBFT_PATH}
 
 clean:
@@ -49,7 +45,7 @@ clean:
 
 fclean: clean
 	${RM} ${NAME};
-	${RM} -rf ${LIBFT_PATH}
+	${MAKE} -C ${LIBFT_PATH} fclean 
 
 re: fclean all
 
