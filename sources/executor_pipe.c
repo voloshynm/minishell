@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_pipe.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:57:12 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/16 02:55:32 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:26:04 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,14 +116,14 @@ static int	upd_fd(int *cmd_index, int pipes[], t_list **current, int num_pipes)
 
 // PID Array: created to store the PIDs of each child process as they are forked
 // Storing PIDs: Each time call fork(),store the resulting PID in the pids array
-int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
+int	execute_pipe(t_shell *m, t_list **p, int nm, int i)
 {
-	int			pipes[8192];
+	int			pi[8192];
 	t_command	*c;
 
-	if (set_close_pipe(num_pipes, pipes, 'S') == -1)
+	if (set_close_pipe(nm, pi, 'S') == -1)
 		return (p_error2("pipe", NULL));
-	while ((*p) && ++i < num_pipes + 1)
+	while ((*p) && ++i < nm + 1)
 	{
 		c = (t_command *)((*p)->content);
 		g_sig_pid = fork();
@@ -131,8 +131,7 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 			return (p_error2("fork", NULL));
 		if (g_sig_pid == 0)
 		{
-			if (is_invalid_command_in_pipe(m, p)
-				|| upd_fd(&i, pipes, p, num_pipes) || setup_redirection(c, m))
+			if (is_inv_c_pipe(m, p) || upd_fd(&i, pi, p, nm) || set_redir(c, m))
 				exit(1);
 			if (is_builtin(c))
 				exit(run_builtin(m, p, (t_command *)((*p)->content)));
@@ -141,6 +140,7 @@ int	execute_pipe(t_shell *m, t_list **p, int num_pipes, int i)
 		}
 		*p = (*p)->next;
 	}
-	set_close_pipe(num_pipes, pipes, 'C');
-	return (restore_and_close_files(c, m), 0);
+	set_close_pipe(nm, pi, 'C');
+	restore_and_close_files(c, m);
+	return (wait_children(m));
 }

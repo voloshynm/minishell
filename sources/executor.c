@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/16 02:55:19 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:29:18 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	execute_command(t_shell *m, t_list **parser)
 	t_command	*c;
 
 	c = ((t_command *)((*parser)->content));
-	setup_redirection(c, m);
+	set_redir(c, m);
 	if (is_builtin(c))
 		return (run_builtin(m, parser, c));
 	if (c->full_path == NULL)
@@ -100,33 +100,6 @@ static void	advance_after_bypassing_splitter_or_and(t_list **p, t_shell *m)
 	}
 }
 
-// int	is_invalid_command_in_pipe(t_shell *m, t_list **p, int num_pipes)
-// {
-// 	t_list		*start;
-// 	t_command	*c;
-// 	bool		is_invalid;
-
-// 	start = *p;
-// 	is_invalid = false;
-// 	while (num_pipes + 1)
-// 	{
-// 		c = ((t_command *)((*p)->content));
-// 		if (c->full_path == NULL && !is_builtin(c))
-// 		{
-// 			if (!is_invalid)
-// 				printf("%s: command not found\n", c->cmd[0]);
-// 			is_invalid = true;
-// 		}
-// 		*p = (*p)->next;
-// 		num_pipes--;
-// 	}
-// 	if (is_invalid)
-// 		m->ex_status = CMD_NOT_EXIST;
-// 	else
-// 		*p = start;
-// 	return (is_invalid);
-// }
-
 /*
 **	take the standard output (stdout) of the command on its left
 		and send it as the standard input (stdin) to the command on its righ
@@ -153,7 +126,6 @@ int	executor_loop(t_shell *m)
 		{
 			num_pipes = count_pipes(m);
 			m->ex_status = execute_pipe(m, &p, num_pipes, -1);
-			wait_children(m);
 		}
 		else if (c->infile >= 0 && c->outfile >= 0)
 			m->ex_status = execute_command(m, &p);

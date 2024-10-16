@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/16 02:56:38 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:26:48 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	parse_redir(t_command *c, t_token token, char *filename, t_shell *m)
 	Redirect output if outfile is set and not STDOUT
 	if (c->outfile != STDOUT_FILENO)
 */
-int	setup_redirection(t_command *c, t_shell *m)
+int	set_redir(t_command *c, t_shell *m)
 {
 	if (c->infile != STDIN_FILENO)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/16 02:58:11 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/16 20:28:23 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <errno.h>
 # include <fcntl.h> // For open(), O_CREAT, etc.
 # include <limits.h>
-# include <sys/stat.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -30,6 +29,7 @@
 # include <stdlib.h> // For malloc(), free()
 # include <string.h> // For strcmp(), strlen()
 # include <sys/ioctl.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h> // For read(), write(), close(), unlink()
@@ -104,7 +104,7 @@ int			print_parser(t_shell *minihell);
 // parser_redirection.c: to handle redirections
 int			parse_redir(t_command *c, t_token token, char *filename,
 				t_shell *m);
-int			setup_redirection(t_command *c, t_shell *m);
+int			set_redir(t_command *c, t_shell *m);
 void		restore_and_close_files(t_command *c, t_shell *m);
 
 // executor.c: to execute the command
@@ -114,7 +114,7 @@ int			wait_children(t_shell *m);
 int			execute_command(t_shell *m, t_list **p);
 int			execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
 int			run_builtin(t_shell *m, t_list **parser, t_command *c);
-int			is_invalid_command_in_pipe(t_shell *m, t_list **p);
+int			is_inv_c_pipe(t_shell *m, t_list **p);
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
 void		handle_signals(void);

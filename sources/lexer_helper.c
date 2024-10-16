@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/16 17:44:43 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/16 22:22:08 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char	*process_str(char *str)
 	if (opening_quote_type == '\0')
 		return (str);
 	new_str = remove_quotes(str, opening_quote_type, -1);
+	free(str);
 	return (new_str);
 }
 
@@ -63,7 +64,6 @@ static int	get_length(char *start, char **input)
 
 char	*tokenize_input(char **input)
 {
-	char	*temp;
 	char	*str;
 	char	*start;
 	int		length;
@@ -74,15 +74,13 @@ char	*tokenize_input(char **input)
 		if (**input == '\'' || **input == '\"')
 			*input = handle_quotes(*input);
 	length = get_length(start, input);
+	if (!length)
+		return ("");
 	str = malloc(sizeof(char) * length + 1);
 	if (str == NULL)
 		return (p_error(ALLOC_FAILURE, NULL), NULL);
 	ft_strlcpy(str, start, length + 1);
-	temp = str;
-	str = process_str(str);
-	if (temp != str)
-		free(temp);
-	return (str);
+	return (process_str(str));
 }
 
 int	add_to_token_list(t_lexer **lexer, char *str)
