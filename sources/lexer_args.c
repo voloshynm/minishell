@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/16 22:19:43 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:54:41 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ static char	*replace_quest_mark(char *s, char *str)
 	if (!tmp_2)
 		tmp_2 = "";
 	tmp_1 = ft_strjoin(tmp_2, s + 1);
+	free(tmp_2);
 	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
 	if (tmp_1 == NULL || tmp_2 == NULL)
 		return (NULL);
@@ -88,11 +89,16 @@ static char	*replace_quest_mark(char *s, char *str)
 
 static char	*replace_env_arg(char *s, char *str)
 {
+	char *new_str;
+	
 	if (ft_isdigit(*s))
-		return (replace_digit(s, str));
+		new_str = replace_digit(s, str);
 	else if (*s == '?')
-		return (replace_quest_mark(s, str));
-	return (replace_real_arg(s, str));
+		new_str = replace_quest_mark(s, str);
+	else
+		new_str = replace_real_arg(s, str);
+	free(str);
+	return (new_str);
 }
 
 int	process_env_arg(char **str)
@@ -118,6 +124,8 @@ int	process_env_arg(char **str)
 			*str = replace_env_arg(++s, *str);
 			if (*str == NULL)
 				return (ALLOC_FAILURE);
+			if (!ft_strchr(*str, '$'))
+				break;
 		}
 		s++;
 	}
