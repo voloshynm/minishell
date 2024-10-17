@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/17 19:05:28 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/17 19:57:42 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,10 @@ static char	*replace_real_arg(char *s, char *str, char ***envp)
 	tmp_1 = ft_strndup(start, s - start);
 	if (tmp_1 == NULL)
 		return (NULL);
-	tmp_2 = get_value(envp[0][get_key_nmb(*envp, tmp_1)]);
-	// if (!tmp_2)
-	// 	tmp_2 = "";
+	if (get_key_nmb(*envp, tmp_1) >= 0)
+		tmp_2 = get_value(envp[0][get_key_nmb(*envp, tmp_1)]);
+	else
+	 	tmp_2 = tmp_1;
 	free(tmp_1);
 	tmp_1 = ft_strjoin(tmp_2, s);
 	free(tmp_2);

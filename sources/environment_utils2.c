@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:58:30 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/17 19:15:13 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/17 19:19:40 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	get_key_nmb(char **envp, char *key_value)
 		free(key_envp);
 	}
 	free(key);
-	return (0);
+	return (-1);
 }
 
 char	*get_key(char *key_value)
