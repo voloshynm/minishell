@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/17 17:54:41 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:46:24 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 	retrieves the chars before $ sign into tmp1. Then it joins tmp2 and tmp1
 	in fact replacing the name of variable with the value.
 */
-static char	*replace_real_arg(char *s, char *str)
+static char	*replace_real_arg(char *s, char *str, char ***envp)
 {
 	char	*new_str;
 	char	*tmp_1;
@@ -87,21 +87,21 @@ static char	*replace_quest_mark(char *s, char *str)
 	return (new_str);
 }
 
-static char	*replace_env_arg(char *s, char *str)
+static char	*replace_env_arg(char *s, char *str, char ***envp)
 {
-	char *new_str;
-	
+	char	*new_str;
+
 	if (ft_isdigit(*s))
 		new_str = replace_digit(s, str);
 	else if (*s == '?')
 		new_str = replace_quest_mark(s, str);
 	else
-		new_str = replace_real_arg(s, str);
+		new_str = replace_real_arg(s, str, envp);
 	free(str);
 	return (new_str);
 }
 
-int	process_env_arg(char **str)
+int	process_env_arg(char **str, char ***envp)
 {
 	int		s_qt;
 	int		d_qt;
@@ -121,11 +121,9 @@ int	process_env_arg(char **str)
 		}
 		if (!s_qt && *s == '$' && (ft_isalnum(*(s + 1)) || *(s + 1) == '?'))
 		{
-			*str = replace_env_arg(++s, *str);
-			if (*str == NULL)
-				return (ALLOC_FAILURE);
+			*str = replace_env_arg(++s, *str, envp);
 			if (!ft_strchr(*str, '$'))
-				break;
+				break ;
 		}
 		s++;
 	}

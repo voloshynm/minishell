@@ -6,13 +6,13 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/17 15:27:08 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:45:27 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*process_str(char *str)
+char	*process_str(char *str, char ***envp)
 {
 	char	*new_str;
 	char	opening_quote_type;
@@ -31,7 +31,7 @@ char	*process_str(char *str)
 		}
 	}
 	if (ft_strchr(str, '$'))
-		process_env_arg(&str);
+		process_env_arg(&str, envp);
 	if (opening_quote_type == '\0')
 		return (str);
 	new_str = remove_quotes(str, opening_quote_type, -1);
@@ -62,7 +62,7 @@ static int	get_length(char *start, char **input)
 	return (length);
 }
 
-char	*tokenize_input(char **input)
+char	*tokenize_input(char **input, char ***envp)
 {
 	char	*str;
 	char	*start;
@@ -80,7 +80,7 @@ char	*tokenize_input(char **input)
 	if (str == NULL)
 		return (p_error(ALLOC_FAILURE, NULL), NULL);
 	ft_strlcpy(str, start, length + 1);
-	return (process_str(str));
+	return (process_str(str, envp));
 }
 
 int	add_to_token_list(t_lexer **lexer, char *str)

@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/16 21:54:34 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:44:49 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	join_same_tokens(t_lexer *lexer)
 ^	added to the token list.
 TODO: implement error handler for "add_to_token_list(lexer, token);""
 */
-int	init_lexer(t_lexer **lexer, char *input)
+int	init_lexer(t_lexer **lexer, char *input, char ***envp)
 {
 	char	*token;
 
@@ -69,7 +69,7 @@ int	init_lexer(t_lexer **lexer, char *input)
 	}
 	while (input)
 	{
-		token = tokenize_input(&input);
+		token = tokenize_input(&input, envp);
 		if (!token)
 			return (QUOTE_ERROR);
 		add_to_token_list(lexer, token);

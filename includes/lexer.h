@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/17 15:22:41 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:44:16 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char		*handle_quotes(char *input);
 char		*remove_quotes(char *str, char quote_type, int in_quote);
 
 // lexer.c
-int			init_lexer(t_lexer **lexer, char *input);
+int			init_lexer(t_lexer **lexer, char *input, char ***envp);
 void		analyse_tokens(t_lexer *lexer);
 void		free_lexer(t_lexer **lexer);
 

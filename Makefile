@@ -30,10 +30,13 @@ MAGENTA = \033[0;95m
 CYAN = \033[0;96m
 WHITE = \033[0;97m
 
-all: libft ${NAME}
+all: ${NAME}
 
-${NAME}: ${OBJS}
+${NAME}: libft ${OBJS}
 	${CC} ${CFLAGS} ${OBJS} -o ${NAME} -L${LIBFT_PATH} -lft -lreadline
+
+bonus: libft ${OBJS}
+	${CC} ${CFLAGS} ${OBJS} -o ${NAME}_bonus -L${LIBFT_PATH} -lft -lreadline
 
 libft:
 	${MAKE} all -C ${LIBFT_PATH}
@@ -45,6 +48,7 @@ clean:
 
 fclean: clean
 	${RM} ${NAME};
+	${RM} ${NAME}_bonus;
 	${MAKE} -C ${LIBFT_PATH} fclean 
 
 re: fclean all
