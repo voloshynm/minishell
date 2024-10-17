@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/17 19:57:42 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/17 22:02:22 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,26 @@ static char	*replace_real_arg(char *s, char *str, char ***envp)
 	char	*tmp_1;
 	char	*tmp_2;
 	char	*start;
+	int		flag;
 
 	start = s;
-	if (ft_strcmp(s, "EMPTY") == 0)
-		return ("");
 	while (ft_isalnum(*s))
 		s++;
 	tmp_1 = ft_strndup(start, s - start);
 	if (tmp_1 == NULL)
 		return (NULL);
 	if (get_key_nmb(*envp, tmp_1) >= 0)
+	{
 		tmp_2 = get_value(envp[0][get_key_nmb(*envp, tmp_1)]);
+		flag = 0;
+	}
 	else
-	 	tmp_2 = tmp_1;
+	{
+		flag = 1;
+		tmp_2 = ft_strdup(" ");
+	}
 	free(tmp_1);
-	tmp_1 = ft_strjoin(tmp_2, s);
+	tmp_1 = ft_strjoin(tmp_2 + flag, s);
 	free(tmp_2);
 	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
 	if (tmp_1 == NULL || tmp_2 == NULL)
@@ -124,6 +129,7 @@ int	process_env_arg(char **str, char ***envp)
 		if (!s_qt && *s == '$' && (ft_isalnum(*(s + 1)) || *(s + 1) == '?'))
 		{
 			*str = replace_env_arg(++s, *str, envp);
+			s = *str;
 			if (!ft_strchr(*str, '$'))
 				break ;
 		}
