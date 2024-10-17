@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/17 18:44:16 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:51:21 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ int			is_token_pipish(t_lexer *l);
 
 // lexer_helper.c
 int			add_to_token_list(t_lexer **lexer, char *str);
-char		*tokenize_input(char **input);
-int			process_env_arg(char **str);
-char		*process_str(char *str);
+char		*tokenize_input(char **input, char ***envp);
+int			process_env_arg(char **str, char ***envp);
+char		*process_str(char *str, char ***envp);
 
 // lexer_quotes.c
 int			quotes_error(char *input);

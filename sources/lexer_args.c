@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/17 18:46:24 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/17 19:05:28 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,12 @@ static char	*replace_real_arg(char *s, char *str, char ***envp)
 	tmp_1 = ft_strndup(start, s - start);
 	if (tmp_1 == NULL)
 		return (NULL);
-	tmp_2 = getenv(tmp_1);
-	if (!tmp_2)
-		tmp_2 = "";
+	tmp_2 = get_value(envp[0][get_key_nmb(*envp, tmp_1)]);
+	// if (!tmp_2)
+	// 	tmp_2 = "";
 	free(tmp_1);
 	tmp_1 = ft_strjoin(tmp_2, s);
+	free(tmp_2);
 	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
 	if (tmp_1 == NULL || tmp_2 == NULL)
 		return (NULL);

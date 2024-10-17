@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/16 20:28:23 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:56:15 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int			is_var_in_envp(t_shell *m, char *key_value);
 // environment_utils2.c
 void		print_envp(t_shell *m);
 int			is_valid_key_value(const char *key_value);
-int			get_key_nmb(t_shell *m, char *key_value);
+int			get_key_nmb(char **envp, char *key_value);
 char		*get_key(char *key_value);
 char		*get_value(char *key_value);
 

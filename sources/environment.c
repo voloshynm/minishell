@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:03:31 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/17 18:36:42 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:55:30 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	rm_from_envp(t_shell *m, char *key_value)
 	int		j;
 
 	n = sizeof_2d_array(m->envp);
-	nmb = get_key_nmb(m, key_value);
+	nmb = get_key_nmb(m->envp, key_value);
 	if (nmb == -1)
 		return (0);
 	v = (char **)malloc((n) * sizeof(char *));

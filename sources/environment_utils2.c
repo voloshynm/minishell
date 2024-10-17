@@ -6,24 +6,32 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:58:30 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/07 21:22:46 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/17 19:15:13 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	get_key_nmb(t_shell *m, char *key_value)
+int	get_key_nmb(char **envp, char *key_value)
 {
-	int	len;
-	int	nmb;
+	int		nmb;
+	char	*key;
+	char	*key_envp;
 
-	len = ft_strlen(key_value);
 	nmb = -1;
-	while (m->envp[++nmb])
+	key = get_key(key_value);
+	while (envp[++nmb])
 	{
-		if (!ft_strncmp(m->envp[nmb], key_value, len))
+		key_envp = get_key(envp[nmb]);
+		if (!ft_strcmp(key_envp, key))
+		{
+			free(key);
+			free(key_envp);
 			return (nmb);
+		}
+		free(key_envp);
 	}
+	free(key);
 	return (0);
 }
 
