@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/17 22:02:22 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/18 16:31:06 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static char	*replace_real_arg(char *s, char *str, char ***envp)
 	char	*tmp_1;
 	char	*tmp_2;
 	char	*start;
-	int		flag;
 
 	start = s;
 	while (ft_isalnum(*s))
@@ -34,17 +33,11 @@ static char	*replace_real_arg(char *s, char *str, char ***envp)
 	if (tmp_1 == NULL)
 		return (NULL);
 	if (get_key_nmb(*envp, tmp_1) >= 0)
-	{
 		tmp_2 = get_value(envp[0][get_key_nmb(*envp, tmp_1)]);
-		flag = 0;
-	}
 	else
-	{
-		flag = 1;
-		tmp_2 = ft_strdup(" ");
-	}
+		tmp_2 = ft_strdup("");
 	free(tmp_1);
-	tmp_1 = ft_strjoin(tmp_2 + flag, s);
+	tmp_1 = ft_strjoin(tmp_2, s);
 	free(tmp_2);
 	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
 	if (tmp_1 == NULL || tmp_2 == NULL)
@@ -110,23 +103,22 @@ static char	*replace_env_arg(char *s, char *str, char ***envp)
 
 int	process_env_arg(char **str, char ***envp)
 {
-	int		s_qt;
-	int		d_qt;
+	int		qt[2];
 	char	*s;
 
-	s_qt = 0;
-	d_qt = 0;
+	qt[0] = 0;
+	qt[1] = 0;
 	s = *str;
 	while (*s)
 	{
-		if ((*s == '\'' && !d_qt) || (*s == '\"' && !s_qt))
+		if ((*s == '\'' && !qt[1]) || (*s == '\"' && !qt[0]))
 		{
-			s_qt ^= (*s == '\'');
-			d_qt ^= (*s == '\"');
+			qt[0] ^= (*s == '\'');
+			qt[1] ^= (*s == '\"');
 			s++;
 			continue ;
 		}
-		if (!s_qt && *s == '$' && (ft_isalnum(*(s + 1)) || *(s + 1) == '?'))
+		if (!qt[0] && *s == '$' && (ft_isalnum(*(s + 1)) || *(s + 1) == '?'))
 		{
 			*str = replace_env_arg(++s, *str, envp);
 			s = *str;

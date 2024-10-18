@@ -6,7 +6,7 @@
 /*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/17 18:10:26 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/18 16:31:19 by sandre-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,17 @@ int	run_builtin(t_shell *m, t_list **parser, t_command *c)
 static int	is_dir_or_file(t_command *c)
 {
 	struct stat	file_stat;
+	DIR			*dir;
 
 	file_stat.st_mode = 0;
 	stat(c->cmd[0], &file_stat);
-	if (opendir(c->cmd[0]) && (!ft_strncmp(c->cmd[0], "./", 2)
-			|| !ft_strncmp(c->cmd[0], "/", 1)))
+	dir = opendir(c->cmd[0]);
+	if (dir && (!ft_strncmp(c->cmd[0], "./", 2) || !ft_strncmp(c->cmd[0], "/",
+				1)))
+	{
+		closedir(dir);
 		return (write(2, "Error: Is a directory\n", 22), 126);
+	}
 	else if (!S_ISDIR(file_stat.st_mode) && !ft_strncmp(c->cmd[0], "./", 2))
 	{
 		if (access(c->cmd[0], F_OK) == 0)
