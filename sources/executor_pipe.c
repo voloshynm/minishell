@@ -61,7 +61,10 @@ int	wait_children(t_shell *m)
 	exited_pid = wait(&status);
 	while (exited_pid > 0)
 	{
-		m->ex_status = (status >> 8) & 0xFF;
+		if (WIFEXITED(status))
+			m->ex_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			m->ex_status = 128 + WTERMSIG(status);
 		exited_pid = wait(&status);
 	}
 	if (exited_pid == -1 && errno != ECHILD)

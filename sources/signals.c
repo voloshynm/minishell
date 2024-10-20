@@ -24,7 +24,7 @@ void	clear_rl_line(void)
 void	handle_sigint(int code)
 {
 	(void)code;
-	if (g_sig_pid == 2)
+	if (g_sig_pid == -255)
 	{
 		write(1, "\033[A", 3);
 		ioctl(0, TIOCSTI, "\n");
@@ -37,8 +37,16 @@ void	handle_sigint(int code)
 	g_sig_pid = 1;
 }
 
+void handle_sigquit(int code)
+{
+	(void)code;
+	write(1, "Quit (core dumped)\n", 20);
+	g_sig_pid = 2;
+	clear_rl_line();
+}
+
 void	handle_signals(void)
 {
 	signal(SIGINT, &handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, &handle_sigquit);
 }

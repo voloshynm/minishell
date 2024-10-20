@@ -19,18 +19,19 @@ static void	heredoc_readline(const char *delimiter, int tmp_fd)
 {
 	char	*line;
 
-	g_sig_pid = 2;
-	while (g_sig_pid == 2)
+	g_sig_pid = -255;
+	while (g_sig_pid == -255)
 	{
 		line = readline("heredoc> ");
-		if (!line)
-			break ;
-		if (g_sig_pid == 1)
+		if (line == NULL)
 		{
-			free(line);
+			write(STDOUT_FILENO, "warning: here-doc delimited by EOF (wanted `", 44);
+			write(STDOUT_FILENO, delimiter, ft_strlen(delimiter));
+			write(STDOUT_FILENO, "')\n", 3);
 			break ;
 		}
-		if (line && ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		if (g_sig_pid == 1
+			|| (line && ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0))
 		{
 			free(line);
 			break ;
@@ -60,8 +61,12 @@ static int	handle_heredoc(const char *delimiter, t_shell *m)
 	tmp_fd = open(tmp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
 		return (p_error(TMP_FILE_CREATION_ERR, NULL));
+	signal(SIGQUIT, SIG_IGN);
 	heredoc_readline(delimiter, tmp_fd);
+	signal(SIGQUIT, SIG_DFL);
 	close(tmp_fd);
+	if (g_sig_pid != -255)
+		return (0 - g_sig_pid - 129);
 	tmp_fd = open(tmp_filename, O_RDONLY);
 	if (tmp_fd < 0)
 		return (p_error(TMP_FILE_CREATION_ERR, NULL));
@@ -82,11 +87,13 @@ int	parse_redir(t_command *c, t_token token, char *filename, t_shell *m)
 		c->outfile = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (token == HEREDOC)
 		c->infile = handle_heredoc(filename, m);
-	if (c->infile < 0 || c->outfile < 0)
+	if (c->infile == -1 || c->outfile == -1)
 	{
 		perror(" ");
 		return (1);
 	}
+	else if (c->infile < 0)
+		return (0 - c->infile);
 	return (0);
 }
 
