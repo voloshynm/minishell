@@ -34,11 +34,12 @@ void	reset_vars(t_shell *m)
 
 void	init_shell_vars(t_shell *m, char **envp)
 {
-	m->envpath = ft_split(getenv("PATH"), ':');
+	m->envpath = NULL;
 	m->original_pwd = ft_strdup(getenv("PWD"));
 	if (!m->original_pwd)
 		p_error(ALLOC_FAILURE, NULL);
 	init_envp(m, envp);
+	update_path_var(m);
 	m->pwd = ft_strdup(m->original_pwd);
 	m->oldpwd = ft_strdup(getenv("OLDPWD"));
 	if (!m->oldpwd)
@@ -53,7 +54,8 @@ void	free_all_resources(t_shell *m)
 	free_parser(&m->parser);
 	free_lexer(&m->lexer);
 	free_ft_split(m->envp);
-	free_ft_split(m->envpath);
+	if (m->envpath && *m->envpath)
+		free_ft_split(m->envpath);
 	free(m->original_pwd);
 	if (m->pwd)
 		free(m->pwd);

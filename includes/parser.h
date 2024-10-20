@@ -24,6 +24,8 @@ typedef struct s_command
 {
 	char	**cmd;
 	char	*full_path;
+	char	*input_path;
+	int		path_offset;
 	int		infile;
 	int		outfile;
 	t_token	cmd_splitter;

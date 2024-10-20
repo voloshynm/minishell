@@ -12,6 +12,27 @@
 
 #include "../includes/minishell.h"
 
+void	update_path_var(t_shell *m)
+{
+	char	*paths;
+	char	**envp;
+	int		key_index;
+
+	envp = m->envp;
+	if (m->envpath && *m->envpath)
+		free_ft_split(m->envpath);
+	key_index = get_key_nmb(envp, "PATH");
+	if (key_index >= 0)
+		paths = get_value(envp[key_index]);
+	if (key_index < 0 || !paths)
+	{
+		m->envpath = NULL;
+		return ;
+	}
+	m->envpath = ft_split(paths, ':');
+	free(paths);
+}
+
 int	is_builtin(t_command *c)
 {
 	if (!ft_strcmp(c->cmd[0], "cd"))
@@ -38,7 +59,7 @@ int	is_bin(t_shell *m, t_command *c)
 	int				i;
 
 	i = -1;
-	while (m->envpath[++i])
+	while (m->envpath && m->envpath[++i])
 	{
 		directory = opendir(m->envpath[i]);
 		while (directory)
@@ -46,9 +67,9 @@ int	is_bin(t_shell *m, t_command *c)
 			entry = readdir(directory);
 			if (!entry)
 				break ;
-			if (!ft_strcmp(c->cmd[0], entry->d_name))
+			if (!ft_strcmp(c->cmd[0] + c->path_offset, entry->d_name))
 			{
-				c->full_path = ft_strdup(m->envpath[i]);
+					c->full_path = ft_strdup(m->envpath[i]);
 				closedir(directory);
 				return (1);
 			}
@@ -58,12 +79,29 @@ int	is_bin(t_shell *m, t_command *c)
 	return (0);
 }
 
+void	parse_input_path(t_command *c)
+{
+	char	*path;
+	char	*path_end;
+
+	c->input_path = NULL;
+	c->path_offset = 0;
+	path = c->cmd[0];
+	path_end = ft_strrchr(path, '/');
+	if (!path_end)
+		return ;
+	c->input_path = ft_strndup(path, path_end - path);
+	c->path_offset = ft_strlen(c->input_path) + 1;
+}
+
 int	parse_full_path(t_command *c, t_shell *m)
 {
 	char	*temp;
 
 	if (c->cmd[0] == NULL)
 		return (1);
+	parse_input_path(c);
+	update_path_var(m);
 	if (!is_builtin(c))
 		is_bin(m, c);
 	if (c->full_path)
@@ -72,7 +110,10 @@ int	parse_full_path(t_command *c, t_shell *m)
 		if (!temp)
 			return (p_error(ALLOC_FAILURE, NULL));
 		free(c->full_path);
-		c->full_path = ft_strjoin(temp, c->cmd[0]);
+		if (!c->path_offset)
+			c->full_path = ft_strjoin(temp, c->cmd[0]);
+		else
+			c->full_path = ft_strdup(c->cmd[0]);
 		free(temp);
 		if (!c->full_path)
 			return (p_error(ALLOC_FAILURE, NULL));
@@ -101,6 +142,7 @@ void	free_parser(t_list **parser)
 			free(command->cmd);
 		}
 		free(command->full_path);
+		free(command->input_path);
 		free(command);
 		free(p);
 	}

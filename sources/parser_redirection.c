@@ -25,7 +25,7 @@ static void	heredoc_readline(const char *delimiter, int tmp_fd)
 		line = readline("heredoc> ");
 		if (line == NULL)
 		{
-			write(STDOUT_FILENO, "warning: here-doc delimited by EOF (wanted `", 44);
+			write(STDOUT_FILENO, "warning: heredoc delim by EOF (wanted `", 40);
 			write(STDOUT_FILENO, delimiter, ft_strlen(delimiter));
 			write(STDOUT_FILENO, "')\n", 3);
 			break ;

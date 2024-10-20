@@ -16,7 +16,7 @@ void	clear_rl_line(void)
 {
 	rl_replace_line("", 0);
 	rl_on_new_line();
-	if (g_sig_pid == 0 || g_sig_pid == 1)
+	if (g_sig_pid == 0 || g_sig_pid == 1 || g_sig_pid == 2)
 		rl_redisplay();
 }
 
@@ -37,12 +37,12 @@ void	handle_sigint(int code)
 	g_sig_pid = 1;
 }
 
-void handle_sigquit(int code)
+void	handle_sigquit(int code)
 {
 	(void)code;
 	write(1, "Quit (core dumped)\n", 20);
-	g_sig_pid = 2;
 	clear_rl_line();
+	g_sig_pid = 2;
 }
 
 void	handle_signals(void)

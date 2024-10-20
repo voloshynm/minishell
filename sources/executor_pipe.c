@@ -63,7 +63,7 @@ int	wait_children(t_shell *m)
 	{
 		if (WIFEXITED(status))
 			m->ex_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
+		else if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
 			m->ex_status = 128 + WTERMSIG(status);
 		exited_pid = wait(&status);
 	}

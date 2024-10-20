@@ -98,7 +98,7 @@ void		free_parser(t_list **parser);
 int			parse_full_path(t_command *c, t_shell *m);
 int			is_builtin(t_command *c);
 int			is_bin(t_shell *m, t_command *p);
-
+void		update_path_var(t_shell *m);
 int			print_parser(t_shell *minihell);
 
 // parser_redirection.c: to handle redirections
@@ -119,6 +119,8 @@ int			is_inv_c_pipe(t_shell *m, t_list **p);
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
 void		handle_signals(void);
 void		handle_sigint(int code);
+void		handle_sigquit(int code);
+void		clear_rl_line(void);
 
 // Builtins
 int			echo(char **arg);

@@ -57,7 +57,7 @@ static int	is_dir_or_file(t_command *c)
 	else if (!S_ISDIR(file_stat.st_mode) && access(c->cmd[0], X_OK) < 0
 		&& (!ft_strncmp(c->cmd[0], "/", 1)))
 		return (write(2, "Error: No such file or directory\n", 33), 127);
-	return (p_error(CMD_NOT_EXIST, NULL));
+	return (write(2, "Error: No such file or directory\n", 33), 127);
 }
 
 int	execute_command(t_shell *m, t_list **parser)
@@ -79,7 +79,7 @@ int	execute_command(t_shell *m, t_list **parser)
 	else if (g_sig_pid == 0)
 	{
 		execve(c->full_path, c->cmd, NULL);
-		exit(p_error2("execve", NULL));
+		exit(p_error2(c->cmd[0], NULL));
 	}
 	restore_and_close_files(c, m);
 	(*parser) = (*parser)->next;
