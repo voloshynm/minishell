@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/21 23:15:13 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/21 23:18:58 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@
 
 # define PROMPT "\001\033[94m\002minishell\001\033[1;31m\002>\001\033[0m\002"
 # define MAX_FDS 4096
+
+extern int	g_sig_pid;
 
 /*
 **	*cmds	= linked list of t_command with all commands, separated by pipes
