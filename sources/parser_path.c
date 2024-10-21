@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/15 14:55:56 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/21 22:44:57 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,10 @@ void	update_path_var(t_shell *m)
 
 int	is_builtin(t_command *c)
 {
-	if (!ft_strcmp(c->cmd[0], "cd"))
-		return (1);
-	else if (!ft_strcmp(c->cmd[0], "pwd"))
-		return (1);
-	else if (!ft_strcmp(c->cmd[0], "echo"))
-		return (1);
-	else if (!ft_strcmp(c->cmd[0], "export"))
-		return (1);
-	else if (!ft_strcmp(c->cmd[0], "env"))
-		return (1);
-	else if (!ft_strcmp(c->cmd[0], "unset"))
-		return (1);
-	else if (!ft_strcmp(c->cmd[0], "exit"))
-		return (1);
-	return (0);
+	return (!ft_strcmp(c->cmd[0], "cd") || !ft_strcmp(c->cmd[0], "pwd")
+		|| !ft_strcmp(c->cmd[0], "echo") || !ft_strcmp(c->cmd[0], "export")
+		|| !ft_strcmp(c->cmd[0], "env") || !ft_strcmp(c->cmd[0], "unset")
+		|| !ft_strcmp(c->cmd[0], "exit"));
 }
 
 int	is_bin(t_shell *m, t_command *c)
@@ -59,6 +48,7 @@ int	is_bin(t_shell *m, t_command *c)
 	int				i;
 
 	i = -1;
+	update_path_var(m);
 	while (m->envpath && m->envpath[++i])
 	{
 		directory = opendir(m->envpath[i]);
@@ -67,9 +57,9 @@ int	is_bin(t_shell *m, t_command *c)
 			entry = readdir(directory);
 			if (!entry)
 				break ;
-			if (!ft_strcmp(c->cmd[0] + c->path_offset, entry->d_name))
+			if (!ft_strcmp(c->cmd[0], entry->d_name))
 			{
-					c->full_path = ft_strdup(m->envpath[i]);
+				c->full_path = ft_strdup(m->envpath[i]);
 				closedir(directory);
 				return (1);
 			}
@@ -79,44 +69,31 @@ int	is_bin(t_shell *m, t_command *c)
 	return (0);
 }
 
-void	parse_input_path(t_command *c)
-{
-	char	*path;
-	char	*path_end;
-
-	c->input_path = NULL;
-	c->path_offset = 0;
-	path = c->cmd[0];
-	path_end = ft_strrchr(path, '/');
-	if (!path_end)
-		return ;
-	c->input_path = ft_strndup(path, path_end - path);
-	c->path_offset = ft_strlen(c->input_path) + 1;
-}
-
 int	parse_full_path(t_command *c, t_shell *m)
 {
-	char	*temp;
+	char		*temp;
+	struct stat	s;
 
 	if (c->cmd[0] == NULL)
 		return (1);
-	parse_input_path(c);
-	update_path_var(m);
 	if (!is_builtin(c))
-		is_bin(m, c);
-	if (c->full_path)
 	{
-		temp = ft_strjoin(c->full_path, "/");
-		if (!temp)
-			return (p_error(ALLOC_FAILURE, NULL));
-		free(c->full_path);
-		if (!c->path_offset)
+		if ((c->cmd[0][0] == '/' || c->cmd[0][0] == '.') && stat(c->cmd[0], &s))
+		{
+			if (S_ISDIR(s.st_mode))
+				return (0);
+			if (access(c->cmd[0], X_OK) == 0)
+				c->full_path = ft_strdup(c->cmd[0]);
+		}
+		else if (is_bin(m, c) && c->full_path)
+		{
+			temp = ft_strjoin(c->full_path, "/");
+			free(c->full_path);
 			c->full_path = ft_strjoin(temp, c->cmd[0]);
-		else
-			c->full_path = ft_strdup(c->cmd[0]);
-		free(temp);
-		if (!c->full_path)
-			return (p_error(ALLOC_FAILURE, NULL));
+			free(temp);
+			if (!c->full_path)
+				return (p_error(ALLOC_FAILURE, NULL));
+		}
 	}
 	return (0);
 }

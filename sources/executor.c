@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/18 16:31:19 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/21 22:09:39 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	is_dir_or_file(t_command *c)
 	else if (!S_ISDIR(file_stat.st_mode) && access(c->cmd[0], X_OK) < 0
 		&& (!ft_strncmp(c->cmd[0], "/", 1)))
 		return (write(2, "Error: No such file or directory\n", 33), 127);
-	return (write(2, "Error: No such file or directory\n", 33), 127);
+	return (p_error(CMD_NOT_EXIST, NULL));
 }
 
 int	execute_command(t_shell *m, t_list **parser)
@@ -122,6 +122,7 @@ int	executor_loop(t_shell *m)
 	int			num_pipes;
 
 	p = m->parser;
+	signal(SIGQUIT, &handle_sigquit);
 	while (p)
 	{
 		c = ((t_command *)(p->content));

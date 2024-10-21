@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:03:31 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/17 18:55:30 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/21 22:36:42 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	init_envp(t_shell *m, char **envp_arg)
 {
 	char	**v;
-	char 	**envp_arg_s;
+	char	**envp_arg_s;
 	int		n;
 
 	envp_arg_s = envp_arg;

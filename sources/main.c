@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/17 23:36:58 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/21 22:41:56 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,11 @@ void	prompt_loop(t_shell *m)
 
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
 		m->input = readline(PROMPT);
 		if (m->input == NULL)
 		{
-			printf("exit\n");
+			write(1, "exit\n", 5);
 			free_all_resources(m);
 			break ;
 		}
@@ -87,14 +88,12 @@ void	prompt_loop(t_shell *m)
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input, &m->envp))
 		{
-			parse_commands(m, m->lexer);
-			executor_loop(m);
+			if (!parse_commands(m, m->lexer))
+				executor_loop(m);
 			free_parser(&m->parser);
-			free_lexer(&m->lexer);
-			reset_vars(m);
 		}
-		else
-			free_lexer(&m->lexer);
+		free_lexer(&m->lexer);
+		reset_vars(m);
 		free(input_ptr);
 	}
 }

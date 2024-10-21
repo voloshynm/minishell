@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:19:38 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/04 15:54:20 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/21 21:06:02 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,5 @@ void	handle_sigquit(int code)
 void	handle_signals(void)
 {
 	signal(SIGINT, &handle_sigint);
-	signal(SIGQUIT, &handle_sigquit);
+	signal(SIGQUIT, SIG_IGN);
 }
