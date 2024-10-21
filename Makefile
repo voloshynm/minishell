@@ -10,9 +10,10 @@ SRC =   sources/main.c 															\
 		sources/builtins/cd.c sources/builtins/pwd.c sources/builtins/export.c 	\
 		sources/builtins/echo.c sources/builtins/unset.c sources/builtins/env.c \
 		sources/builtins/exit.c													\
-		
+
 OBJS = ${SRC:.c=.o}
 NAME = minishell
+BONUS = minishell_bonus
 CC = cc
 CFLAGS = -g -Werror -Wextra -Wall
 LIBFT_PATH = ./libft
@@ -32,18 +33,19 @@ WHITE = \033[0;97m
 
 all: ${NAME}
 
-${NAME}: libft ${OBJS}
+${NAME}: ${OBJS}
+	${MAKE} -C ${LIBFT_PATH}
 	${CC} ${CFLAGS} ${OBJS} -o ${NAME} -L${LIBFT_PATH} -lft -lreadline
 
-bonus: libft ${OBJS}
-	${CC} ${CFLAGS} ${OBJS} -o ${NAME}_bonus -L${LIBFT_PATH} -lft -lreadline
+${BONUS}: ${OBJS_BONUS}
+	${MAKE} -C ${LIBFT_PATH}
+	${CC} ${CFLAGS} ${OBJS_BONUS} -o ${BONUS} -L${LIBFT_PATH} -lft -lreadline
 
-libft:
-	${MAKE} all -C ${LIBFT_PATH}
+bonus: ${BONUS}
 
 clean:
 	${MAKE} -C ${LIBFT_PATH} clean 
-	${RM} ${OBJS}
+	${RM} ${OBJS} ${OBJS_BONUS}
 
 
 fclean: clean
@@ -53,4 +55,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re libft
+.PHONY: all clean fclean re

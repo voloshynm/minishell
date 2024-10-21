@@ -6,13 +6,13 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/21 22:41:56 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/21 23:14:57 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int		g_sig_pid;
+int	g_sig_pid;
 
 /*
 ^FIX PIPE SEG FAULT,  last_splitter_token was not being reset,
@@ -88,8 +88,8 @@ void	prompt_loop(t_shell *m)
 		add_history(m->input);
 		if (!init_lexer(&m->lexer, m->input, &m->envp))
 		{
-			if (!parse_commands(m, m->lexer))
-				executor_loop(m);
+			parse_commands(m, m->lexer);
+			executor_loop(m);
 			free_parser(&m->parser);
 		}
 		free_lexer(&m->lexer);
