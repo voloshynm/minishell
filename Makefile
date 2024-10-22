@@ -12,6 +12,7 @@ SRC =   sources/main.c 															\
 		sources/builtins/exit.c													\
 
 OBJS = ${SRC:.c=.o}
+OBJS_BONUS = ${SRC:.c=.o}
 NAME = minishell
 BONUS = minishell_bonus
 CC = cc

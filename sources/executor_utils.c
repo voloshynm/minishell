@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 02:12:31 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/16 20:27:53 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/22 20:51:22 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	is_inv_c_pipe(t_shell *m, t_list **p)
 
 	is_invalid = false;
 	c = ((t_command *)((*p)->content));
+	if (!c->cmd[0] || !c->cmd[0][0])
+		return (1);
 	if (c->full_path == NULL && !is_builtin(c))
 	{
 		if (!is_invalid)

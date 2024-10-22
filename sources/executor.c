@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/21 22:09:39 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/22 21:03:42 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,14 @@ int	execute_command(t_shell *m, t_list **parser)
 
 	c = ((t_command *)((*parser)->content));
 	set_redir(c, m);
+	if (!c || !c->cmd || !c->cmd[0] || !c->cmd[0][0])
+		return (1);
 	if (is_builtin(c))
 		return (run_builtin(m, parser, c));
 	if (c->full_path == NULL)
 	{
 		(*parser) = (*parser)->next;
+		restore_and_close_files(c, m);
 		return (is_dir_or_file(c));
 	}
 	g_sig_pid = fork();
@@ -134,7 +137,7 @@ int	executor_loop(t_shell *m)
 			num_pipes = count_pipes(m);
 			m->ex_status = execute_pipe(m, &p, num_pipes, -1);
 		}
-		else if (c->infile >= 0 && c->outfile >= 0)
+		else if (c->infile >= 0 && c->outfile >= 0 && c->cmd[0] && c->cmd[0][0])
 			m->ex_status = execute_command(m, &p);
 		else
 			p = p->next;

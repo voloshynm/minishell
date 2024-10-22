@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 19:19:38 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/21 21:06:02 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/22 23:03:23 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	clear_rl_line(void)
 {
 	rl_replace_line("", 0);
 	rl_on_new_line();
-	if (g_sig_pid == 0 || g_sig_pid == 1 || g_sig_pid == 2)
+	if (g_sig_pid == 0 || g_sig_pid == 131 || g_sig_pid == 130)
 		rl_redisplay();
 }
 
@@ -34,7 +34,7 @@ void	handle_sigint(int code)
 		write(1, "\n", 1);
 		clear_rl_line();
 	}
-	g_sig_pid = 1;
+	g_sig_pid = 130;
 }
 
 void	handle_sigquit(int code)
@@ -42,7 +42,7 @@ void	handle_sigquit(int code)
 	(void)code;
 	write(1, "Quit (core dumped)\n", 20);
 	clear_rl_line();
-	g_sig_pid = 2;
+	g_sig_pid = 131;
 }
 
 void	handle_signals(void)

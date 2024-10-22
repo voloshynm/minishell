@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirection.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/16 20:26:48 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/22 21:46:33 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	heredoc_readline(const char *delimiter, int tmp_fd)
 			write(STDOUT_FILENO, "')\n", 3);
 			break ;
 		}
-		if (g_sig_pid == 1
+		if (g_sig_pid == 130
 			|| (line && ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0))
 		{
 			free(line);
@@ -66,11 +66,14 @@ static int	handle_heredoc(const char *delimiter, t_shell *m)
 	signal(SIGQUIT, SIG_DFL);
 	close(tmp_fd);
 	if (g_sig_pid != -255)
-		return (0 - g_sig_pid - 129);
+	{
+		free(tmp_filename);
+		return (0 - g_sig_pid);
+	}
 	tmp_fd = open(tmp_filename, O_RDONLY);
+	free(tmp_filename);
 	if (tmp_fd < 0)
 		return (p_error(TMP_FILE_CREATION_ERR, NULL));
-	free(tmp_filename);
 	return (tmp_fd);
 }
 

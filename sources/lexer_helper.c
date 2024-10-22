@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_helper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/18 14:24:34 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/22 22:59:44 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ char	*process_str(char *str, char ***envp)
 	int		i;
 	int		count;
 
-	opening_quote_type = '\0';
+	if (ft_strpbrk(str, "\'\""))
+		opening_quote_type = *(ft_strpbrk(str, "\'\""));
+	else
+		opening_quote_type = '\0';
 	i = -1;
 	count = 0;
 	while (str[++i])
 	{
-		if (str[i] == '\"' || str[i] == '\'')
-		{
-			opening_quote_type = str[i];
+		if (str[i] == opening_quote_type)
 			count++;
-		}
 	}
 	if (ft_strchr(str, '$'))
 		process_env_arg(&str, envp);

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:03:31 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/21 22:36:42 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/22 22:31:20 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,19 +69,19 @@ int	update_var_in_envp(t_shell *m, char *key_value)
 	envp = m->envp;
 	while (*envp && value)
 	{
-		if (!ft_strncmp(key, *envp, ft_strlen(key)))
+		if (!ft_strncmp(key, *(envp++), ft_strlen(key)))
 		{
 			free(value);
-			value = ft_strdup(*envp);
+			value = ft_strdup(*(envp - 1));
 			rm_from_envp(m, value);
 			add_to_envp(m, key_value);
 			free(key);
 			free(value);
 			return (OK);
 		}
-		envp++;
 	}
-	add_to_envp(m, key_value);
+	if (value)
+		add_to_envp(m, key_value);
 	free(key);
 	free(value);
 	return (OK);
