@@ -3,49 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/18 16:31:06 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:31:19 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 /*
-**	Pointer *s shows start of the name of variable. After moving till the end
-	of alphanum. Upon retrieving non-alphanum, it gets the value of variable
-	adds whatever left after the name and stores into tmp1. From lexer->str it
-	retrieves the chars before $ sign into tmp1. Then it joins tmp2 and tmp1
-	in fact replacing the name of variable with the value.
+** Function to replace the environment variable in str with its value
+** s is the pointer after the '$', so it's the start of the variable name
+** Find the end of the variable name (assumed to be alphanum or underscores)
+** Extract the variable name
+** Find the corresponding value in envp
+** Allocate space for the new string
+** Copy the part before the variable
+** -1 to account for the '$'
+** Copy the environment value
+** Copy the remaining part of the string after the variable
 */
 static char	*replace_real_arg(char *s, char *str, char ***envp)
 {
-	char	*new_str;
-	char	*tmp_1;
-	char	*tmp_2;
-	char	*start;
-
-	start = s;
-	while (ft_isalnum(*s))
-		s++;
-	tmp_1 = ft_strndup(start, s - start);
-	if (tmp_1 == NULL)
+	char	*v_st;
+	char	*v_end;
+	char	*result;
+	char 	*var_name;
+	char 	*env_val;
+	
+	v_st = s;
+	v_end = s;
+	while (*v_end && (ft_isalnum(*v_end) || *v_end == '_'))
+		v_end++;
+	var_name = ft_strndup(v_st, v_end - v_st);
+	env_val = get_env_value(var_name, envp);
+	free(var_name);
+	result = malloc(ft_strlen(str) - (v_end - v_st) + ft_strlen(env_val) + 1);
+	if (!result)
 		return (NULL);
-	if (get_key_nmb(*envp, tmp_1) >= 0)
-		tmp_2 = get_value(envp[0][get_key_nmb(*envp, tmp_1)]);
-	else
-		tmp_2 = ft_strdup("");
-	free(tmp_1);
-	tmp_1 = ft_strjoin(tmp_2, s);
-	free(tmp_2);
-	tmp_2 = ft_strndup(str, ft_strlen(str) - ft_strlen(start) - 1);
-	if (tmp_1 == NULL || tmp_2 == NULL)
-		return (NULL);
-	new_str = ft_strjoin(tmp_2, tmp_1);
-	free(tmp_1);
-	free(tmp_2);
-	return (new_str);
+	ft_strncpy(result, str, (s - str - 1));
+	ft_strcpy(result + (s - str - 1), env_val);
+	ft_strcpy(result + (s - str - 1) + ft_strlen(env_val), v_end);
+	return (result);
 }
 
 static char	*replace_digit(char *s, char *str)
@@ -122,7 +122,7 @@ int	process_env_arg(char **str, char ***envp)
 		{
 			*str = replace_env_arg(++s, *str, envp);
 			s = *str;
-			if (!ft_strchr(*str, '$'))
+			if (!s || !ft_strchr(*str, '$'))
 				break ;
 		}
 		s++;

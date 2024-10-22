@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 15:31:19 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/09/23 02:34:41 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:39:21 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ char				*ft_strrev(char *str);
 int					ft_strcount(const char *str, char c);
 int					ft_str_starts_with(const char *str, const char *start);
 int					ft_str_ends_with(const char *str, const char *start);
+char				*ft_strcpy(char *dest, char *src);
+char				*ft_strncpy(char *dest, char *src, unsigned int n);
 
 // Linked list functions///////////////////////////////////////////////////////
 typedef struct s_list

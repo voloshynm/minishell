@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/19 15:01:33 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/22 18:31:30 by mvoloshy         ###   ########.fr       */
+/*   Created: 2023/11/29 20:24:30 by mvoloshy          #+#    #+#             */
+/*   Updated: 2024/10/22 18:28:25 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-/*
-* The ft_strlen function calculates the length of the string pointed to by str.
-*/
-size_t	ft_strlen(const char *str)
+char	*ft_strcpy(char *dest, char *src)
 {
-	int	x;
+	char	*saved_dest;
 
-	if (str == NULL)
-		return (0);
-	x = 0;
-	while (*str++)
-		x++;
-	return (x);
+	saved_dest = dest;
+	while (src && *src != '\0')
+	{
+		*dest = *src;
+		src++;
+		dest++;
+	}
+	*dest++ = '\0';
+	return (saved_dest);
 }
+

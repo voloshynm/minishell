@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/21 23:18:58 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:24:51 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,11 +137,12 @@ int			add_to_envp(t_shell *m, char *key_value);
 int			update_var_in_envp(t_shell *m, char *key_value);
 int			rm_from_envp(t_shell *m, char *key_value);
 
-// environment_utils2.c
+// environment_utils.c
 void		ft_str_swap(char **a, char **b);
 void		ft_str_bubble_sort(char **arr, int n);
 int			sizeof_2d_array(char **arr);
 int			is_var_in_envp(t_shell *m, char *key_value);
+char		*get_env_value(char *var, char ***envp);
 
 // environment_utils2.c
 void		print_envp(t_shell *m);
