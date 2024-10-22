@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:29:10 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/22 17:25:21 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:38:48 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	sizeof_2d_array(char **arr)
 		n++;
 	return (n);
 }
+
 /*
 **	Helper function to get environment variable's value from envp
 **	Compare the beginning of envp[i] with var and look for '=' after the var name
@@ -69,14 +70,14 @@ char	*get_env_value(char *var, char ***envp)
 {
 	int		i;
 	size_t	len;
-	
+
 	i = 0;
 	len = strlen(var);
 	while ((*envp)[i])
 	{
 		if (strncmp((*envp)[i], var, len) == 0 && (*envp)[i][len] == '=')
-			return (*envp)[i] + len + 1;
+			return ((*envp)[i] + len + 1);
 		i++;
 	}
-	return NULL;
+	return (NULL);
 }

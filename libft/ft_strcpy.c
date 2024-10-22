@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 20:24:30 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/22 18:28:25 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:36:37 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,3 @@ char	*ft_strcpy(char *dest, char *src)
 	*dest++ = '\0';
 	return (saved_dest);
 }
-

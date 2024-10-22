@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/22 18:31:19 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:37:17 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ static char	*replace_real_arg(char *s, char *str, char ***envp)
 	char	*v_st;
 	char	*v_end;
 	char	*result;
-	char 	*var_name;
-	char 	*env_val;
-	
+	char	*var_name;
+	char	*env_val;
+
 	v_st = s;
 	v_end = s;
 	while (*v_end && (ft_isalnum(*v_end) || *v_end == '_'))
