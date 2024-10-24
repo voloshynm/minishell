@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/17 23:37:04 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:31:01 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	init_lexer(t_lexer **lexer, char *input, char ***envp)
 	{
 		token = tokenize_input(&input, envp);
 		if (!token)
-			return (QUOTE_ERROR);
+			continue ;
 		add_to_token_list(lexer, token);
 		if (input)
 			if (ft_strchr(">|<&", *(input - 1)))

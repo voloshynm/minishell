@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/22 22:59:44 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:29:51 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ char	*process_str(char *str, char ***envp)
 	}
 	if (ft_strchr(str, '$'))
 		process_env_arg(&str, envp);
-	if (opening_quote_type == '\0')
-		return (str);
 	new_str = remove_quotes(str, opening_quote_type, -1);
 	free(str);
 	return (new_str);
