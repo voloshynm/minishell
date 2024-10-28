@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/22 17:24:51 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/28 21:41:35 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,10 @@ int			wait_children(t_shell *m);
 int			execute_command(t_shell *m, t_list **p);
 int			execute_pipe(t_shell *m, t_list **parser, int num_pipes, int i);
 int			run_builtin(t_shell *m, t_list **parser, t_command *c);
+
+// executor_utils.c: useful functions for execution and parsing
 int			is_inv_c_pipe(t_shell *m, t_list **p);
+int			get_cmd_len(t_lexer *lexer);
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
 void		handle_signals(void);

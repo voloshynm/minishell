@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 02:12:31 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/22 20:51:22 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/28 21:40:17 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,23 @@ int	is_inv_c_pipe(t_shell *m, t_list **p)
 	if (is_invalid)
 		m->ex_status = CMD_NOT_EXIST;
 	return (is_invalid);
+}
+
+int	get_cmd_len(t_lexer *lexer)
+{
+	int		len;
+	int		redir;
+	t_lexer	*l;
+
+	l = lexer;
+	len = 0;
+	redir = 0;
+	while (l && !is_token_pipish(l))
+	{
+		if (is_token_redir(l))
+			redir += 2;
+		len++;
+		l = l->next;
+	}
+	return (len);
 }

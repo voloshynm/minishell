@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandre-a <sandre-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/16 20:34:15 by sandre-a         ###   ########.fr       */
+/*   Updated: 2024/10/28 22:25:22 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,6 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 	(*c)->cmd_splitter = NONE;
 	(*c)->last_splitter_token = m->last_splitter_token;
 	return (OK);
-}
-
-static int	get_cmd_len(t_lexer *lexer)
-{
-	int		len;
-	int		redir;
-	t_lexer	*l;
-
-	l = lexer;
-	len = 0;
-	redir = 0;
-	while (l && !is_token_pipish(l))
-	{
-		if (is_token_redir(l))
-			redir += 2;
-		len++;
-		l = l->next;
-	}
-	return (len);
 }
 
 static int	parse_command(t_command *c, t_lexer **l, t_shell *m)
@@ -95,6 +76,19 @@ static int	add_to_command_list(t_command *c, t_lexer **l)
 	return (0);
 }
 
+static void	parse_redir_loop(t_shell *m, t_lexer **l, t_command *c)
+{
+	if (!m->ex_status && (*l)->prev && (*l)->prev->prev
+		&& is_token_redir((*l)->prev->prev))
+	{
+		if (c->infile && ((*l)->token == IN || (*l)->token == HEREDOC))
+			close(c->infile);
+	}
+	if (!m->ex_status)
+		m->ex_status = parse_redir(c, (*l)->token, ((*l)->next)->str, m);
+	(*l) = (*l)->next->next;
+}
+
 int	parse_commands(t_shell *m, t_lexer *l)
 {
 	t_command	*c;
@@ -107,11 +101,7 @@ int	parse_commands(t_shell *m, t_lexer *l)
 		while (l && !is_token_pipish(l))
 		{
 			if (is_token_redir(l))
-			{
-				if (!m->ex_status)
-					m->ex_status = parse_redir(c, l->token, (l->next)->str, m);
-				l = l->next->next;
-			}
+				parse_redir_loop(m, &l, c);
 			add_to_command_list(c, &l);
 		}
 		if (l && is_token_pipish(l))

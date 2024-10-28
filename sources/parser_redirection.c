@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:41:20 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/22 21:46:33 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/28 22:13:18 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 **	function to read into heredoc
 */
-static void	heredoc_readline(const char *delimiter, int tmp_fd)
+static void	heredoc_readline(const char *delimiter, int tmp_fd, char **envp)
 {
 	char	*line;
 
@@ -23,6 +23,10 @@ static void	heredoc_readline(const char *delimiter, int tmp_fd)
 	while (g_sig_pid == -255)
 	{
 		line = readline("heredoc> ");
+		//printf("Is ' in EOF? %s\n", ft_strchr(delimiter, '\''));
+		// if (!ft_strchr(delimiter, '\'') && ft_strchr(line, '$'))
+		// 	process_env_arg(&line, &envp);
+		(void)envp;
 		if (line == NULL)
 		{
 			write(STDOUT_FILENO, "warning: heredoc delim by EOF (wanted `", 40);
@@ -62,16 +66,13 @@ static int	handle_heredoc(const char *delimiter, t_shell *m)
 	if (tmp_fd < 0)
 		return (p_error(TMP_FILE_CREATION_ERR, NULL));
 	signal(SIGQUIT, SIG_IGN);
-	heredoc_readline(delimiter, tmp_fd);
+	heredoc_readline(delimiter, tmp_fd, m->envp);
 	signal(SIGQUIT, SIG_DFL);
 	close(tmp_fd);
-	if (g_sig_pid != -255)
-	{
-		free(tmp_filename);
-		return (0 - g_sig_pid);
-	}
 	tmp_fd = open(tmp_filename, O_RDONLY);
 	free(tmp_filename);
+	if (g_sig_pid != -255)
+		return (0 - g_sig_pid);
 	if (tmp_fd < 0)
 		return (p_error(TMP_FILE_CREATION_ERR, NULL));
 	return (tmp_fd);

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/21 23:14:57 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/28 18:51:56 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void	reset_vars(t_shell *m)
 	m->input = NULL;
 	g_sig_pid = m->ex_status;
 	m->ex_status = 0;
-	m->pipefd[0] = dup(STDIN_FILENO);
-	m->pipefd[1] = dup(STDOUT_FILENO);
 	m->last_splitter_token = NONE;
 }
 
