@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 14:51:35 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/22 18:37:17 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 15:20:42 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int	process_env_arg(char **str, char ***envp)
 			s++;
 			continue ;
 		}
-		if (!qt[0] && *s == '$' && (ft_isalnum(*(s + 1)) || *(s + 1) == '?'))
+		if (*s == '$' && (ft_isalnum(*(s + 1)) || *(s + 1) == '?'))
 		{
 			*str = replace_env_arg(++s, *str, envp);
 			s = *str;

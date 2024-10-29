@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/24 15:31:01 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:09:33 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,17 @@ static void	join_same_tokens(t_lexer *lexer)
 		lexer->str = ft_strdup("&&");
 }
 
+static char	get_quote_type(char *token)
+{
+	char	opening_quote_type;
+
+	if (ft_strpbrk(token, "\'\""))
+		opening_quote_type = *(ft_strpbrk(token, "\'\""));
+	else
+		opening_quote_type = '\0';
+	return (opening_quote_type);
+}
+
 /*
 ^ Goes through the input to split it by token, ft_strchr return the position
 ^	of the found token **TOKENIZE_INPUT** split using (SPACE, >, <, |, ", ')
@@ -58,9 +69,10 @@ static void	join_same_tokens(t_lexer *lexer)
 ^	added to the token list.
 TODO: implement error handler for "add_to_token_list(lexer, token);""
 */
-int	init_lexer(t_lexer **lexer, char *input, char ***envp)
+int	init_lexer(t_lexer **lexer, char *input)
 {
 	char	*token;
+	char	q_type;
 
 	if (quotes_error(input))
 	{
@@ -69,41 +81,20 @@ int	init_lexer(t_lexer **lexer, char *input, char ***envp)
 	}
 	while (input)
 	{
-		token = tokenize_input(&input, envp);
+		token = tokenize_input(&input);
+		q_type = get_quote_type(token);
+		token = process_str(token, q_type);
 		if (!token)
 			continue ;
-		add_to_token_list(lexer, token);
+		add_to_token_list(lexer, token, q_type);
 		if (input)
 			if (ft_strchr(">|<&", *(input - 1)))
-				add_to_token_list(lexer, ft_strndup((input - 1), 1));
+				add_to_token_list(lexer, ft_strndup((input - 1), 1), q_type);
 	}
 	analyse_tokens(*lexer);
 	if (unexpected_token(*lexer))
 		return (UNEXPEC_TOKEN);
 	return (0);
-}
-
-void	free_lexer(t_lexer **lexer)
-{
-	t_lexer	*token;
-
-	if (lexer == NULL || *lexer == NULL)
-		return ;
-	while (*lexer)
-	{
-		token = get_first_token(*lexer);
-		if (token == NULL)
-			return ;
-		*lexer = token->next;
-		if (*lexer)
-			(*lexer)->prev = NULL;
-		if (token->str)
-			free(token->str);
-		token->str = NULL;
-		free(token);
-		token = NULL;
-	}
-	*lexer = NULL;
 }
 
 void	analyse_tokens(t_lexer *lexer)

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/21 23:23:52 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:13:19 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,33 +97,6 @@ int	parse_full_path(t_command *c, t_shell *m)
 	return (0);
 }
 
-void	free_parser(t_list **parser)
-{
-	t_list		*p;
-	t_command	*command;
-	int			i;
-
-	if (parser == NULL)
-		return ;
-	while (*parser)
-	{
-		p = *parser;
-		*parser = (*parser)->next;
-		command = ((t_command *)p->content);
-		if (command->cmd)
-		{
-			i = 0;
-			while (command->cmd[i])
-				free(command->cmd[i++]);
-			free(command->cmd);
-		}
-		free(command->full_path);
-		free(command->input_path);
-		free(command);
-		free(p);
-	}
-	*parser = NULL;
-}
 //! DEBUGGING
 // int	print_parser(t_shell *minihell)
 // {

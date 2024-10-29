@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:57:12 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/28 22:26:11 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:08:48 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,16 +124,16 @@ int	execute_pipe(t_shell *m, t_list **p, int nm, int i)
 	int			pi[8192];
 	t_command	*c;
 
-	if (set_close_pipe(nm, pi, 'S') == -1)
-		return (p_error2("pipe", NULL));
+	set_close_pipe(nm, pi, 'S');
 	while ((*p) && ++i < nm + 1)
 	{
 		c = (t_command *)((*p)->content);
-		g_sig_pid = fork();
-		if (g_sig_pid == -1)
+		m->fork_status = fork();
+		if (m->fork_status == -1)
 			return (p_error2("fork", NULL));
-		if (g_sig_pid == 0)
+		if (m->fork_status == 0)
 		{
+			process_env_args(m, &c);
 			if (is_inv_c_pipe(m, p) || upd_fd(&i, pi, p, nm) || set_redir(c, m))
 				exit(1);
 			if (is_builtin(c))

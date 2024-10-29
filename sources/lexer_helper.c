@@ -6,33 +6,19 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:07:26 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/24 15:29:51 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:11:00 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*process_str(char *str, char ***envp)
+char	*process_str(char *str, char q_type)
 {
 	char	*new_str;
-	char	opening_quote_type;
-	int		i;
-	int		count;
 
-	if (ft_strpbrk(str, "\'\""))
-		opening_quote_type = *(ft_strpbrk(str, "\'\""));
-	else
-		opening_quote_type = '\0';
-	i = -1;
-	count = 0;
-	while (str[++i])
-	{
-		if (str[i] == opening_quote_type)
-			count++;
-	}
-	if (ft_strchr(str, '$'))
-		process_env_arg(&str, envp);
-	new_str = remove_quotes(str, opening_quote_type, -1);
+	if (!str || !(*str))
+		return (str);
+	new_str = remove_quotes(str, q_type, -1);
 	free(str);
 	return (new_str);
 }
@@ -60,7 +46,7 @@ static int	get_length(char *start, char **input)
 	return (length);
 }
 
-char	*tokenize_input(char **input, char ***envp)
+char	*tokenize_input(char **input)
 {
 	char	*str;
 	char	*start;
@@ -78,10 +64,10 @@ char	*tokenize_input(char **input, char ***envp)
 	if (str == NULL)
 		return (p_error(ALLOC_FAILURE, NULL), NULL);
 	ft_strlcpy(str, start, length + 1);
-	return (process_str(str, envp));
+	return (str);
 }
 
-int	add_to_token_list(t_lexer **lexer, char *str)
+int	add_to_token_list(t_lexer **lexer, char *str, char q_type)
 {
 	t_lexer	*new_token;
 	t_lexer	*temp;
@@ -92,6 +78,7 @@ int	add_to_token_list(t_lexer **lexer, char *str)
 	if (new_token == NULL)
 		return (p_error(ALLOC_FAILURE, NULL));
 	new_token->str = str;
+	new_token->q_type = q_type;
 	new_token->token = token_type(str);
 	new_token->next = NULL;
 	new_token->prev = NULL;

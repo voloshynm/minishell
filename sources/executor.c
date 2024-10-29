@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 19:14:56 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/22 21:03:42 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:03:05 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,27 +65,27 @@ int	execute_command(t_shell *m, t_list **parser)
 	t_command	*c;
 
 	c = ((t_command *)((*parser)->content));
-	set_redir(c, m);
+	process_env_args(m, &c);
 	if (!c || !c->cmd || !c->cmd[0] || !c->cmd[0][0])
-		return (1);
+		return (0);
+	set_redir(c, m);
 	if (is_builtin(c))
 		return (run_builtin(m, parser, c));
-	if (c->full_path == NULL)
+	if (c->full_path != NULL)
 	{
-		(*parser) = (*parser)->next;
-		restore_and_close_files(c, m);
-		return (is_dir_or_file(c));
-	}
-	g_sig_pid = fork();
-	if (g_sig_pid == -1)
-		return (p_error2("fork", NULL));
-	else if (g_sig_pid == 0)
-	{
-		execve(c->full_path, c->cmd, NULL);
-		exit(p_error2(c->cmd[0], NULL));
+		m->fork_status = fork();
+		if (m->fork_status == -1)
+			return (p_error2("fork", NULL));
+		else if (m->fork_status == 0)
+		{
+			execve(c->full_path, c->cmd, NULL);
+			exit(p_error2(c->cmd[0], NULL));
+		}
 	}
 	restore_and_close_files(c, m);
 	(*parser) = (*parser)->next;
+	if (c->full_path == NULL)
+		return (is_dir_or_file(c));
 	return (wait_children(m));
 }
 

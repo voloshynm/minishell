@@ -1,4 +1,4 @@
-SRC =   sources/main.c 															\
+SRC =   sources/main.c sources/free_malloc_utils.c								\
 		sources/lexer.c sources/lexer_utils.c sources/lexer_helper.c 			\
 		sources/lexer_args.c sources/lexer_quotes.c					 			\
 		sources/parser.c sources/parser_redirection.c sources/parser_path.c		\

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/28 21:41:35 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:27:30 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_shell
 	char	*oldpwd;
 	char	*original_pwd;
 	int		ex_status;
+	int		fork_status;
 	int		pipefd[2];
 	int		is_unique_cmd;
 	t_token	last_splitter_token;
@@ -92,7 +93,6 @@ int			p_error2(char *str, void *arg);
 
 // parser.c: to parse tokens into commands with its path
 int			parse_commands(t_shell *m, t_lexer *l);
-void		free_parser(t_list **parser);
 
 // parser_path.c: to get full path of the command for exec
 int			parse_full_path(t_command *c, t_shell *m);
@@ -102,8 +102,7 @@ void		update_path_var(t_shell *m);
 int			print_parser(t_shell *minihell);
 
 // parser_redirection.c: to handle redirections
-int			parse_redir(t_command *c, t_token token, char *filename,
-				t_shell *m);
+int			parse_redir(t_command *c, t_token token, t_lexer *l, t_shell *m);
 int			set_redir(t_command *c, t_shell *m);
 void		restore_and_close_files(t_command *c, t_shell *m);
 
@@ -118,6 +117,8 @@ int			run_builtin(t_shell *m, t_list **parser, t_command *c);
 // executor_utils.c: useful functions for execution and parsing
 int			is_inv_c_pipe(t_shell *m, t_list **p);
 int			get_cmd_len(t_lexer *lexer);
+int			process_env_args(t_shell *m, t_command **c);
+void		rmv_cmd(t_command **c, int i, char **new_cmd, char **new_q_type);
 
 // signals.c: handle Ctrl-C and Ctrl-D and Ctrl-"\"
 void		handle_signals(void);
@@ -153,5 +154,11 @@ int			is_valid_key_value(const char *key_value);
 int			get_key_nmb(char **envp, char *key_value);
 char		*get_key(char *key_value);
 char		*get_value(char *key_value);
+
+// free_malloc_utils.c
+void		free_lexer(t_lexer **lexer);
+void		free_parser(t_list **parser);
+void		free_cmds(t_command **c);
+void		free_all_resources(t_shell *m);
 
 #endif

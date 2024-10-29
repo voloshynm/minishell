@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 02:12:31 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/28 21:40:17 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:32:21 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,50 @@ int	get_cmd_len(t_lexer *lexer)
 		l = l->next;
 	}
 	return (len);
+}
+
+int	process_env_args(t_shell *m, t_command **c)
+{
+	int		i;
+
+	i = -1;
+	while ((*c)->cmd[++i])
+	{
+		if (ft_strchr((*c)->cmd[i], '$') && *((*c)->q_type[i]) != '\'')
+		{
+			process_env_arg(&((*c)->cmd[i]), &m->envp);
+			if (ft_strlen((*c)->cmd[i]) == 0)
+				rmv_cmd(c, i, NULL, NULL);
+		}
+	}
+	return (0);
+}
+
+void	rmv_cmd(t_command **c, int i, char **new_cmd, char **new_q_type)
+{
+	int			j;
+	char		**new_cmd_start;
+	char		**new_q_start;
+
+	j = 0;
+	while ((*c)->cmd[j])
+		j++;
+	new_cmd = ft_calloc(j - 1 + 1, sizeof(char *));
+	new_q_type = ft_calloc(j - 1 + 1, sizeof(char *));
+	new_cmd_start = new_cmd;
+	new_q_start = new_q_type;
+	j = -1;
+	while ((*c)->cmd[++j])
+	{
+		if (j != i)
+		{
+			*(new_cmd) = ft_strdup((*c)->cmd[j]);
+			*(new_q_type) = ft_strdup((*c)->q_type[j]);
+			new_cmd++;
+			new_q_type++;
+		}
+	}
+	free_cmds(c);
+	(*c)->cmd = new_cmd_start;
+	(*c)->q_type = new_q_start;
 }

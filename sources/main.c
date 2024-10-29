@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 18:48:59 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/28 18:51:56 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 19:21:05 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ void	reset_vars(t_shell *m)
 	m->input = NULL;
 	g_sig_pid = m->ex_status;
 	m->ex_status = 0;
+	m->fork_status = -255;
 	m->last_splitter_token = NONE;
+	m->pipefd[0] = -255;
+	m->pipefd[1] = -255;
 }
 
 void	init_shell_vars(t_shell *m, char **envp)
@@ -47,27 +50,6 @@ void	init_shell_vars(t_shell *m, char **envp)
 	reset_vars(m);
 }
 
-void	free_all_resources(t_shell *m)
-{
-	free_parser(&m->parser);
-	free_lexer(&m->lexer);
-	free_ft_split(m->envp);
-	if (m->envpath && *m->envpath)
-		free_ft_split(m->envpath);
-	free(m->original_pwd);
-	if (m->pwd)
-		free(m->pwd);
-	free(m->oldpwd);
-	m->lexer = NULL;
-	m->parser = NULL;
-	m->input = NULL;
-	m->envpath = NULL;
-	m->original_pwd = NULL;
-	m->oldpwd = NULL;
-	m->pid = 0;
-	rl_clear_history();
-}
-
 void	prompt_loop(t_shell *m)
 {
 	char	*input_ptr;
@@ -84,7 +66,7 @@ void	prompt_loop(t_shell *m)
 		}
 		input_ptr = m->input;
 		add_history(m->input);
-		if (!init_lexer(&m->lexer, m->input, &m->envp))
+		if (!init_lexer(&m->lexer, m->input))
 		{
 			parse_commands(m, m->lexer);
 			executor_loop(m);

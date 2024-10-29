@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/28 22:25:22 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 17:14:43 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,23 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 static int	parse_command(t_command *c, t_lexer **l, t_shell *m)
 {
 	char	**cur_cmd;
+	char	**cur_q_type;
 
 	cur_cmd = ft_calloc(get_cmd_len(*l) + 1, sizeof(char *));
-	if (!cur_cmd)
+	cur_q_type = ft_calloc(get_cmd_len(*l) + 1, sizeof(char *));
+	if (!cur_cmd || !cur_q_type)
 		return (p_error(ALLOC_FAILURE, NULL));
 	c->cmd = cur_cmd;
+	c->q_type = cur_q_type;
 	while (*l && (*l)->token == WORD)
 	{
 		*cur_cmd = ft_strdup((*l)->str);
-		if (!*cur_cmd)
+		*cur_q_type = ft_strdup(&((*l)->q_type));
+		if (!*cur_cmd || !*cur_q_type)
 			return (p_error(ALLOC_FAILURE, NULL));
 		*l = (*l)->next;
 		cur_cmd++;
+		cur_q_type++;
 	}
 	parse_full_path(c, m);
 	*cur_cmd = NULL;
@@ -67,12 +72,14 @@ static int	add_to_command_list(t_command *c, t_lexer **l)
 	while (*l && (*l)->token == WORD)
 	{
 		c->cmd[i] = ft_strdup((*l)->str);
-		if (!c->cmd[i])
+		c->q_type[i] = ft_strdup(&((*l)->q_type));
+		if (!c->cmd[i] || !c->q_type[i])
 			return (p_error(ALLOC_FAILURE, NULL));
 		*l = (*l)->next;
 		i++;
 	}
 	c->cmd[i] = 0;
+	c->q_type[i] = 0;
 	return (0);
 }
 
@@ -85,7 +92,7 @@ static void	parse_redir_loop(t_shell *m, t_lexer **l, t_command *c)
 			close(c->infile);
 	}
 	if (!m->ex_status)
-		m->ex_status = parse_redir(c, (*l)->token, ((*l)->next)->str, m);
+		m->ex_status = parse_redir(c, (*l)->token, (*l)->next, m);
 	(*l) = (*l)->next->next;
 }
 

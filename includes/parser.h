@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:31 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/21 21:24:45 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 12:11:01 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 typedef struct s_command
 {
 	char	**cmd;
+	char	**q_type;
 	char	*full_path;
 	char	*input_path;
 	int		path_offset;

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 17:23:35 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/17 18:51:21 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 12:18:41 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef enum e_token
 typedef struct s_lexer
 {
 	char			*str;
+	char			q_type;
 	t_token			token;
 	struct s_lexer	*next;
 	struct s_lexer	*prev;
@@ -62,10 +63,10 @@ int			is_token_redir(t_lexer *l);
 int			is_token_pipish(t_lexer *l);
 
 // lexer_helper.c
-int			add_to_token_list(t_lexer **lexer, char *str);
-char		*tokenize_input(char **input, char ***envp);
+int			add_to_token_list(t_lexer **lexer, char *str, char q_type);
+char		*tokenize_input(char **input);
 int			process_env_arg(char **str, char ***envp);
-char		*process_str(char *str, char ***envp);
+char		*process_str(char *str, char q_type);
 
 // lexer_quotes.c
 int			quotes_error(char *input);
@@ -73,7 +74,7 @@ char		*handle_quotes(char *input);
 char		*remove_quotes(char *str, char quote_type, int in_quote);
 
 // lexer.c
-int			init_lexer(t_lexer **lexer, char *input, char ***envp);
+int			init_lexer(t_lexer **lexer, char *input);
 void		analyse_tokens(t_lexer *lexer);
 void		free_lexer(t_lexer **lexer);
 
