@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/29 19:46:03 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/29 20:06:51 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,6 @@ int	parse_full_path(t_command *c, t_shell *m)
 			c->full_path = ft_strjoin(temp, c->cmd[0]);
 			free(temp);
 		}
-		// if (!stat(c->cmd[0], &s)
-		// 	&& (c->cmd[0][0] == '/' || c->cmd[0][0] == '.'))
 		if (!stat(c->cmd[0], &s) && ft_strchr(c->cmd[0], '/'))
 		{
 			if (S_ISDIR(s.st_mode))
