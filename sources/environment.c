@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:03:31 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/22 22:31:20 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/30 23:17:34 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	init_envp(t_shell *m, char **envp_arg)
 		envp_arg_s++;
 	}
 	*v = NULL;
-	ft_str_bubble_sort(m->envp, n);
+	//ft_str_bubble_sort(m->envp, n);
 	return (0);
 }
 
@@ -54,7 +54,7 @@ int	add_to_envp(t_shell *m, char *key_value)
 	*v = NULL;
 	free(m->envp - n);
 	m->envp = v_start;
-	ft_str_bubble_sort(m->envp, n + 1);
+	//ft_str_bubble_sort(m->envp, n + 1);
 	return (0);
 }
 
@@ -112,6 +112,6 @@ int	rm_from_envp(t_shell *m, char *key_value)
 	v[j] = NULL;
 	free(m->envp);
 	m->envp = v;
-	ft_str_bubble_sort(m->envp, sizeof_2d_array(m->envp));
+	//ft_str_bubble_sort(m->envp, sizeof_2d_array(m->envp));
 	return (0);
 }

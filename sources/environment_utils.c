@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:29:10 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/22 18:38:48 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/30 23:42:52 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,40 @@ void	ft_str_swap(char **a, char **b)
 }
 
 // Bubble sort function to sort array of strings
-void	ft_str_bubble_sort(char **arr, int n)
+char **ft_str_bubble_sort(char **arr, int n)
 {
-	int	i;
-	int	j;
+	int		i;
+	int 	j;
+	char	**sorted_arr;
 
-	i = 0;
-	while (i < n - 1)
+	sorted_arr = (char **)malloc(n * sizeof(char *));
+	if (!sorted_arr)
+		return NULL;
+	i = -1;
+	while (++i < n)
+		sorted_arr[i] = strdup(arr[i]);
+	i = -1;
+	while (++i < n - 1)
 	{
 		j = 0;
 		while (j < n - 1 - i)
 		{
-			if (ft_strcmp(arr[j], arr[j + 1]) > 0)
-				ft_str_swap(&arr[j], &arr[j + 1]);
+			if (ft_strcmp(sorted_arr[j], sorted_arr[j + 1]) > 0)
+				ft_str_swap(&sorted_arr[j], &sorted_arr[j + 1]);
 			j++;
 		}
-		i++;
 	}
+	return (sorted_arr);
+}
+
+void	free_sorted_array(char **arr)
+{
+	int	i;
+
+	i = -1;
+	while (arr[++i])
+		free(arr[i]);
+	free(arr);
 }
 
 int	sizeof_2d_array(char **arr)

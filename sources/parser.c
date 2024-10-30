@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:47:38 by mvoloshy          #+#    #+#             */
-/*   Updated: 2024/10/29 17:14:43 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/30 23:14:32 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	init_cmd_struct_add_to_parser_lst(t_command **c, t_shell *m)
 	return (OK);
 }
 
-static int	parse_command(t_command *c, t_lexer **l, t_shell *m)
+static int	alloc_commands(t_command *c, t_lexer **l)
 {
 	char	**cur_cmd;
 	char	**cur_q_type;
@@ -47,18 +47,6 @@ static int	parse_command(t_command *c, t_lexer **l, t_shell *m)
 		return (p_error(ALLOC_FAILURE, NULL));
 	c->cmd = cur_cmd;
 	c->q_type = cur_q_type;
-	while (*l && (*l)->token == WORD)
-	{
-		*cur_cmd = ft_strdup((*l)->str);
-		*cur_q_type = ft_strdup(&((*l)->q_type));
-		if (!*cur_cmd || !*cur_q_type)
-			return (p_error(ALLOC_FAILURE, NULL));
-		*l = (*l)->next;
-		cur_cmd++;
-		cur_q_type++;
-	}
-	parse_full_path(c, m);
-	*cur_cmd = NULL;
 	return (0);
 }
 
@@ -72,7 +60,7 @@ static int	add_to_command_list(t_command *c, t_lexer **l)
 	while (*l && (*l)->token == WORD)
 	{
 		c->cmd[i] = ft_strdup((*l)->str);
-		c->q_type[i] = ft_strdup(&((*l)->q_type));
+		c->q_type[i] = copy_char((*l)->q_type);
 		if (!c->cmd[i] || !c->q_type[i])
 			return (p_error(ALLOC_FAILURE, NULL));
 		*l = (*l)->next;
@@ -103,7 +91,7 @@ int	parse_commands(t_shell *m, t_lexer *l)
 	while (l)
 	{
 		m->ex_status = 0;
-		if (init_cmd_struct_add_to_parser_lst(&c, m) || parse_command(c, &l, m))
+		if (init_cmd_struct_add_to_parser_lst(&c, m) || alloc_commands(c, &l))
 			return (ALLOC_FAILURE);
 		while (l && !is_token_pipish(l))
 		{
@@ -111,6 +99,8 @@ int	parse_commands(t_shell *m, t_lexer *l)
 				parse_redir_loop(m, &l, c);
 			add_to_command_list(c, &l);
 		}
+		if (parse_full_path(c, m))
+			return (ALLOC_FAILURE);
 		if (l && is_token_pipish(l))
 		{
 			c->cmd_splitter = l->token;

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 16:29:13 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/29 19:27:30 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/30 23:43:14 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int			parse_full_path(t_command *c, t_shell *m);
 int			is_builtin(t_command *c);
 int			is_bin(t_shell *m, t_command *p);
 void		update_path_var(t_shell *m);
+char		*copy_char(char c);
 int			print_parser(t_shell *minihell);
 
 // parser_redirection.c: to handle redirections
@@ -130,7 +131,7 @@ void		clear_rl_line(void);
 int			echo(char **arg);
 int			cd(t_shell *m, char **arg);
 int			pwd(void);
-int			export(t_shell *m, t_command *c);
+int			export(t_shell *m, t_command *c, char **v, int i);
 int			unset(t_shell *m, t_command *c);
 int			env(t_shell *m, t_command *c);
 void		exit_shell(t_shell *m, t_command *c);
@@ -143,10 +144,11 @@ int			rm_from_envp(t_shell *m, char *key_value);
 
 // environment_utils.c
 void		ft_str_swap(char **a, char **b);
-void		ft_str_bubble_sort(char **arr, int n);
+char 		**ft_str_bubble_sort(char **arr, int n);
 int			sizeof_2d_array(char **arr);
 int			is_var_in_envp(t_shell *m, char *key_value);
 char		*get_env_value(char *var, char ***envp);
+void		free_sorted_array(char **arr);
 
 // environment_utils2.c
 void		print_envp(t_shell *m);

@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:20:24 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/29 19:09:33 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/30 22:54:01 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static char	get_quote_type(char *token)
 	if (ft_strpbrk(token, "\'\""))
 		opening_quote_type = *(ft_strpbrk(token, "\'\""));
 	else
-		opening_quote_type = '\0';
+		opening_quote_type = ' ';
 	return (opening_quote_type);
 }
 

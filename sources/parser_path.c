@@ -6,7 +6,7 @@
 /*   By: mvoloshy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 21:08:49 by sandre-a          #+#    #+#             */
-/*   Updated: 2024/10/29 20:06:51 by mvoloshy         ###   ########.fr       */
+/*   Updated: 2024/10/30 22:56:21 by mvoloshy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,18 @@ int	parse_full_path(t_command *c, t_shell *m)
 		}
 	}
 	return (0);
+}
+
+char	*copy_char(char c)
+{
+	char	*new_str;
+
+	new_str = (char *)malloc(2 * sizeof(char));
+	if (!new_str)
+		return NULL;
+	new_str[0] = c;
+	new_str[1] = '\0';
+	return (new_str);
 }
 
 //! DEBUGGING
